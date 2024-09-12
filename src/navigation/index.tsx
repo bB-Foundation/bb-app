@@ -1,11 +1,20 @@
 import React, {FC} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {
+  createNativeStackNavigator,
+  NativeStackNavigationProp,
+} from '@react-navigation/native-stack';
 
 // PAGES
 import SignIn from '../modules/sign-in';
+import SignUp from '../modules/sign-up';
 
-const Stack = createNativeStackNavigator();
+type RootStackParamList = {
+  'sign-in': undefined;
+  'sign-up': undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const Navigator: FC = () => {
   return (
@@ -14,10 +23,13 @@ const Navigator: FC = () => {
         screenOptions={{
           headerShown: false,
         }}>
-        <Stack.Screen name="Sign in" component={SignIn} />
+        <Stack.Screen name="sign-in" component={SignIn} />
+        <Stack.Screen name="sign-up" component={SignUp} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
 export default Navigator;
+
+export type NavigationProp = NativeStackNavigationProp<RootStackParamList>;

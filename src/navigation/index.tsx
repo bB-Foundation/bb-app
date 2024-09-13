@@ -9,11 +9,13 @@ import {
 import SignIn from '../modules/sign-in';
 import SignUp from '../modules/sign-up';
 import ForgotPassword from '../modules/forgot-password';
+import RestorePasswordVerification from '../modules/restore-password-verification';
 
 type RootStackParamList = {
   'sign-in': undefined;
   'sign-up': undefined;
   'forgot-password': undefined;
+  'restore-password-verification': undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -28,6 +30,10 @@ const Navigator: FC = () => {
         <Stack.Screen name="sign-in" component={SignIn} />
         <Stack.Screen name="sign-up" component={SignUp} />
         <Stack.Screen name="forgot-password" component={ForgotPassword} />
+        <Stack.Screen
+          name="restore-password-verification"
+          component={RestorePasswordVerification}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

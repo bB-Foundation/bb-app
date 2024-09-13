@@ -11,5 +11,5 @@ export const useCheckBox = (name: string) => {
 
   const errorMessage = getErrorMessage(fieldError);
 
-  return {control, fieldError, errorMessage};
+  return {control, errorMessage};
 };

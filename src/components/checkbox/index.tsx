@@ -8,7 +8,7 @@ import {checkBoxStyles} from './checkbox.styles';
 import {CheckBoxProps} from './checkbox.types';
 
 export const CheckBox: FC<CheckBoxProps> = ({name, children, ...props}) => {
-  const {control, fieldError, errorMessage} = useCheckBox(name);
+  const {control, errorMessage} = useCheckBox(name);
 
   return (
     <Controller
@@ -21,9 +21,7 @@ export const CheckBox: FC<CheckBoxProps> = ({name, children, ...props}) => {
           </KittenCheckBox>
 
           {errorMessage && (
-            <Text
-              style={checkBoxStyles.errorMessage}
-              status={fieldError ? 'danger' : 'basic'}>
+            <Text style={checkBoxStyles.errorMessage} status="danger">
               {errorMessage}
             </Text>
           )}

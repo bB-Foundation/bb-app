@@ -25,9 +25,7 @@ export const Input: FC<InputProps> = ({name, ...props}) => {
           />
 
           {errorMessage && (
-            <Text
-              style={inputStyles.errorMessage}
-              status={fieldError ? 'danger' : 'basic'}>
+            <Text style={inputStyles.errorMessage} status="danger">
               {errorMessage}
             </Text>
           )}

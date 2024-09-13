@@ -3,8 +3,8 @@ import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {useNavigation} from '@react-navigation/native';
 
-import {SignInFormFields} from './sign-in.types';
-import {signInFormSchema} from './sign-in.api';
+import {ForgotPasswordFormFields} from './forgot-password.types';
+import {forgotPasswordFormSchema} from './forgot-password.api';
 import {NavigationProp} from '../../navigation';
 
 export const useIsPasswordVisible = () => {
@@ -17,11 +17,11 @@ export const useIsPasswordVisible = () => {
 
 export const useFormLogic = () => {
   const formData = useForm({
-    resolver: yupResolver<SignInFormFields>(signInFormSchema),
+    resolver: yupResolver<ForgotPasswordFormFields>(forgotPasswordFormSchema),
   });
   const {handleSubmit} = formData;
 
-  const onSubmit = (data: SignInFormFields) => console.log(data);
+  const onSubmit = (data: ForgotPasswordFormFields) => console.log(data);
 
   const submitHandler = handleSubmit(onSubmit);
 
@@ -31,13 +31,9 @@ export const useFormLogic = () => {
 export const useButtonHandlers = () => {
   const navigation = useNavigation<NavigationProp>();
 
-  const onSignUpButtonPress = (): void => {
-    navigation.navigate('sign-up');
+  const goBack = (): void => {
+    navigation.goBack();
   };
 
-  const onForgotPasswordButtonPress = (): void => {
-    navigation.navigate('forgot-password');
-  };
-
-  return {onSignUpButtonPress, onForgotPasswordButtonPress};
+  return {goBack};
 };

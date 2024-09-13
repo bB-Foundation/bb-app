@@ -8,10 +8,12 @@ import {
 // PAGES
 import SignIn from '../modules/sign-in';
 import SignUp from '../modules/sign-up';
+import ForgotPassword from '../modules/forgot-password';
 
 type RootStackParamList = {
   'sign-in': undefined;
   'sign-up': undefined;
+  'forgot-password': undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -25,6 +27,7 @@ const Navigator: FC = () => {
         }}>
         <Stack.Screen name="sign-in" component={SignIn} />
         <Stack.Screen name="sign-up" component={SignUp} />
+        <Stack.Screen name="forgot-password" component={ForgotPassword} />
       </Stack.Navigator>
     </NavigationContainer>
   );

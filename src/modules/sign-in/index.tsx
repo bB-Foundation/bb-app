@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {View} from 'react-native';
+import {SafeAreaView, View} from 'react-native';
 import {Button, Layout, Text, useStyleSheet, Icon} from '@ui-kitten/components';
 import {FormProvider} from 'react-hook-form';
 
@@ -22,7 +22,7 @@ const SignIn: FC = () => {
     useButtonHandlers();
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <Text category="h1" status="control">
           Hello
@@ -76,7 +76,7 @@ const SignIn: FC = () => {
         onPress={onSignUpButtonPress}>
         Don't have an account? Create
       </Button>
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -1,4 +1,3 @@
-import {useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {useNavigation} from '@react-navigation/native';
@@ -6,14 +5,6 @@ import {useNavigation} from '@react-navigation/native';
 import {ForgotPasswordFormFields} from './forgot-password.types';
 import {forgotPasswordFormSchema} from './forgot-password.api';
 import {NavigationProp} from '../../navigation';
-
-export const useIsPasswordVisible = () => {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
-  const togglePasswordVisibility = (): void => setIsPasswordVisible(v => !v);
-
-  return {isPasswordVisible, togglePasswordVisibility};
-};
 
 export const useFormLogic = () => {
   const formData = useForm({

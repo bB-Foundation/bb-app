@@ -4,7 +4,6 @@ export const ForgotPasswordStyles = StyleService.create({
   container: {
     backgroundColor: 'background-basic-color-1',
     flexGrow: 1,
-    gap: 30,
     justifyContent: 'space-between',
   },
   headerContainer: {
@@ -19,6 +18,7 @@ export const ForgotPasswordStyles = StyleService.create({
   formContainer: {
     flex: 1,
     paddingTop: 32,
+    gap: 30,
     paddingHorizontal: 16,
   },
   emailLabel: {

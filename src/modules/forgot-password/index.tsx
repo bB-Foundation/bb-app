@@ -16,49 +16,42 @@ const ForgotPassword: FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View>
-        <View style={styles.headerContainer}>
-          <Text category="h1" status="control">
-            bB
-          </Text>
-          <Text style={styles.headerLabel} category="s1" status="control">
-            Forgot Password
-          </Text>
-        </View>
-
-        <FormProvider {...formData}>
-          <Layout style={styles.formContainer} level="1">
-            <Text style={styles.emailLabel}>
-              Please enter your email address
-            </Text>
-
-            <Input
-              name="email"
-              style={styles.emailInput}
-              autoCapitalize="none"
-              placeholder="Email"
-              accessoryRight={<Icon name="email" />}
-            />
-          </Layout>
-        </FormProvider>
+      <View style={styles.headerContainer}>
+        <Text category="h1" status="control">
+          bB
+        </Text>
+        <Text style={styles.headerLabel} category="s1" status="control">
+          Forgot Password
+        </Text>
       </View>
 
-      <View>
-        <Button
-          style={styles.submitButton}
-          size="giant"
-          onPress={submitHandler}>
-          SEND VERIFICATION CODE
-        </Button>
+      <FormProvider {...formData}>
+        <Layout style={styles.formContainer} level="1">
+          <Text category="h6" style={styles.emailLabel}>
+            Please enter your email address
+          </Text>
 
-        <Button
-          style={styles.goBackButton}
-          appearance="ghost"
-          status="basic"
-          onPress={goBack}>
-          Go back
-        </Button>
-      </View>
+          <Input
+            name="email"
+            style={styles.emailInput}
+            autoCapitalize="none"
+            placeholder="Email"
+            accessoryRight={<Icon name="email" />}
+          />
+        </Layout>
+      </FormProvider>
+
+      <Button style={styles.submitButton} size="giant" onPress={submitHandler}>
+        SEND VERIFICATION CODE
+      </Button>
+
+      <Button
+        style={styles.goBackButton}
+        appearance="ghost"
+        status="basic"
+        onPress={goBack}>
+        Go back
+      </Button>
     </SafeAreaView>
   );
 };

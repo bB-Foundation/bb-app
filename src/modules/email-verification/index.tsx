@@ -10,6 +10,7 @@ const EmailVerification: FC = () => {
   const {
     verificationCode,
     isValidVerificationCode,
+    isSubmitting,
     setVerificationCode,
     onSubmit,
     resendEmailVerification,
@@ -49,7 +50,7 @@ const EmailVerification: FC = () => {
         style={styles.submitButton}
         size="giant"
         onPress={onSubmit}
-        disabled={!isValidVerificationCode}>
+        disabled={!isValidVerificationCode || isSubmitting}>
         VERIFY
       </Button>
 

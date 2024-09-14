@@ -13,7 +13,8 @@ export const useFormLogic = () => {
 
   const route = useRoute<RouteProp<RootStackParamList, 'email-verification'>>();
 
-  const {mutateAsync: verifyEmailAsync} = useVerifyEmail();
+  const {mutateAsync: verifyEmailAsync, isPending: isSubmitting} =
+    useVerifyEmail();
 
   const {mutateAsync: resendEmailVerificationAsync} =
     useResendEmailVerification();
@@ -50,6 +51,7 @@ export const useFormLogic = () => {
   return {
     verificationCode,
     isValidVerificationCode,
+    isSubmitting,
     setVerificationCode,
     onSubmit,
     resendEmailVerification,

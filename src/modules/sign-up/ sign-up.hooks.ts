@@ -31,7 +31,9 @@ export const useFormLogic = () => {
   const onSubmit = async (data: SignUpFormFields) => {
     try {
       await signUpAsync(data);
-      navigation.navigate('email-verification');
+      navigation.navigate('email-verification', {
+        email: data.email,
+      });
     } catch (error) {
       Toast.show({
         type: 'error',

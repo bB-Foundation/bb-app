@@ -1,8 +1,8 @@
+import {useState} from 'react';
 import {Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 import {NavigationProp} from '../../navigation';
-import {useState} from 'react';
 
 export const useFormLogic = () => {
   const [verificationCode, setVerificationCode] = useState('');

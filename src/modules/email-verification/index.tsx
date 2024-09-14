@@ -7,9 +7,15 @@ import {useButtonHandlers, useFormLogic} from './email-verification.hooks';
 import CodeField from '../../components/code-field';
 
 const EmailVerification: FC = () => {
-  const {exitToSignIn, resendVerificationCode} = useButtonHandlers();
+  const {
+    verificationCode,
+    isValidVerificationCode,
+    setVerificationCode,
+    onSubmit,
+    resendEmailVerification,
+  } = useFormLogic();
 
-  const {verificationCode, setVerificationCode, onSubmit} = useFormLogic();
+  const {exitToSignIn} = useButtonHandlers();
 
   const styles = useStyleSheet(rootStyles);
 
@@ -34,12 +40,16 @@ const EmailVerification: FC = () => {
         <Button
           appearance="ghost"
           status="basic"
-          onPress={resendVerificationCode}>
+          onPress={resendEmailVerification}>
           Resend verification code
         </Button>
       </Layout>
 
-      <Button style={styles.submitButton} size="giant" onPress={onSubmit}>
+      <Button
+        style={styles.submitButton}
+        size="giant"
+        onPress={onSubmit}
+        disabled={!isValidVerificationCode}>
         VERIFY
       </Button>
 

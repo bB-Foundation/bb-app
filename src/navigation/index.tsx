@@ -14,12 +14,12 @@ import EmailVerification from '../modules/email-verification';
 import NewAccountCongrats from '../modules/new-account-congrats';
 import Main from '../modules/main';
 
-type RootStackParamList = {
+export type RootStackParamList = {
   'sign-in': undefined;
   'sign-up': undefined;
   'forgot-password': undefined;
   'restore-password-verification': undefined;
-  'email-verification': undefined;
+  'email-verification': {email: string};
   'new-account-congrats': undefined;
   main: undefined;
 };

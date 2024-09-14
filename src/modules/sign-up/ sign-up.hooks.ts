@@ -2,10 +2,13 @@ import {useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {useNavigation} from '@react-navigation/native';
+import {useMutation} from '@tanstack/react-query';
+import Toast from 'react-native-toast-message';
 
 import {SignUpFormFields} from './sign-up.types';
-import {signUpFormSchema} from './sign-up.api';
+import {signUp, signUpFormSchema} from './sign-up.api';
 import {NavigationProp} from '../../navigation';
+import {getApiOrUnknownErrorMessage} from '../../utils';
 
 export const useIsPasswordVisible = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -21,11 +24,26 @@ export const useFormLogic = () => {
   });
   const {handleSubmit} = formData;
 
-  const onSubmit = (data: SignUpFormFields) => console.log(data);
+  const {mutateAsync: signUpAsync, isPending} = useSignUp();
+
+  const navigation = useNavigation<NavigationProp>();
+
+  const onSubmit = async (data: SignUpFormFields) => {
+    try {
+      await signUpAsync(data);
+      navigation.navigate('email-verification');
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: getApiOrUnknownErrorMessage(error),
+      });
+    }
+  };
 
   const submitHandler = handleSubmit(onSubmit);
 
-  return {formData, submitHandler};
+  return {formData, submitHandler, isSubmitting: isPending};
 };
 
 export const useButtonHandlers = () => {
@@ -37,3 +55,8 @@ export const useButtonHandlers = () => {
 
   return {onSignInButtonPress};
 };
+
+export const useSignUp = () =>
+  useMutation({
+    mutationFn: signUp,
+  });

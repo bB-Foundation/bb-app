@@ -1,16 +1,13 @@
 import * as yup from 'yup';
+import axios from 'axios';
+
 import {FormMessages} from '../../enums/form-messages';
+import {SignUpData} from './sign-up.types';
 
 export const signUpFormSchema = yup.object().shape({
-  userName: yup.string().trim().required('user name is a required field'),
   email: yup.string().trim().email(FormMessages.INVALID_EMAIL).required(),
-  password: yup.string().required(),
-  passwordRepeat: yup
-    .string()
-    .required('repeat password is a required field')
-    .oneOf([yup.ref('password')], 'passwords must match'),
-  termsAccepted: yup
-    .bool()
-    .default(false)
-    .oneOf([true], 'terms must be accepted'),
+  password: yup.string().min(8).required(),
 });
+
+export const signUp = async (signUpData: SignUpData): Promise<void> =>
+  (await axios.post<void>('/auth/signup', signUpData)).data;

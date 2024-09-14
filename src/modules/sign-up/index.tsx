@@ -10,10 +10,9 @@ import {
   useIsPasswordVisible,
 } from './ sign-up.hooks';
 import {Input} from '../../components/input';
-import {CheckBox} from '../../components/checkbox';
 
 const SignUp: FC = () => {
-  const {formData, submitHandler} = useFormLogic();
+  const {formData, isSubmitting, submitHandler} = useFormLogic();
 
   const {isPasswordVisible, togglePasswordVisibility} = useIsPasswordVisible();
 
@@ -27,7 +26,7 @@ const SignUp: FC = () => {
         <View>
           <View style={styles.headerContainer}>
             <Text category="h1" status="control">
-              Welcome
+              bB
             </Text>
             <Text style={styles.signUpLabel} category="s1" status="control">
               Create a new account
@@ -36,12 +35,6 @@ const SignUp: FC = () => {
 
           <FormProvider {...formData}>
             <Layout style={styles.formContainer} level="1">
-              <Input
-                name="userName"
-                placeholder="User Name"
-                accessoryRight={<Icon name="person" />}
-              />
-
               <Input
                 name="email"
                 style={styles.emailInput}
@@ -62,22 +55,6 @@ const SignUp: FC = () => {
                   />
                 }
               />
-
-              <Input
-                name="passwordRepeat"
-                style={styles.passwordInput}
-                secureTextEntry={!isPasswordVisible}
-                placeholder="Repeat Password"
-                accessoryRight={<Icon name="lock-outline" />}
-              />
-
-              <CheckBox name="termsAccepted" style={styles.termsCheckBox}>
-                {props => (
-                  <Text {...props} style={styles.termsCheckBoxText}>
-                    I read and agree to Terms & Conditions
-                  </Text>
-                )}
-              </CheckBox>
             </Layout>
           </FormProvider>
         </View>
@@ -86,7 +63,8 @@ const SignUp: FC = () => {
           <Button
             style={styles.signUpButton}
             size="giant"
-            onPress={submitHandler}>
+            onPress={submitHandler}
+            disabled={isSubmitting}>
             SIGN UP
           </Button>
 

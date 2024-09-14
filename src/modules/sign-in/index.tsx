@@ -12,7 +12,7 @@ import {
 } from './ sign-in.hooks';
 
 const SignIn: FC = () => {
-  const {formData, submitHandler} = useFormLogic();
+  const {formData, isSubmitting, submitHandler} = useFormLogic();
 
   const {isPasswordVisible, togglePasswordVisibility} = useIsPasswordVisible();
 
@@ -65,7 +65,11 @@ const SignIn: FC = () => {
         </Layout>
       </FormProvider>
 
-      <Button style={styles.signInButton} size="giant" onPress={submitHandler}>
+      <Button
+        style={styles.signInButton}
+        size="giant"
+        onPress={submitHandler}
+        disabled={isSubmitting}>
         SIGN IN
       </Button>
 

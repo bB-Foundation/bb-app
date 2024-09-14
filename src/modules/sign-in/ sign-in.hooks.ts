@@ -26,7 +26,7 @@ export const useFormLogic = () => {
   });
   const {handleSubmit} = formData;
 
-  const {mutateAsync: logInAsync} = useLogIn();
+  const {mutateAsync: logInAsync, isPending: isSubmitting} = useLogIn();
 
   const onSubmit = async (data: SignInFormFields) => {
     try {
@@ -43,7 +43,7 @@ export const useFormLogic = () => {
 
   const submitHandler = handleSubmit(onSubmit);
 
-  return {formData, submitHandler};
+  return {formData, isSubmitting, submitHandler};
 };
 
 export const useButtonHandlers = () => {

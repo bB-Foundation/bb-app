@@ -25,7 +25,7 @@ const SignIn: FC = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <Text category="h1" status="control">
-          Hello
+          bB
         </Text>
         <Text style={styles.signInLabel} category="s1" status="control">
           Sign in to your account
@@ -37,7 +37,7 @@ const SignIn: FC = () => {
           <Input
             name="email"
             placeholder="Email"
-            accessoryRight={<Icon name="person" />}
+            accessoryRight={<Icon name="email" />}
             autoCapitalize="none"
           />
           <Input

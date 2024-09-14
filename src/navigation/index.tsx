@@ -11,6 +11,8 @@ import SignUp from '../modules/sign-up';
 import ForgotPassword from '../modules/forgot-password';
 import RestorePasswordVerification from '../modules/restore-password-verification';
 import EmailVerification from '../modules/email-verification';
+import NewAccountCongrats from '../modules/new-account-congrats';
+import Main from '../modules/main';
 
 type RootStackParamList = {
   'sign-in': undefined;
@@ -18,6 +20,8 @@ type RootStackParamList = {
   'forgot-password': undefined;
   'restore-password-verification': undefined;
   'email-verification': undefined;
+  'new-account-congrats': undefined;
+  main: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -37,6 +41,11 @@ const Navigator: FC = () => {
           component={RestorePasswordVerification}
         />
         <Stack.Screen name="email-verification" component={EmailVerification} />
+        <Stack.Screen
+          name="new-account-congrats"
+          component={NewAccountCongrats}
+        />
+        <Stack.Screen name="main" component={Main} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -13,12 +13,14 @@ import RestorePasswordVerification from '../modules/restore-password-verificatio
 import EmailVerification from '../modules/email-verification';
 import NewAccountCongrats from '../modules/new-account-congrats';
 import Main from '../modules/main';
+import RestorePasswordCongrats from '../modules/restore-password-congrats';
 
 export type RootStackParamList = {
   'sign-in': undefined;
   'sign-up': undefined;
   'forgot-password': undefined;
   'restore-password-verification': undefined;
+  'restore-password-congrats': undefined;
   'email-verification': {email: string};
   'new-account-congrats': undefined;
   main: undefined;
@@ -39,6 +41,10 @@ const Navigator: FC = () => {
         <Stack.Screen
           name="restore-password-verification"
           component={RestorePasswordVerification}
+        />
+        <Stack.Screen
+          name="restore-password-congrats"
+          component={RestorePasswordCongrats}
         />
         <Stack.Screen name="email-verification" component={EmailVerification} />
         <Stack.Screen

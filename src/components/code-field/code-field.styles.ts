@@ -3,7 +3,6 @@ import {Dimensions, StyleSheet} from 'react-native';
 const screenDimensions = Dimensions.get('screen');
 
 export default StyleSheet.create({
-  root: {minHeight: 300},
   codeFiledRoot: {
     marginLeft: 'auto',
     marginRight: 'auto',

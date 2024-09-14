@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {SafeAreaView, Text, View} from 'react-native';
+import {Text, View} from 'react-native';
 import {
   CodeField as RNCodeField,
   Cursor,
@@ -17,7 +17,7 @@ const CodeField: FC<CodeFieldProps> = ({value, setValue}) => {
   });
 
   return (
-    <SafeAreaView style={styles.root}>
+    <View>
       <RNCodeField
         {...props}
         ref={ref}
@@ -38,7 +38,7 @@ const CodeField: FC<CodeFieldProps> = ({value, setValue}) => {
           </View>
         )}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

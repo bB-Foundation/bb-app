@@ -8,7 +8,7 @@ import {useButtonHandlers, useFormLogic} from './forgot-password.hooks';
 import {Input} from '../../components/input';
 
 const ForgotPassword: FC = () => {
-  const {formData, submitHandler} = useFormLogic();
+  const {formData, isSubmitting, submitHandler} = useFormLogic();
 
   const styles = useStyleSheet(ForgotPasswordStyles);
 
@@ -41,7 +41,11 @@ const ForgotPassword: FC = () => {
         </Layout>
       </FormProvider>
 
-      <Button style={styles.submitButton} size="giant" onPress={submitHandler}>
+      <Button
+        style={styles.submitButton}
+        size="giant"
+        onPress={submitHandler}
+        disabled={isSubmitting}>
         SEND VERIFICATION CODE
       </Button>
 

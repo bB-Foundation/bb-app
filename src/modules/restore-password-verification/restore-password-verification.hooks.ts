@@ -1,15 +1,43 @@
 import {useState} from 'react';
 import {Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {useMutation} from '@tanstack/react-query';
+import Toast from 'react-native-toast-message';
 
 import {NavigationProp} from '../../navigation';
+import {verifyPasswordRestore} from './restore-password-verification.api';
+import {getApiOrUnknownErrorMessage} from '../../utils';
 
 export const useFormLogic = () => {
   const [verificationCode, setVerificationCode] = useState('');
 
-  const onSubmit = () => console.log(verificationCode);
+  const navigation = useNavigation<NavigationProp>();
 
-  return {verificationCode, setVerificationCode, onSubmit};
+  const {mutateAsync: verifyPasswordRestoreAsync, isPending: isSubmitting} =
+    useVerifyPasswordRestore();
+
+  const isValidVerificationCode = verificationCode.length === 6;
+
+  const onSubmit = async () => {
+    try {
+      await verifyPasswordRestoreAsync(verificationCode);
+      navigation.navigate('restore-password', {verificationCode});
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: getApiOrUnknownErrorMessage(error),
+      });
+    }
+  };
+
+  return {
+    verificationCode,
+    isValidVerificationCode,
+    isSubmitting,
+    setVerificationCode,
+    onSubmit,
+  };
 };
 
 export const useButtonHandlers = () => {
@@ -26,3 +54,8 @@ export const useButtonHandlers = () => {
 
   return {exitToSignIn};
 };
+
+const useVerifyPasswordRestore = () =>
+  useMutation({
+    mutationFn: verifyPasswordRestore,
+  });

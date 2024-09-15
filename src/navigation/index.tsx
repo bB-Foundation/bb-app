@@ -14,12 +14,14 @@ import EmailVerification from '../modules/email-verification';
 import NewAccountCongrats from '../modules/new-account-congrats';
 import Main from '../modules/main';
 import RestorePasswordCongrats from '../modules/restore-password-congrats';
+import RestorePassword from '../modules/restore-password';
 
 export type RootStackParamList = {
   'sign-in': undefined;
   'sign-up': undefined;
   'forgot-password': undefined;
   'restore-password-verification': undefined;
+  'restore-password': {verificationCode: string};
   'restore-password-congrats': undefined;
   'email-verification': {email: string};
   'new-account-congrats': undefined;
@@ -42,6 +44,7 @@ const Navigator: FC = () => {
           name="restore-password-verification"
           component={RestorePasswordVerification}
         />
+        <Stack.Screen name="restore-password" component={RestorePassword} />
         <Stack.Screen
           name="restore-password-congrats"
           component={RestorePasswordCongrats}

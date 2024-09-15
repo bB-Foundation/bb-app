@@ -23,6 +23,7 @@ export const ForgotPasswordStyles = StyleService.create({
   },
   emailLabel: {
     textAlign: 'center',
+    fontWeight: 'normal',
   },
   emailInput: {
     marginTop: 16,

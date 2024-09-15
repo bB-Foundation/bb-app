@@ -1,6 +1,6 @@
 import {StyleService} from '@ui-kitten/components';
 
-export const signInStyles = StyleService.create({
+export const restorePasswordStyles = StyleService.create({
   container: {
     backgroundColor: 'background-basic-color-1',
     flex: 1,
@@ -15,9 +15,14 @@ export const signInStyles = StyleService.create({
     flex: 1,
     paddingTop: 32,
     paddingHorizontal: 16,
+    gap: 30,
   },
   signInLabel: {
     marginTop: 16,
+  },
+  emailLabel: {
+    textAlign: 'center',
+    fontWeight: 'normal',
   },
   signInButton: {
     marginHorizontal: 16,

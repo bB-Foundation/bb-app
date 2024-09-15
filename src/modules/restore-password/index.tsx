@@ -4,7 +4,7 @@ import {Button, Layout, Text, useStyleSheet, Icon} from '@ui-kitten/components';
 import {FormProvider} from 'react-hook-form';
 
 import {Input} from '../../components/input';
-import {signInStyles} from './restore-password.styles';
+import {restorePasswordStyles} from './restore-password.styles';
 import {
   useButtonHandlers,
   useFormLogic,
@@ -16,7 +16,7 @@ const RestorePassword: FC = () => {
 
   const {isPasswordVisible, togglePasswordVisibility} = useIsPasswordVisible();
 
-  const styles = useStyleSheet(signInStyles);
+  const styles = useStyleSheet(restorePasswordStyles);
 
   const {exitToSignIn} = useButtonHandlers();
 
@@ -33,6 +33,10 @@ const RestorePassword: FC = () => {
 
       <FormProvider {...formData}>
         <Layout style={styles.formContainer} level="1">
+          <Text category="h6" style={styles.emailLabel}>
+            Please enter your new password
+          </Text>
+
           <Input
             name="password"
             style={styles.passwordInput}

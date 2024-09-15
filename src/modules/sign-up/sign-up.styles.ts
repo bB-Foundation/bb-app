@@ -3,9 +3,7 @@ import {StyleService} from '@ui-kitten/components';
 export const SignUpStyles = StyleService.create({
   container: {
     backgroundColor: 'background-basic-color-1',
-    flexGrow: 1,
-    gap: 30,
-    justifyContent: 'space-between',
+    flex: 1,
   },
   headerContainer: {
     justifyContent: 'center',
@@ -20,9 +18,6 @@ export const SignUpStyles = StyleService.create({
     flex: 1,
     paddingTop: 32,
     paddingHorizontal: 16,
-  },
-  emailInput: {
-    marginTop: 16,
   },
   passwordInput: {
     marginTop: 16,

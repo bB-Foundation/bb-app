@@ -12,7 +12,13 @@ import CodeField from '../../components/code-field';
 const RestorePasswordVerification: FC = () => {
   const {exitToSignIn} = useButtonHandlers();
 
-  const {verificationCode, setVerificationCode, onSubmit} = useFormLogic();
+  const {
+    verificationCode,
+    isValidVerificationCode,
+    isSubmitting,
+    setVerificationCode,
+    onSubmit,
+  } = useFormLogic();
 
   const styles = useStyleSheet(rootStyles);
 
@@ -35,7 +41,11 @@ const RestorePasswordVerification: FC = () => {
         <CodeField value={verificationCode} setValue={setVerificationCode} />
       </Layout>
 
-      <Button style={styles.submitButton} size="giant" onPress={onSubmit}>
+      <Button
+        style={styles.submitButton}
+        size="giant"
+        onPress={onSubmit}
+        disabled={!isValidVerificationCode || isSubmitting}>
         VERIFY
       </Button>
 

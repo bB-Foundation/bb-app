@@ -5,27 +5,24 @@ export default StyleService.create({
     backgroundColor: 'background-basic-color-1',
     flexGrow: 1,
   },
-  headerContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: 216,
-    backgroundColor: 'color-primary-default',
-  },
-  headerLabel: {
-    marginTop: 16,
+  iconWrapper: {
+    height: 330,
+    paddingTop: 32,
   },
   formContainer: {
     flex: 1,
-    paddingTop: 32,
+    paddingTop: 44,
     paddingHorizontal: 16,
     gap: 30,
+  },
+  congratsHeader: {
+    textAlign: 'center',
+    fontWeight: '600',
   },
   congratsLabel: {
     textAlign: 'center',
     fontWeight: 'normal',
-  },
-  emailInput: {
-    marginTop: 16,
+    paddingHorizontal: 20,
   },
   submitButton: {
     marginHorizontal: 16,

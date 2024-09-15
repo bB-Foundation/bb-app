@@ -1,8 +1,8 @@
 import React, {FC} from 'react';
 import {SafeAreaView, View} from 'react-native';
 import {Button, Layout, useStyleSheet, Text} from '@ui-kitten/components';
-import SuccessIcon from '../../assets/images/new-account-congrats/success.svg';
 
+import SuccessIcon from '../../assets/images/new-account-congrats/success.svg';
 import rootStyles from './new-account-congrats.styles';
 import {useButtonHandlers} from './new-account-congrats.hooks';
 

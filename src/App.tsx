@@ -7,6 +7,7 @@ import Toast from 'react-native-toast-message';
 
 import './configs';
 import Navigator from './navigation';
+import toastConfig from './configs/toast-config';
 
 const queryClient = new QueryClient();
 
@@ -21,7 +22,7 @@ function App(): React.JSX.Element {
         </QueryClientProvider>
       </ApplicationProvider>
 
-      <Toast position="top" topOffset={40} />
+      <Toast position="top" topOffset={56} config={toastConfig} />
     </>
   );
 }

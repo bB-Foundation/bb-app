@@ -10,6 +10,7 @@ import {
   useIsPasswordVisible,
 } from './ sign-up.hooks';
 import {Input} from '../../components/input';
+import WelcomeIcon from '../../assets/images/sign-up/people.svg';
 
 const SignUp: FC = () => {
   const {formData, isSubmitting, submitHandler} = useFormLogic();
@@ -22,14 +23,13 @@ const SignUp: FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text category="h1" status="control">
-          bB
-        </Text>
-        <Text style={styles.signUpLabel} category="s1" status="control">
-          Create a new account
-        </Text>
+      <View style={styles.iconWrapper}>
+        <WelcomeIcon width="92%" height="100%" />
       </View>
+
+      <Text style={styles.signUpLabel} category="h2" status="control">
+        Sign up
+      </Text>
 
       <FormProvider {...formData}>
         <Layout style={styles.formContainer} level="1">

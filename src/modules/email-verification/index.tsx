@@ -5,6 +5,7 @@ import {Button, Layout, useStyleSheet, Text} from '@ui-kitten/components';
 import rootStyles from './email-verification.styles';
 import {useButtonHandlers, useFormLogic} from './email-verification.hooks';
 import CodeField from '../../components/code-field';
+import MailIcon from '../../assets/images/subscribe.svg';
 
 const EmailVerification: FC = () => {
   const {
@@ -22,14 +23,13 @@ const EmailVerification: FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text category="h1" status="control">
-          bB
-        </Text>
-        <Text style={styles.headerLabel} category="s1" status="control">
-          Verify Email
-        </Text>
+      <View style={styles.iconWrapper}>
+        <MailIcon width="80%" height="100%" />
       </View>
+
+      <Text style={styles.headerLabel} category="h2" status="control">
+        Verify {'\n'}Email
+      </Text>
 
       <Layout style={styles.formContainer} level="1">
         <Text category="h6" style={styles.emailLabel}>

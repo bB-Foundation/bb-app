@@ -10,6 +10,7 @@ import {
   useFormLogic,
   useIsPasswordVisible,
 } from './restore-password.hooks';
+import RestorePasswordIcon from '../../assets/images/restore-password/typewriter.svg';
 
 const RestorePassword: FC = () => {
   const {formData, isSubmitting, submitHandler} = useFormLogic();
@@ -22,18 +23,17 @@ const RestorePassword: FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text category="h1" status="control">
-          bB
-        </Text>
-        <Text style={styles.signInLabel} category="s1" status="control">
-          Restore Password
-        </Text>
+      <View style={styles.iconWrapper}>
+        <RestorePasswordIcon width="80%" height="100%" />
       </View>
+
+      <Text style={styles.headerLabel} category="h2" status="control">
+        Restore {'\n'}Password
+      </Text>
 
       <FormProvider {...formData}>
         <Layout style={styles.formContainer} level="1">
-          <Text category="h6" style={styles.emailLabel}>
+          <Text category="h6" style={styles.hintLabel}>
             Please enter your new password
           </Text>
 

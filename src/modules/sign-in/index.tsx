@@ -10,6 +10,7 @@ import {
   useFormLogic,
   useIsPasswordVisible,
 } from './ sign-in.hooks';
+import LogInIcon from '../../assets/images/sign-in/login.svg';
 
 const SignIn: FC = () => {
   const {formData, isSubmitting, submitHandler} = useFormLogic();
@@ -23,14 +24,13 @@ const SignIn: FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text category="h1" status="control">
-          bB
-        </Text>
-        <Text style={styles.signInLabel} category="s1" status="control">
-          Sign in to your account
-        </Text>
+      <View style={styles.iconWrapper}>
+        <LogInIcon width="100%" height="100%" />
       </View>
+
+      <Text style={styles.signInLabel} category="h2" status="control">
+        Login
+      </Text>
 
       <FormProvider {...formData}>
         <Layout style={styles.formContainer} level="1">

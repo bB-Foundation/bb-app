@@ -13,15 +13,22 @@ export const restorePasswordStyles = StyleService.create({
   },
   formContainer: {
     flex: 1,
-    paddingTop: 32,
+    paddingTop: 14,
     paddingHorizontal: 16,
     gap: 30,
   },
-  signInLabel: {
+  headerLabel: {
     marginTop: 16,
+    color: 'black',
+    paddingHorizontal: 16,
+    fontWeight: '600',
   },
-  emailLabel: {
-    textAlign: 'center',
+  iconWrapper: {
+    height: 330,
+    paddingTop: 32,
+    alignItems: 'center',
+  },
+  hintLabel: {
     fontWeight: 'normal',
   },
   signInButton: {

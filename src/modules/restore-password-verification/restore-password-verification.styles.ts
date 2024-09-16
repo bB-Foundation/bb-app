@@ -13,6 +13,14 @@ export default StyleService.create({
   },
   headerLabel: {
     marginTop: 16,
+    color: 'black',
+    paddingHorizontal: 16,
+    fontWeight: '600',
+  },
+  iconWrapper: {
+    height: 330,
+    paddingTop: 32,
+    alignItems: 'center',
   },
   formContainer: {
     flex: 1,
@@ -21,7 +29,6 @@ export default StyleService.create({
     gap: 30,
   },
   emailLabel: {
-    textAlign: 'center',
     fontWeight: 'normal',
   },
   emailInput: {

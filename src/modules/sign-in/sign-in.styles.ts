@@ -11,13 +11,20 @@ export const signInStyles = StyleService.create({
     minHeight: 216,
     backgroundColor: 'color-primary-default',
   },
+  iconWrapper: {
+    height: 330,
+    paddingTop: 32,
+  },
   formContainer: {
     flex: 1,
     paddingTop: 32,
     paddingHorizontal: 16,
   },
   signInLabel: {
-    marginTop: 16,
+    marginTop: 20,
+    color: 'black',
+    paddingHorizontal: 16,
+    fontWeight: '600',
   },
   signInButton: {
     marginHorizontal: 16,

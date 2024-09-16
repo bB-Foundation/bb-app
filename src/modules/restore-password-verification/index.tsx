@@ -8,6 +8,7 @@ import {
   useFormLogic,
 } from './restore-password-verification.hooks';
 import CodeField from '../../components/code-field';
+import MailIcon from '../../assets/images/subscribe.svg';
 
 const RestorePasswordVerification: FC = () => {
   const {exitToSignIn} = useButtonHandlers();
@@ -24,14 +25,13 @@ const RestorePasswordVerification: FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text category="h1" status="control">
-          bB
-        </Text>
-        <Text style={styles.headerLabel} category="s1" status="control">
-          Restore Password
-        </Text>
+      <View style={styles.iconWrapper}>
+        <MailIcon width="80%" height="100%" />
       </View>
+
+      <Text style={styles.headerLabel} category="h2" status="control">
+        Restore {'\n'}Password
+      </Text>
 
       <Layout style={styles.formContainer} level="1">
         <Text category="h6" style={styles.emailLabel}>

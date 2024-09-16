@@ -13,16 +13,23 @@ export const ForgotPasswordStyles = StyleService.create({
     backgroundColor: 'color-primary-default',
   },
   headerLabel: {
-    marginTop: 16,
+    marginTop: 10,
+    color: 'black',
+    paddingHorizontal: 16,
+    fontWeight: '600',
+  },
+  iconWrapper: {
+    height: 330,
+    paddingTop: 32,
+    alignItems: 'center',
   },
   formContainer: {
     flex: 1,
-    paddingTop: 32,
+    paddingTop: 14,
     gap: 30,
     paddingHorizontal: 16,
   },
   emailLabel: {
-    textAlign: 'center',
     fontWeight: 'normal',
   },
   emailInput: {

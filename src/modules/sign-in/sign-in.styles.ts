@@ -4,6 +4,8 @@ export const signInStyles = StyleService.create({
   container: {
     backgroundColor: 'background-basic-color-1',
     flex: 1,
+    gap: 28,
+    justifyContent: 'space-between',
   },
   headerContainer: {
     justifyContent: 'center',

@@ -3,7 +3,7 @@ import {SafeAreaView, View} from 'react-native';
 import {Button, Layout, Text, useStyleSheet, Icon} from '@ui-kitten/components';
 import {FormProvider} from 'react-hook-form';
 
-import {Input} from '../../components/input';
+import {Input} from '../../components/forms/input';
 import {restorePasswordStyles} from './restore-password.styles';
 import {
   useButtonHandlers,

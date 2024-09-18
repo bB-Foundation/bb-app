@@ -9,7 +9,7 @@ import {
   useFormLogic,
   useIsPasswordVisible,
 } from './ sign-up.hooks';
-import {Input} from '../../components/input';
+import {Input} from '../../components/forms/input';
 import WelcomeIcon from '../../assets/images/sign-up/people.svg';
 
 const SignUp: FC = () => {

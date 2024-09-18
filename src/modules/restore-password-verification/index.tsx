@@ -7,7 +7,7 @@ import {
   useButtonHandlers,
   useFormLogic,
 } from './restore-password-verification.hooks';
-import CodeField from '../../components/code-field';
+import CodeField from '../../components/forms/code-field';
 import MailIcon from '../../assets/images/subscribe.svg';
 
 const RestorePasswordVerification: FC = () => {

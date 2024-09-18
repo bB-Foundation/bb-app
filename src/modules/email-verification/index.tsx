@@ -4,7 +4,7 @@ import {Button, Layout, useStyleSheet, Text} from '@ui-kitten/components';
 
 import rootStyles from './email-verification.styles';
 import {useButtonHandlers, useFormLogic} from './email-verification.hooks';
-import CodeField from '../../components/code-field';
+import CodeField from '../../components/forms/code-field';
 import MailIcon from '../../assets/images/subscribe.svg';
 
 const EmailVerification: FC = () => {

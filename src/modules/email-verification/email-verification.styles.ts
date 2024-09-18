@@ -4,6 +4,8 @@ export default StyleService.create({
   container: {
     backgroundColor: 'background-basic-color-1',
     flexGrow: 1,
+    gap: 28,
+    justifyContent: 'space-between',
   },
   headerContainer: {
     justifyContent: 'center',

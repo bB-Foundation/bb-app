@@ -11,7 +11,10 @@ import {
   restorePassword,
   restorePasswordFormSchema,
 } from './restore-password.api';
-import {NavigationProp, RootStackParamList} from '../../navigation';
+import {
+  NavigationProp,
+  RootStackParamList,
+} from '../navigation/navigation.types';
 import {getApiOrUnknownErrorMessage} from '../../utils';
 
 export const useIsPasswordVisible = () => {

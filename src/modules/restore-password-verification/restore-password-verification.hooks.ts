@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useMutation} from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 
-import {NavigationProp} from '../../navigation';
+import {NavigationProp} from '../navigation/navigation.types';
 import {verifyPasswordRestore} from './restore-password-verification.api';
 import {getApiOrUnknownErrorMessage} from '../../utils';
 

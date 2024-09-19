@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 
-import {NavigationProp} from '../../navigation';
+import {NavigationProp} from '../navigation/navigation.types';
 
 export const useButtonHandlers = () => {
   const navigation = useNavigation<NavigationProp>();

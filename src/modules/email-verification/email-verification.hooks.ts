@@ -4,9 +4,12 @@ import {useMutation} from '@tanstack/react-query';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
-import {NavigationProp, RootStackParamList} from '../../navigation';
 import {resendEmailVerification, verifyEmail} from './email-verification.api';
 import {getApiOrUnknownErrorMessage} from '../../utils';
+import {
+  NavigationProp,
+  RootStackParamList,
+} from '../navigation/navigation.types';
 
 export const useFormLogic = () => {
   const [verificationCode, setVerificationCode] = useState('');

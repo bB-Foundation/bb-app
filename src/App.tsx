@@ -3,11 +3,10 @@ import * as eva from '@eva-design/eva';
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import Toast from 'react-native-toast-message';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 import './configs';
-import Navigator from './navigation';
-import toastConfig from './configs/toast-config';
+import Navigator from './modules/navigation';
 
 const queryClient = new QueryClient();
 
@@ -18,11 +17,11 @@ function App(): React.JSX.Element {
 
       <ApplicationProvider {...eva} theme={eva.light}>
         <QueryClientProvider client={queryClient}>
-          <Navigator />
+          <SafeAreaProvider>
+            <Navigator />
+          </SafeAreaProvider>
         </QueryClientProvider>
       </ApplicationProvider>
-
-      <Toast position="top" topOffset={56} config={toastConfig} />
     </>
   );
 }

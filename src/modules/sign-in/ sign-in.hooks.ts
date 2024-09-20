@@ -2,13 +2,13 @@ import {useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {useNavigation} from '@react-navigation/native';
-import {useMutation} from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 
 import {SignInFormFields} from './sign-in.types';
-import {logIn, signInFormSchema} from './sign-in.api';
+import {signInFormSchema} from './sign-in.api';
 import {NavigationProp} from '../navigation/navigation.types';
 import {getApiOrUnknownErrorMessage} from '../../utils';
+import {useLogIn} from '../../shared/sign-in/sign-in.hooks';
 
 export const useIsPasswordVisible = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -59,5 +59,3 @@ export const useButtonHandlers = () => {
 
   return {onSignUpButtonPress, onForgotPasswordButtonPress};
 };
-
-const useLogIn = () => useMutation({mutationFn: logIn});

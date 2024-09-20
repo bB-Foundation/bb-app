@@ -3,9 +3,9 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 
-import toastConfig from '../../configs/toast-config';
 import {useNavigator} from './navigation.hooks';
 import {RootStackParamList} from './navigation.types';
+import toastConfig from '../../configs/toast';
 // PAGES
 import SignIn from '../sign-in';
 import SignUp from '../sign-up';

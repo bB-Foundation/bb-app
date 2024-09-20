@@ -1,6 +1,6 @@
 import {isAxiosError} from 'axios';
 
-import {Errors} from '../shared/errors';
+import {Errors} from '../enums/errors';
 
 export const getApiOrUnknownErrorMessage = (error: unknown): string =>
   isAxiosError(error)

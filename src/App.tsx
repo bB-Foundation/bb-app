@@ -5,7 +5,7 @@ import {EvaIconsPack} from '@ui-kitten/eva-icons';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 
-import './configs';
+import './configs/axios';
 import Navigator from './modules/navigation';
 
 const queryClient = new QueryClient();

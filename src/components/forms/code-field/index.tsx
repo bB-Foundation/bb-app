@@ -27,6 +27,7 @@ const CodeField: FC<CodeFieldProps> = ({value, setValue}) => {
         rootStyle={styles.codeFiledRoot}
         keyboardType="number-pad"
         textContentType="oneTimeCode"
+        testID="code-field"
         renderCell={({index, symbol, isFocused}) => (
           <View
             onLayout={getCellOnLayoutHandler(index)}

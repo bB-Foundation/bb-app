@@ -8,7 +8,7 @@ import {SignInFormFields} from './sign-in.types';
 import {signInFormSchema} from './sign-in.api';
 import {NavigationProp} from '../navigation/navigation.types';
 import {getApiOrUnknownErrorMessage} from '../../utils';
-import {useLogIn} from '../../shared/sign-in/sign-in.hooks';
+import { useLogIn } from '../../shared/sign-in/sign-in.hooks';
 
 export const useIsPasswordVisible = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);

@@ -9,7 +9,7 @@ import {
   useButtonHandlers,
   useFormLogic,
   useIsPasswordVisible,
-} from './ sign-in.hooks';
+} from './sign-in.hooks';
 import LogInIcon from '../../assets/images/sign-in/login.svg';
 import Page from '../../components/page';
 
@@ -51,6 +51,7 @@ const SignIn: FC = () => {
                   <Icon
                     onPress={togglePasswordVisibility}
                     name={isPasswordVisible ? 'eye-off' : 'eye'}
+                    testID="toggle-password-visibility-button"
                   />
                 }
                 secureTextEntry={!isPasswordVisible}
@@ -61,7 +62,8 @@ const SignIn: FC = () => {
                   style={styles.forgotPasswordButton}
                   appearance="ghost"
                   status="basic"
-                  onPress={onForgotPasswordButtonPress}>
+                  onPress={onForgotPasswordButtonPress}
+                  testID="forgot-password-button">
                   Forgot your password?
                 </Button>
               </View>
@@ -74,7 +76,8 @@ const SignIn: FC = () => {
             style={styles.signInButton}
             size="giant"
             onPress={submitHandler}
-            disabled={isSubmitting}>
+            disabled={isSubmitting}
+            testID="submit-button">
             SIGN IN
           </Button>
 
@@ -82,7 +85,8 @@ const SignIn: FC = () => {
             style={styles.signUpButton}
             appearance="ghost"
             status="basic"
-            onPress={onSignUpButtonPress}>
+            onPress={onSignUpButtonPress}
+            testID="sign-up-button">
             Don't have an account? Create
           </Button>
         </View>

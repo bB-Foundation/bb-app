@@ -48,6 +48,7 @@ const RestorePassword: FC = () => {
                   <Icon
                     onPress={togglePasswordVisibility}
                     name={isPasswordVisible ? 'eye-off' : 'eye'}
+                    testID="toggle-password-visibility-button"
                   />
                 }
                 secureTextEntry={!isPasswordVisible}
@@ -61,7 +62,8 @@ const RestorePassword: FC = () => {
             style={styles.signInButton}
             size="giant"
             onPress={submitHandler}
-            disabled={isSubmitting}>
+            disabled={isSubmitting}
+            testID="submit-button">
             RESTORE PASSWORD
           </Button>
 
@@ -69,7 +71,8 @@ const RestorePassword: FC = () => {
             style={styles.signUpButton}
             appearance="ghost"
             status="basic"
-            onPress={exitToSignIn}>
+            onPress={exitToSignIn}
+            testID="exit-button">
             Exit
           </Button>
         </View>

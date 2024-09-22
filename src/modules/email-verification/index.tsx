@@ -47,7 +47,8 @@ const EmailVerification: FC = () => {
             <Button
               appearance="ghost"
               status="basic"
-              onPress={resendEmailVerification}>
+              onPress={resendEmailVerification}
+              testID="resend-verification-code-button">
               Resend verification code
             </Button>
           </Layout>
@@ -58,7 +59,8 @@ const EmailVerification: FC = () => {
             style={styles.submitButton}
             size="giant"
             onPress={onSubmit}
-            disabled={!isValidVerificationCode || isSubmitting}>
+            disabled={!isValidVerificationCode || isSubmitting}
+            testID="submit-button">
             VERIFY
           </Button>
 
@@ -66,7 +68,8 @@ const EmailVerification: FC = () => {
             style={styles.goBackButton}
             appearance="ghost"
             status="basic"
-            onPress={exitToSignIn}>
+            onPress={exitToSignIn}
+            testID="exit-button">
             Exit
           </Button>
         </View>

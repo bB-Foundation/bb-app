@@ -53,7 +53,8 @@ const RestorePasswordVerification: FC = () => {
             style={styles.submitButton}
             size="giant"
             onPress={onSubmit}
-            disabled={!isValidVerificationCode || isSubmitting}>
+            disabled={!isValidVerificationCode || isSubmitting}
+            testID="submit-button">
             VERIFY
           </Button>
 
@@ -61,7 +62,8 @@ const RestorePasswordVerification: FC = () => {
             style={styles.goBackButton}
             appearance="ghost"
             status="basic"
-            onPress={exitToSignIn}>
+            onPress={exitToSignIn}
+            testID="exit-button">
             Exit
           </Button>
         </View>

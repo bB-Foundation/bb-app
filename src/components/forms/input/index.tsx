@@ -17,15 +17,18 @@ export const Input: FC<InputProps> = ({name, ...props}) => {
       render={({field: {onChange, onBlur, value}}) => (
         <View>
           <KittenInput
+            {...props}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
             status={fieldError ? 'danger' : 'basic'}
-            {...props}
           />
 
           {errorMessage && (
-            <Text style={inputStyles.errorMessage} status="danger">
+            <Text
+              testID={`${name}-input-message`}
+              style={inputStyles.errorMessage}
+              status="danger">
               {errorMessage}
             </Text>
           )}

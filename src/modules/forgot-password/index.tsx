@@ -51,7 +51,8 @@ const ForgotPassword: FC = () => {
             style={styles.submitButton}
             size="giant"
             onPress={submitHandler}
-            disabled={isSubmitting}>
+            disabled={isSubmitting}
+            testID="submit-button">
             SEND VERIFICATION CODE
           </Button>
 
@@ -59,7 +60,8 @@ const ForgotPassword: FC = () => {
             style={styles.goBackButton}
             appearance="ghost"
             status="basic"
-            onPress={goBack}>
+            onPress={goBack}
+            testID="go-back-button">
             Go back
           </Button>
         </View>

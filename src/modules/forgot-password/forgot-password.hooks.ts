@@ -7,7 +7,7 @@ import Toast from 'react-native-toast-message';
 import {ForgotPasswordFormFields} from './forgot-password.types';
 import {forgotPassword, forgotPasswordFormSchema} from './forgot-password.api';
 import {NavigationProp} from '../navigation/navigation.types';
-import {getApiOrUnknownErrorMessage} from '../../utils';
+import { getApiOrUnknownErrorMessage } from 'src/shared/utils/errors';
 
 export const useFormLogic = () => {
   const navigation = useNavigation<NavigationProp>();

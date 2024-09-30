@@ -5,9 +5,9 @@ import {FormProvider} from 'react-hook-form';
 
 import {ForgotPasswordStyles} from './forgot-password.styles';
 import {useButtonHandlers, useFormLogic} from './forgot-password.hooks';
-import {Input} from '../../components/forms/input';
 import ForgotPasswordIcon from '../../assets/images/forgot-password/forgot-password.svg';
-import Page from '../../components/page';
+import Page from 'components/page';
+import { Input } from 'components/forms/input';
 
 const ForgotPassword: FC = () => {
   const {formData, isSubmitting, submitHandler} = useFormLogic();

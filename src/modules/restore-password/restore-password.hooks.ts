@@ -15,7 +15,7 @@ import {
   NavigationProp,
   RootStackParamList,
 } from '../navigation/navigation.types';
-import {getApiOrUnknownErrorMessage} from '../../utils';
+import { getApiOrUnknownErrorMessage } from 'src/shared/utils/errors';
 
 export const useIsPasswordVisible = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);

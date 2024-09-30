@@ -1,12 +1,9 @@
 import {useMutation} from '@tanstack/react-query';
 
 import {logIn} from './sign-in.api';
-import {
-  storeJwtAccessToken,
-  storeJwtRefreshToken,
-} from '../../../utils/secure-storage';
+import {storeJwtAccessToken, storeJwtRefreshToken} from '../../utils/secure-storage';
 
-export const useSignIn = () =>
+const useSignIn = () =>
   useMutation({
     mutationFn: logIn,
     onSuccess: async ({accessToken, refreshToken}) => {
@@ -16,3 +13,5 @@ export const useSignIn = () =>
       ]);
     },
   });
+
+export default useSignIn;

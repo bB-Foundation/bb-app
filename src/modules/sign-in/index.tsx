@@ -3,7 +3,6 @@ import {View} from 'react-native';
 import {Button, Layout, Text, useStyleSheet, Icon} from '@ui-kitten/components';
 import {FormProvider} from 'react-hook-form';
 
-import {Input} from '../../components/forms/input';
 import {signInStyles} from './sign-in.styles';
 import {
   useButtonHandlers,
@@ -11,7 +10,8 @@ import {
   useIsPasswordVisible,
 } from './sign-in.hooks';
 import LogInIcon from '../../assets/images/sign-in/login.svg';
-import Page from '../../components/page';
+import Page from 'components/page';
+import { Input } from 'components/forms/input';
 
 const SignIn: FC = () => {
   const {formData, isSubmitting, submitHandler} = useFormLogic();

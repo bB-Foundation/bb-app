@@ -7,8 +7,8 @@ import Toast from 'react-native-toast-message';
 import {SignInFormFields} from './sign-in.types';
 import {signInFormSchema} from './sign-in.api';
 import {NavigationProp} from '../navigation/navigation.types';
-import {getApiOrUnknownErrorMessage} from '../../utils';
-import {useSignIn} from '../../shared/hooks/sign-in';
+import useSignIn from 'hooks/sign-in';
+import { getApiOrUnknownErrorMessage } from 'src/shared/utils/errors';
 
 export const useIsPasswordVisible = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);

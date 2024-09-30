@@ -5,11 +5,11 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
 import {resendEmailVerification, verifyEmail} from './email-verification.api';
-import {getApiOrUnknownErrorMessage} from '../../utils';
 import {
   NavigationProp,
   RootStackParamList,
 } from '../navigation/navigation.types';
+import { getApiOrUnknownErrorMessage } from 'src/shared/utils/errors';
 
 export const useFormLogic = () => {
   const [verificationCode, setVerificationCode] = useState('');

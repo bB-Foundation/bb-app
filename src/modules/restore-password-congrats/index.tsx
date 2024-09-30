@@ -5,7 +5,7 @@ import {Button, Layout, useStyleSheet, Text} from '@ui-kitten/components';
 import SuccessIcon from '../../assets/images/success.svg';
 import rootStyles from './restore-password-congrats.styles';
 import {useButtonHandlers} from './restore-password-congrats.hooks';
-import Page from '../../components/page';
+import Page from 'components/page';
 
 const RestorePasswordCongrats: FC = () => {
   const {goToSingIn} = useButtonHandlers();

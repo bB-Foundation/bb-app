@@ -9,9 +9,9 @@ import {
   useFormLogic,
   useIsPasswordVisible,
 } from './sign-up.hooks';
-import {Input} from '../../components/forms/input';
 import WelcomeIcon from '../../assets/images/sign-up/people.svg';
-import Page from '../../components/page';
+import Page from 'components/page';
+import { Input } from 'components/forms/input';
 
 const SignUp: FC = () => {
   const {formData, isSubmitting, submitHandler} = useFormLogic();

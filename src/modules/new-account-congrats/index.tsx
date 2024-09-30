@@ -5,7 +5,7 @@ import {Button, Layout, useStyleSheet, Text} from '@ui-kitten/components';
 import SuccessIcon from '../../assets/images/success.svg';
 import rootStyles from './new-account-congrats.styles';
 import {useButtonHandlers} from './new-account-congrats.hooks';
-import Page from '../../components/page';
+import Page from 'components/page';
 
 const NewAccountCongrats: FC = () => {
   const {goToMain} = useButtonHandlers();

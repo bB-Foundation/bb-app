@@ -6,7 +6,7 @@ import Toast from 'react-native-toast-message';
 
 import {NavigationProp} from '../navigation/navigation.types';
 import {verifyPasswordRestore} from './restore-password-verification.api';
-import {getApiOrUnknownErrorMessage} from '../../utils';
+import { getApiOrUnknownErrorMessage } from 'src/shared/utils/errors';
 
 export const useFormLogic = () => {
   const [verificationCode, setVerificationCode] = useState('');

@@ -8,5 +8,15 @@ module.exports = {
         allowUndefined: false,
       },
     ],
+    [
+      'module-resolver',
+      {
+        alias: {
+          components: './src/components',
+          hooks: './src/shared/hooks',
+          src: './src',
+        },
+      },
+    ],
   ],
 };

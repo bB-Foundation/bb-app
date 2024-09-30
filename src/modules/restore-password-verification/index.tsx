@@ -7,9 +7,9 @@ import {
   useButtonHandlers,
   useFormLogic,
 } from './restore-password-verification.hooks';
-import CodeField from '../../components/forms/code-field';
 import MailIcon from '../../assets/images/subscribe.svg';
-import Page from '../../components/page';
+import Page from 'components/page';
+import CodeField from 'components/forms/code-field';
 
 const RestorePasswordVerification: FC = () => {
   const {exitToSignIn} = useButtonHandlers();

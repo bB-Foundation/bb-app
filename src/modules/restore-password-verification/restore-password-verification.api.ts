@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from 'configs/axios';
 
 export const verifyPasswordRestore = async (code: string) =>
-  (await axios.post<void>('/auth/verify-reset-code', {code})).data;
+  (await api.post<void>('/auth/verify-reset-code', {code})).data;

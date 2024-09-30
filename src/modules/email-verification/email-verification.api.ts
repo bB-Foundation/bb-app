@@ -1,8 +1,8 @@
-import axios from 'axios';
+import api from 'configs/axios';
 
 export const verifyEmail = async (verificationCode: string): Promise<void> =>
-  (await axios.post<void>('/auth/email-verification', {code: verificationCode}))
+  (await api.post<void>('/auth/email-verification', {code: verificationCode}))
     .data;
 
 export const resendEmailVerification = async (email: string): Promise<void> =>
-  (await axios.post<void>('/auth/resend-email-verification', {email})).data;
+  (await api.post<void>('/auth/resend-email-verification', {email})).data;

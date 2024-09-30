@@ -1,7 +1,7 @@
 import * as yup from 'yup';
-import axios from 'axios';
 
 import {RestorePasswordData} from './restore-password.types';
+import api from 'configs/axios';
 
 export const restorePasswordFormSchema = yup.object().shape({
   password: yup.string().min(8).required(),
@@ -9,5 +9,4 @@ export const restorePasswordFormSchema = yup.object().shape({
 
 export const restorePassword = async (
   data: RestorePasswordData,
-): Promise<void> =>
-  (await axios.post<void>('/auth/restore-password', data)).data;
+): Promise<void> => (await api.post<void>('/auth/restore-password', data)).data;

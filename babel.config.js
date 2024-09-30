@@ -14,6 +14,7 @@ module.exports = {
         alias: {
           components: './src/components',
           hooks: './src/shared/hooks',
+          configs: './src/configs',
           src: './src',
         },
       },

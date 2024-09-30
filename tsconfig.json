@@ -5,6 +5,7 @@
     "paths": {
       "components/*": ["src/components/*"],
       "hooks/*": ["src/shared/hooks/*"],
+      "configs/*": ["src/configs/*"],
       "src/*": ["src/*"]
     }
   }

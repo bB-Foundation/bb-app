@@ -8,9 +8,11 @@ import {
 } from '../shared/utils/secure-storage';
 import {refreshAuthToken} from '../shared/hooks/sign-in/sign-in.api';
 
-axios.defaults.baseURL = process.env.BACKEND_API_URL;
+const api = axios.create({
+  baseURL: process.env.BACKEND_API_URL,
+});
 
-axios.interceptors.request.use(async config => {
+api.interceptors.request.use(async config => {
   try {
     const accessToken = await getJwtAccessToken();
     if (accessToken) {
@@ -23,7 +25,7 @@ axios.interceptors.request.use(async config => {
   }
 });
 
-axios.interceptors.response.use(
+api.interceptors.response.use(
   response => response,
   async error => {
     const originalRequest = error.config;
@@ -54,3 +56,5 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+export default api;

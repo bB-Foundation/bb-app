@@ -8,7 +8,7 @@ import {SignInFormFields} from './sign-in.types';
 import {signInFormSchema} from './sign-in.api';
 import {NavigationProp} from '../navigation/navigation.types';
 import {getApiOrUnknownErrorMessage} from '../../utils';
-import { useLogIn } from '../../shared/sign-in/sign-in.hooks';
+import {useSignIn} from '../../shared/hooks/sign-in';
 
 export const useIsPasswordVisible = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -26,11 +26,11 @@ export const useFormLogic = () => {
   });
   const {handleSubmit} = formData;
 
-  const {mutateAsync: logInAsync, isPending: isSubmitting} = useLogIn();
+  const {mutateAsync: signIn, isPending: isSubmitting} = useSignIn();
 
   const onSubmit = async (data: SignInFormFields) => {
     try {
-      await logInAsync(data);
+      await signIn(data);
       navigation.navigate('main');
     } catch (error) {
       Toast.show({

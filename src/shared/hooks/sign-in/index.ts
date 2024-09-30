@@ -4,9 +4,9 @@ import {logIn} from './sign-in.api';
 import {
   storeJwtAccessToken,
   storeJwtRefreshToken,
-} from '../../utils/secure-storage';
+} from '../../../utils/secure-storage';
 
-export const useLogIn = () =>
+export const useSignIn = () =>
   useMutation({
     mutationFn: logIn,
     onSuccess: async ({accessToken, refreshToken}) => {

@@ -6,7 +6,7 @@ import {
   storeJwtAccessToken,
   storeJwtRefreshToken,
 } from '../utils/secure-storage';
-import {refreshAuthToken} from '../shared/sign-in/sign-in.api';
+import {refreshAuthToken} from '../shared/hooks/sign-in/sign-in.api';
 
 axios.defaults.baseURL = process.env.BACKEND_API_URL;
 

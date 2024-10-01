@@ -16,7 +16,7 @@ api.interceptors.request.use(async config => {
   try {
     const accessToken = await getJwtAccessToken();
     if (accessToken) {
-      config.headers.Authorization = `bearer ${accessToken}`;
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
   } catch (error) {
     Promise.reject(error);
@@ -46,7 +46,7 @@ api.interceptors.response.use(
           storeJwtRefreshToken(response.refreshToken),
         ]);
 
-        originalRequest.headers.Authorization = `bearer ${response.accessToken}`;
+        originalRequest.headers.Authorization = `Bearer ${response.accessToken}`;
         return axios(originalRequest);
       } catch (e) {
         Promise.reject(e);

@@ -16,6 +16,8 @@ import NewAccountCongrats from '../new-account-congrats';
 import Main from '../main';
 import RestorePasswordCongrats from '../restore-password-congrats';
 import RestorePassword from '../restore-password';
+import Quests from '../quests';
+import Quest from '../quest';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -50,6 +52,8 @@ const Navigator: FC = () => {
             component={NewAccountCongrats}
           />
           <Stack.Screen name="main" component={Main} />
+          <Stack.Screen name="quests" component={Quests} />
+          <Stack.Screen name="quest" component={Quest} />
         </Stack.Navigator>
       </NavigationContainer>
 

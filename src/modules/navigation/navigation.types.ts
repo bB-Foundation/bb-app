@@ -10,6 +10,8 @@ export type RootStackParamList = {
   'email-verification': {email: string};
   'new-account-congrats': undefined;
   main: undefined;
+  quests: undefined;
+  quest: {questId: number};
 };
 
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList>;

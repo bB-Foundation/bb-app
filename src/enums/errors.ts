@@ -1,3 +1,3 @@
 export enum Errors {
-  UNKNOWN = 'Unknown error',
+  UNKNOWN = 'Something went wrong. Please try again later.',
 }

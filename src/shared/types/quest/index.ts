@@ -1,6 +1,6 @@
-import Milestone from './milestone';
-import {Nullable} from './tools';
-import User from './user';
+import Milestone from '../milestone';
+import {Nullable} from '../tools';
+import User from '../user';
 
 type Quest = {
   id: number;

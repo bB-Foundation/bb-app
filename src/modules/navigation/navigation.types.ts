@@ -12,6 +12,7 @@ export type RootStackParamList = {
   main: undefined;
   quests: undefined;
   quest: {questId: number};
+  'quests-filters-modal': undefined;
 };
 
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList>;

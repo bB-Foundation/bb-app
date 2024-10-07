@@ -2,29 +2,26 @@ import React, {FC} from 'react';
 import {Image, ListRenderItemInfo, View} from 'react-native';
 import {Button, Layout, Text, Card, List} from '@ui-kitten/components';
 
-import Quest from 'types/quest';
 import styles from './list.styles';
-import {translateQuestCategory} from './list.api';
 import ImageOverlay from 'components/image-overlay';
 import {useQuestsListLogic} from './quests-list.hooks';
+import {translateQuestCategory} from 'src/shared/api/quests';
+import QuestWithDistance from 'types/quest/quest-with-distance';
+import {QuestsListProps} from './quests-list.types';
 
-type Props = {
-  quests: Quest[];
-};
-
-export const QuestsList: FC<Props> = ({quests}) => {
+export const QuestsList: FC<QuestsListProps> = ({quests}) => {
   const {goToQuest} = useQuestsListLogic();
 
   const renderItemHeader = (
-    info: ListRenderItemInfo<Quest>,
+    quest: ListRenderItemInfo<QuestWithDistance>,
   ): React.ReactElement => (
     <ImageOverlay style={styles.itemHeader}>
       <View style={styles.itemHeaderDetails}>
         <Text category="h4" status="control" style={styles.cardTitle}>
-          {info.item.title}
+          {quest.item.title}
         </Text>
         <Text category="s1" status="control" style={styles.distanceFromQuest}>
-          30000m
+          {Math.round(quest.item.distanceInKm * 1000)}m
         </Text>
       </View>
 
@@ -34,13 +31,15 @@ export const QuestsList: FC<Props> = ({quests}) => {
           source={require('src/assets/images/quests/assets/gem-white.png')}
         />
         <Text category="h4" status="control">
-          100
+          {quest.item.milestones.length}
         </Text>
       </View>
     </ImageOverlay>
   );
 
-  const renderItem = (quest: ListRenderItemInfo<Quest>): React.ReactElement => {
+  const renderItem = (
+    quest: ListRenderItemInfo<QuestWithDistance>,
+  ): React.ReactElement => {
     const playersAmount = quest.item.users.length;
 
     const playerLabel = playersAmount > 1 ? 'players' : 'player';

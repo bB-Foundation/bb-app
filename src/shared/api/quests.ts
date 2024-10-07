@@ -1,4 +1,4 @@
-import {QuestCategory} from 'types/quest';
+import {QuestCategory} from '../types/quest';
 
 export const translateQuestCategory = (
   questCategory: QuestCategory,

@@ -49,22 +49,16 @@ const useDefineUserParticipateQuest = (quest: Quest | undefined) => {
 export const useButtonHandlers = () => {
   const queryClient = useQueryClient();
 
-  const refetchQuests = async (questId: number) =>
-    Promise.all([
-      await queryClient.invalidateQueries({
-        queryKey: queryKeys.getQuestById(questId),
-      }),
-
-      await queryClient.invalidateQueries({
-        queryKey: queryKeys.getQuests(),
-      }),
-    ]);
+  const refetchCurrentQuestQuests = async (questId: number) =>
+    queryClient.invalidateQueries({
+      queryKey: queryKeys.getQuestById(questId),
+    });
 
   const joinQuestHandler = async (data: JoinQuestData) => {
     try {
       await joinQuest(data);
 
-      await refetchQuests(data.questId);
+      await refetchCurrentQuestQuests(data.questId);
 
       Toast.show({
         type: 'success',
@@ -84,7 +78,7 @@ export const useButtonHandlers = () => {
     try {
       await leaveQuest(data);
 
-      await refetchQuests(data.questId);
+      await refetchCurrentQuestQuests(data.questId);
 
       Toast.show({
         type: 'success',

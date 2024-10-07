@@ -2,14 +2,17 @@ import React, {FC} from 'react';
 
 import Page from 'components/page';
 import {useQuestsLogic} from './quests.hooks';
-import { QuestsList } from './components/list/quests-list';
+import {OverlayLoader} from 'components/overlay-loader';
+import {Content} from './components/content';
 
 const Quests: FC = () => {
-  const {quests} = useQuestsLogic();
+  const {geoPosition, showLoader} = useQuestsLogic();
 
   return (
     <Page>
-      <QuestsList quests={quests} />
+      {geoPosition && <Content geoPosition={geoPosition} />}
+
+      {showLoader && <OverlayLoader />}
     </Page>
   );
 };

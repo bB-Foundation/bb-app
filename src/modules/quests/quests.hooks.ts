@@ -1,28 +1,38 @@
-import {useQuery} from '@tanstack/react-query';
-import Toast from 'react-native-toast-message';
+import {useEffect} from 'react';
+import {RootState} from 'src/redux-store';
+import {useDispatch, useSelector} from 'react-redux';
 
-import {getQuests} from './quests.api';
-import queryKeys from 'configs/query-keys';
-import {Errors} from 'src/enums/errors';
+import useGeoPosition from 'hooks/geo-position';
+import {
+  hideLoader,
+  showLoader as showLoaderFn,
+} from 'src/redux-store/slices/quests-page';
 
 export const useQuestsLogic = () => {
-  const {data: quests = [], error: loadQuestsError} = useQuests();
-  if (loadQuestsError) {
-    Toast.show({
-      type: 'error',
-      text1: 'Error',
-      text2: Errors.UNKNOWN,
-    });
-  }
+  const dispatch = useDispatch();
 
-  return {
-    quests,
-  };
+  const {showLoader: showLoader} = useSelector(
+    (state: RootState) => state.questsPage,
+  );
+
+  const {
+    geoPosition,
+    getGeoPositionError,
+    isPermissionDenied,
+    isGetPermissionError,
+  } = useGeoPosition();
+
+  // show loader on mount
+  useEffect(() => {
+    dispatch(showLoaderFn());
+  }, [dispatch]);
+
+  // hide loader on error
+  useEffect(() => {
+    if (getGeoPositionError || isPermissionDenied || isGetPermissionError) {
+      dispatch(hideLoader());
+    }
+  }, [getGeoPositionError, isPermissionDenied, isGetPermissionError, dispatch]);
+
+  return {geoPosition, showLoader};
 };
-
-const useQuests = () =>
-  useQuery({
-    queryKey: queryKeys.getQuests(),
-    queryFn: getQuests,
-    select: data => data.quests,
-  });

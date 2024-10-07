@@ -1,29 +1,37 @@
 import React, {FC} from 'react';
 import {View} from 'react-native';
 import {Button, Layout, useStyleSheet, Text} from '@ui-kitten/components';
+import WebView from 'react-native-webview';
 
 import rootStyles from './email-verification.styles';
-import {useButtonHandlers, useFormLogic} from './email-verification.hooks';
+import {
+  useButtonHandlers,
+  useCreateWallet,
+  useFormLogic,
+} from './email-verification.hooks';
 import MailIcon from '../../assets/images/subscribe.svg';
-import CodeField from 'components/forms/code-field';
 import Page from 'components/page';
+import webApp from './components/web-app';
+import {VerificationCodeField} from './components/verification-code-field';
+import {SubmitButton} from './components/submit-button';
 
 const EmailVerification: FC = () => {
-  const {
-    verificationCode,
-    isValidVerificationCode,
-    isSubmitting,
-    setVerificationCode,
-    onSubmit,
-    resendEmailVerification,
-  } = useFormLogic();
+  const {onSubmit} = useFormLogic();
 
-  const {exitToSignIn} = useButtonHandlers();
+  const {resendEmailVerificationHandler, exitToSignIn} = useButtonHandlers();
+
+  const {webBrowserRef, onWebBrowserMessage} = useCreateWallet();
 
   const styles = useStyleSheet(rootStyles);
 
   return (
     <Page>
+      <WebView
+        ref={webBrowserRef}
+        source={{html: webApp}}
+        onMessage={onWebBrowserMessage}
+      />
+
       <View style={styles.container}>
         <View>
           <View style={styles.iconWrapper}>
@@ -39,15 +47,12 @@ const EmailVerification: FC = () => {
               Please enter the 6-digit code
             </Text>
 
-            <CodeField
-              value={verificationCode}
-              setValue={setVerificationCode}
-            />
+            <VerificationCodeField />
 
             <Button
               appearance="ghost"
               status="basic"
-              onPress={resendEmailVerification}
+              onPress={resendEmailVerificationHandler}
               testID="resend-verification-code-button">
               Resend verification code
             </Button>
@@ -55,14 +60,7 @@ const EmailVerification: FC = () => {
         </View>
 
         <View>
-          <Button
-            style={styles.submitButton}
-            size="giant"
-            onPress={onSubmit}
-            disabled={!isValidVerificationCode || isSubmitting}
-            testID="submit-button">
-            VERIFY
-          </Button>
+          <SubmitButton onSubmit={onSubmit} />
 
           <Button
             style={styles.goBackButton}

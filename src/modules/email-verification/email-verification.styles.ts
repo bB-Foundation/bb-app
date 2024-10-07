@@ -36,9 +36,7 @@ export default StyleService.create({
   emailInput: {
     marginTop: 16,
   },
-  submitButton: {
-    marginHorizontal: 16,
-  },
+
   goBackButton: {
     marginVertical: 12,
     marginHorizontal: 16,

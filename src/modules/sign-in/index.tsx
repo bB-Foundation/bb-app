@@ -77,7 +77,8 @@ const SignIn: FC = () => {
             size="giant"
             onPress={submitHandler}
             disabled={isSubmitting}
-            testID="submit-button">
+            testID="submit-button"
+            >
             SIGN IN
           </Button>
 

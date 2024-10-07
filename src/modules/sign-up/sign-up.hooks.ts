@@ -8,7 +8,8 @@ import Toast from 'react-native-toast-message';
 import {SignUpFormFields} from './sign-up.types';
 import {signUp, signUpFormSchema} from './sign-up.api';
 import {NavigationProp} from '../navigation/navigation.types';
-import { getApiOrUnknownErrorMessage } from 'src/shared/utils/errors';
+import {getApiOrUnknownErrorMessage} from 'src/shared/utils/errors';
+import useSignIn from 'hooks/sign-in';
 
 export const useIsPasswordVisible = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -24,13 +25,16 @@ export const useFormLogic = () => {
   });
   const {handleSubmit} = formData;
 
-  const {mutateAsync: signUpAsync, isPending} = useSignUp();
+  const {mutateAsync: signUpAsync, isPending: isPendingSignUp} = useSignUp();
+
+  const {mutateAsync: signIn, isPending: isPendingSignIn} = useSignIn();
 
   const navigation = useNavigation<NavigationProp>();
 
   const onSubmit = async (data: SignUpFormFields) => {
     try {
       await signUpAsync(data);
+      await signIn(data);
       navigation.navigate('email-verification', {
         email: data.email,
       });
@@ -45,7 +49,11 @@ export const useFormLogic = () => {
 
   const submitHandler = handleSubmit(onSubmit);
 
-  return {formData, submitHandler, isSubmitting: isPending};
+  return {
+    formData,
+    submitHandler,
+    isSubmitting: isPendingSignUp || isPendingSignIn,
+  };
 };
 
 export const useButtonHandlers = () => {

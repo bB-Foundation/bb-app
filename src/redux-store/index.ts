@@ -1,10 +1,11 @@
 import {configureStore} from '@reduxjs/toolkit';
 
-import {questsPage} from './slices';
+import {emailVerificationPage, questsPage} from './slices';
 
 const store = configureStore({
   reducer: {
     questsPage,
+    emailVerificationPage,
   },
 });
 

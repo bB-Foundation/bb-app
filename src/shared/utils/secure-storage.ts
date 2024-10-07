@@ -3,6 +3,8 @@ import * as Keychain from 'react-native-keychain';
 enum TokenNames {
   JWT_ACCESS = 'JWT_ACCESS',
   JWT_REFRESH = 'JWT_REFRESH',
+  USER_PASSWORD = 'USER_PASSWORD',
+  USER_PRIVATE_KEY = 'USER_PRIVATE_KEY',
 }
 
 const storeToken = async (tokenName: string, tokenValue: string) => {
@@ -55,6 +57,38 @@ export const storeJwtRefreshToken = async (tokenValue: string) => {
 export const getJwtRefreshToken = async () => {
   try {
     return await getToken(TokenNames.JWT_REFRESH);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const storeUserPassword = async (password: string) => {
+  try {
+    await storeToken(TokenNames.USER_PASSWORD, password);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getUserPassword = async () => {
+  try {
+    return await getToken(TokenNames.USER_PASSWORD);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const storeUserPrivateKey = async (privateKey: string) => {
+  try {
+    await storeToken(TokenNames.USER_PRIVATE_KEY, privateKey);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getUserPrivateKey = async () => {
+  try {
+    return await getToken(TokenNames.USER_PRIVATE_KEY);
   } catch (error) {
     throw error;
   }

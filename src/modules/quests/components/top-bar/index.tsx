@@ -10,9 +10,9 @@ export const TopBar = () => {
 
   return (
     <View style={styles.container}>
-      <Button status="basic" style={styles.button}>
+      {/* <Button status="basic" style={styles.button}>
         Sort by
-      </Button>
+      </Button> */}
       <Button status="basic" style={styles.button} onPress={openFiltersModal}>
         Filter
       </Button>

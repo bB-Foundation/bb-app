@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 import {useDispatch, useSelector} from 'react-redux';
@@ -15,6 +15,8 @@ import Quest from 'types/quest';
 
 export const useContentLogic = (geoPosition: GeoPosition) => {
   const dispatch = useDispatch();
+
+  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
 
   const {questsFilters} = useSelector((state: RootState) => state.questsPage);
 
@@ -42,6 +44,8 @@ export const useContentLogic = (geoPosition: GeoPosition) => {
 
   return {
     quests,
+    selectedTabIndex,
+    setSelectedTabIndex,
   };
 };
 

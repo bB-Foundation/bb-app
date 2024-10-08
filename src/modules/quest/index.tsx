@@ -9,7 +9,8 @@ import AdvantageItem from './components/advantage-item';
 import themedStyles from './quest.styles';
 
 const Quest: FC = () => {
-  const {quest, isUserParticipateQuest} = useQuestLogic();
+  const {quest, isUserParticipateQuest, distanceFromQuestInKm} =
+    useQuestLogic();
 
   const {joinQuestHandler, leaveQuestHandler} = useButtonHandlers();
 
@@ -24,7 +25,14 @@ const Quest: FC = () => {
           <AdvantageItem hint="Players" value={quest.users.length} />
           <AdvantageItem hint="Status" value={quest.status} />
           <AdvantageItem hint="Difficulty" value={quest.difficulty} />
-          <AdvantageItem hint="From you" value="300m" />
+          <AdvantageItem
+            hint="From you"
+            value={
+              distanceFromQuestInKm === undefined
+                ? ''
+                : `${Math.round(distanceFromQuestInKm * 1000)}m`
+            }
+          />
         </View>
       </View>
     </View>
@@ -49,7 +57,7 @@ const Quest: FC = () => {
               style={styles.gemImage}
               source={require('src/assets/images/quests/assets/gem-black.png')}
             />
-            <Text category="h4">100</Text>
+            <Text category="h4">{quest.milestones.length}</Text>
           </View>
 
           {/* TODO add loading indicator inside button and disable it while loading */}

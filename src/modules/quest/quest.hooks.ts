@@ -5,6 +5,7 @@ import Toast from 'react-native-toast-message';
 
 import {RootStackParamList} from '../navigation/navigation.types';
 import {
+  calculateDistanceFromQuestInKm,
   defineUserParticipateQuest,
   getQuestById,
   joinQuest,
@@ -15,17 +16,26 @@ import {getApiOrUnknownErrorMessage} from 'src/shared/utils/errors';
 import queryKeys from 'configs/query-keys';
 import useCurrentUserProfile from 'hooks/current-user';
 import Quest from 'types/quest';
+import useGeoPosition from 'hooks/geo-position';
 
 export const useQuestLogic = () => {
   const {
     params: {questId},
   } = useRoute<RouteProp<RootStackParamList, 'quest'>>();
 
+  const {geoPosition} = useGeoPosition();
+
   const {data: quest} = useQuest(questId);
 
   const isUserParticipateQuest = useDefineUserParticipateQuest(quest);
 
-  return {quest, isUserParticipateQuest};
+  const distanceFromQuestInKm = calculateDistanceFromQuestInKm(
+    geoPosition?.coords.latitude,
+    geoPosition?.coords.longitude,
+    quest,
+  );
+
+  return {quest, isUserParticipateQuest, distanceFromQuestInKm};
 };
 
 const useQuest = (questId: number) =>

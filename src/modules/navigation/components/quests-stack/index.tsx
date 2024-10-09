@@ -1,11 +1,11 @@
-import React from 'react';
+import React, {FC} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {QuestsStackParamList} from '../../navigation.types';
 import Quests from 'src/modules/quests';
 import Quest from 'src/modules/quest';
 
-const QuestsStack = () => {
+const QuestsStack: FC = () => {
   const Stack = createNativeStackNavigator<QuestsStackParamList>();
 
   return (

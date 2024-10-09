@@ -20,6 +20,13 @@ export type QuestsStackParamList = {
   };
 };
 
+export type QrCodeStackParamList = {
+  'qr-scanner-camera': undefined;
+  'check-milestone-qr-code': {
+    milestoneUuid: string;
+  };
+};
+
 export type NavigationProp = NativeStackNavigationProp<
-  RootStackParamList & QuestsStackParamList
+  RootStackParamList & QuestsStackParamList & QrCodeStackParamList
 >;

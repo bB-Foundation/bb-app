@@ -1,8 +1,8 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import QuestsStack from '../questss-stack';
-import QrScanner from 'src/modules/qr-scanner';
+import QuestsStack from '../quests-stack';
+import QrCodeStack from '../qr-code-stack';
 
 const BottomTabs = () => {
   const BottomTab = createBottomTabNavigator();
@@ -23,7 +23,7 @@ const BottomTabs = () => {
       />
       <BottomTab.Screen
         name="qr-scanner"
-        component={QrScanner}
+        component={QrCodeStack}
         options={{
           tabBarLabel: 'QR scanner',
           tabBarLabelStyle: {fontSize: 16},

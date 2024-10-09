@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useQueryClient} from '@tanstack/react-query';
 
 import queryKeys from 'configs/query-keys';
-import { NavigationProp } from 'src/modules/navigation/navigation.types';
+import {NavigationProp} from 'src/modules/navigation/navigation.types';
 import Quest from 'types/quest';
 
 export const useQuestsListLogic = () => {

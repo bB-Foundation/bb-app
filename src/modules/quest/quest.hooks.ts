@@ -3,7 +3,7 @@ import {RouteProp, useRoute} from '@react-navigation/native';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 
-import {RootStackParamList} from '../navigation/navigation.types';
+import {QuestsStackParamList} from '../navigation/navigation.types';
 import {
   calculateDistanceFromQuestInKm,
   defineUserParticipateQuest,
@@ -21,7 +21,7 @@ import useGeoPosition from 'hooks/geo-position';
 export const useQuestLogic = () => {
   const {
     params: {questId},
-  } = useRoute<RouteProp<RootStackParamList, 'quest'>>();
+  } = useRoute<RouteProp<QuestsStackParamList, 'quest'>>();
 
   const {geoPosition} = useGeoPosition();
 

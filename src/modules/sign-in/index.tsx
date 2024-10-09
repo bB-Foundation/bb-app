@@ -6,12 +6,13 @@ import {FormProvider} from 'react-hook-form';
 import {signInStyles} from './sign-in.styles';
 import {
   useButtonHandlers,
+  useCheckAuth,
   useFormLogic,
   useIsPasswordVisible,
 } from './sign-in.hooks';
 import LogInIcon from '../../assets/images/sign-in/login.svg';
 import Page from 'components/page';
-import { Input } from 'components/forms/input';
+import {Input} from 'components/forms/input';
 
 const SignIn: FC = () => {
   const {formData, isSubmitting, submitHandler} = useFormLogic();
@@ -22,6 +23,8 @@ const SignIn: FC = () => {
 
   const {onSignUpButtonPress, onForgotPasswordButtonPress} =
     useButtonHandlers();
+
+  useCheckAuth();
 
   return (
     <Page>
@@ -77,8 +80,7 @@ const SignIn: FC = () => {
             size="giant"
             onPress={submitHandler}
             disabled={isSubmitting}
-            testID="submit-button"
-            >
+            testID="submit-button">
             SIGN IN
           </Button>
 

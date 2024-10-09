@@ -9,7 +9,7 @@ const Quests: FC = () => {
   const {geoPosition, showLoader} = useQuestsLogic();
 
   return (
-    <Page>
+    <Page isSafeContainer={false}>
       {geoPosition && <Content geoPosition={geoPosition} />}
 
       {showLoader && <OverlayLoader />}

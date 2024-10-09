@@ -1,31 +1,27 @@
-import React, {FC, ReactNode} from 'react';
-import {KeyboardAvoidingView, Platform, ScrollView} from 'react-native';
+import React, {FC} from 'react';
+import {View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useStyleSheet} from '@ui-kitten/components';
 
 import rootStyles from './page.styles';
+import ContentWrapper from './components/content-wrapper';
+import {PageProps} from './page.types';
 
-type Props = {children: ReactNode};
-
-const Page: FC<Props> = ({children}) => {
+const Page: FC<PageProps> = ({children, isSafeContainer}) => {
   const styles = useStyleSheet(rootStyles);
 
+  if (isSafeContainer === true || isSafeContainer === undefined) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ContentWrapper>{children}</ContentWrapper>
+      </SafeAreaView>
+    );
+  }
+
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-        style={styles.keyboardAvoidingView}
-        contentContainerStyle={styles.keyboardAvoidingView}>
-        <ScrollView
-          bounces={false}
-          contentContainerStyle={styles.scrollContainer}
-          contentInsetAdjustmentBehavior="always"
-          overScrollMode="always"
-          showsVerticalScrollIndicator={true}>
-          {children}
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <ContentWrapper>{children}</ContentWrapper>
+    </View>
   );
 };
 

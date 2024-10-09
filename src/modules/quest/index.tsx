@@ -7,6 +7,7 @@ import Page from 'components/page';
 import ImageOverlay from 'components/image-overlay';
 import AdvantageItem from './components/advantage-item';
 import themedStyles from './quest.styles';
+import {MilestonesMap} from './components/milestones-map';
 
 const Quest: FC = () => {
   const {quest, isUserParticipateQuest, distanceFromQuestInKm} =
@@ -18,28 +19,33 @@ const Quest: FC = () => {
 
   if (!quest) return null;
 
-  const renderCardFooter = (): React.ReactElement => (
-    <View style={styles.footerContainer}>
-      <View style={styles.optionList}>
-        <View style={styles.advantagesContainer}>
-          <AdvantageItem hint="Players" value={quest.users.length} />
-          <AdvantageItem hint="Status" value={quest.status} />
-          <AdvantageItem hint="Difficulty" value={quest.difficulty} />
-          <AdvantageItem
-            hint="From you"
-            value={
-              distanceFromQuestInKm === undefined
-                ? ''
-                : `${Math.round(distanceFromQuestInKm * 1000)}m`
-            }
-          />
+  const renderCardFooter = (): React.ReactElement => {
+    const playersHint =
+      quest.users.length > 1 || quest.users.length === 0 ? 'players' : 'player';
+
+    return (
+      <View style={styles.footerContainer}>
+        <View style={styles.optionList}>
+          <View style={styles.advantagesContainer}>
+            <AdvantageItem hint={playersHint} value={quest.users.length} />
+            <AdvantageItem hint="Status" value={quest.status} />
+            <AdvantageItem hint="Difficulty" value={quest.difficulty} />
+            <AdvantageItem
+              hint="From you"
+              value={
+                distanceFromQuestInKm === undefined
+                  ? ''
+                  : `${Math.round(distanceFromQuestInKm * 1000)}m`
+              }
+            />
+          </View>
         </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   return (
-    <Page>
+    <Page isSafeContainer={false}>
       <View style={styles.container}>
         <ImageOverlay style={styles.image} />
         <Card
@@ -85,6 +91,16 @@ const Quest: FC = () => {
           About
         </Text>
         <Text style={styles.description}>{quest.description}</Text>
+
+        {quest.milestones.length > 0 && (
+          <View>
+            <Text style={styles.sectionLabel} category="s1">
+              Milestones
+            </Text>
+
+            <MilestonesMap milestones={quest.milestones} />
+          </View>
+        )}
       </View>
     </Page>
   );

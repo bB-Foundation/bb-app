@@ -45,7 +45,7 @@ const Quest: FC = () => {
   };
 
   return (
-    <Page isSafeContainer={false}>
+    <Page isBottomTabContainer>
       <View style={styles.container}>
         <ImageOverlay style={styles.image} />
         <Card

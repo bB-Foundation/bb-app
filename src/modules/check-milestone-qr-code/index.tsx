@@ -12,7 +12,7 @@ export const CheckMilestoneQrCode: FC = () => {
   const {isProcessing} = useCheckQrCode();
 
   return (
-    <Page isSafeContainer={false}>
+    <Page isBottomTabContainer>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
           <CheckLocation width="100%" height="100%" />

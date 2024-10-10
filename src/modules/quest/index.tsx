@@ -7,7 +7,7 @@ import Page from 'components/page';
 import ImageOverlay from 'components/image-overlay';
 import AdvantageItem from './components/advantage-item';
 import themedStyles from './quest.styles';
-import {MilestonesMap} from './components/milestones-map';
+import {QuestTasksMap} from './components/quest-tasks-map';
 
 const Quest: FC = () => {
   const {quest, isUserParticipateQuest, distanceFromQuestInKm} =
@@ -29,7 +29,6 @@ const Quest: FC = () => {
           <View style={styles.advantagesContainer}>
             <AdvantageItem hint={playersHint} value={quest.users.length} />
             <AdvantageItem hint="Status" value={quest.status} />
-            <AdvantageItem hint="Difficulty" value={quest.difficulty} />
             <AdvantageItem
               hint="From you"
               value={
@@ -47,7 +46,7 @@ const Quest: FC = () => {
   return (
     <Page isBottomTabContainer>
       <View style={styles.container}>
-        <ImageOverlay style={styles.image} />
+        <ImageOverlay style={styles.image} source={{uri: quest.imgUrl}} />
         <Card
           style={styles.bookingCard}
           appearance="filled"
@@ -63,11 +62,9 @@ const Quest: FC = () => {
               style={styles.gemImage}
               source={require('src/assets/images/quests/assets/gem-black.png')}
             />
-            <Text category="h4">{quest.milestones.length}</Text>
+            <Text category="h4">{quest.tasks.length}</Text>
           </View>
 
-          {/* TODO add loading indicator inside button and disable it while loading */}
-          {/* TODO don't show buttons before isUserParticipateQuest loaded */}
           {isUserParticipateQuest ? (
             <Button
               style={styles.bookButton}
@@ -92,13 +89,13 @@ const Quest: FC = () => {
         </Text>
         <Text style={styles.description}>{quest.description}</Text>
 
-        {quest.milestones.length > 0 && (
+        {quest.tasks.length > 0 && (
           <View>
             <Text style={styles.sectionLabel} category="s1">
-              Milestones
+              Tasks
             </Text>
 
-            <MilestonesMap milestones={quest.milestones} />
+            <QuestTasksMap questTasks={quest.tasks} />
           </View>
         )}
       </View>

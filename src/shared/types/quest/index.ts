@@ -1,4 +1,4 @@
-import Milestone from '../milestone';
+import QuestTask from './quest-task';
 import {Nullable} from '../tools';
 import User from '../user';
 
@@ -6,13 +6,13 @@ type Quest = {
   id: number;
   title: string;
   description: string;
-  difficulty: QuestDifficultyLevel;
   latitude: string;
   longitude: string;
   contractAddress: Nullable<string>;
   category: QuestCategory;
   status: QuestStatus;
-  milestones: Milestone[];
+  imgUrl: string;
+  tasks: QuestTask[];
   users: User[];
 };
 

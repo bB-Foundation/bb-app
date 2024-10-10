@@ -2,13 +2,13 @@ import React, {FC} from 'react';
 import {View} from 'react-native';
 import {Text} from '@ui-kitten/components';
 
-import styles from './check-milestone-qr-code.styles';
+import styles from './check-quest-task-qr-code.styles';
 import CheckLocation from '../../assets/images/qr-code/check-location.svg';
 import Page from 'components/page';
 import Spinner from 'components/spinner';
-import {useCheckQrCode} from './check-milestone-qr-code.hooks';
+import {useCheckQrCode} from './check-quest-task-qr-code.hooks';
 
-export const CheckMilestoneQrCode: FC = () => {
+export const CheckQuestTaskQrCode: FC = () => {
   const {isProcessing} = useCheckQrCode();
 
   return (

@@ -3,7 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {QrCodeStackParamList} from '../../navigation.types';
 import QrScanner from 'src/modules/qr-scanner';
-import {CheckMilestoneQrCode} from 'src/modules/check-milestone-qr-code';
+import {CheckQuestTaskQrCode} from 'src/modules/check-quest-task-qr-code';
 
 const QrCodeStack: FC = () => {
   const Stack = createNativeStackNavigator<QrCodeStackParamList>();
@@ -15,8 +15,8 @@ const QrCodeStack: FC = () => {
       }}>
       <Stack.Screen name="qr-scanner-camera" component={QrScanner} />
       <Stack.Screen
-        name="check-milestone-qr-code"
-        component={CheckMilestoneQrCode}
+        name="check-quest-task-qr-code"
+        component={CheckQuestTaskQrCode}
       />
     </Stack.Navigator>
   );

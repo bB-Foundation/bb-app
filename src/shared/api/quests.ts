@@ -1,4 +1,5 @@
-import {QuestCategory} from '../types/quest';
+import api from 'configs/axios';
+import Quest, {QuestCategory} from '../types/quest';
 
 export const translateQuestCategory = (
   questCategory: QuestCategory,
@@ -13,3 +14,6 @@ export const translateQuestCategory = (
 
   return mapper.get(questCategory) ?? questCategory;
 };
+
+export const getQuestById = async (questId: number): Promise<Quest> =>
+  (await api.get<Quest>(`/quest/${questId}`)).data;

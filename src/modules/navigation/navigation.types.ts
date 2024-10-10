@@ -22,8 +22,8 @@ export type QuestsStackParamList = {
 
 export type QrCodeStackParamList = {
   'qr-scanner-camera': undefined;
-  'check-milestone-qr-code': {
-    milestoneUuid: string;
+  'check-quest-task-qr-code': {
+    questTaskId: number;
   };
 };
 

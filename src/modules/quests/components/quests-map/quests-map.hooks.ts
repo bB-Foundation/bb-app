@@ -1,10 +1,14 @@
+import {useNavigation} from '@react-navigation/native';
 import {useEffect, useRef, useState} from 'react';
 import MapView, {UserLocationChangeEvent} from 'react-native-maps';
 
 import QuestWithDistance from 'types/quest/quest-with-distance';
+import {NavigationProp} from 'src/modules/navigation/navigation.types';
 
 export const useMapLogic = (quests: QuestWithDistance[]) => {
   const mapRef = useRef<MapView>(null);
+
+  const navigation = useNavigation<NavigationProp>();
 
   const [isCameraMovedToUserPoint, setIsCameraMovedToUserPoint] =
     useState(false);
@@ -26,6 +30,10 @@ export const useMapLogic = (quests: QuestWithDistance[]) => {
 
     setStartingUserCoordinates(coordinate);
     setIsCameraMovedToUserPoint(true);
+  };
+
+  const goToQuest = (questId: number) => {
+    navigation.navigate('quest', {questId});
   };
 
   /** fit map to all quests markers */
@@ -62,5 +70,5 @@ export const useMapLogic = (quests: QuestWithDistance[]) => {
     }
   }, [quests, startingUserCoordinates]);
 
-  return {mapRef, onUserLocationChange};
+  return {mapRef, onUserLocationChange, goToQuest};
 };

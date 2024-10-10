@@ -1,4 +1,4 @@
 export const data = [
   {label: 'No city', value: null},
-  {label: 'Sydney', value: '1'},
+  {label: 'New York', value: '40.730610, -73.935242'},
 ];

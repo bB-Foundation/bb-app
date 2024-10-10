@@ -1,12 +1,13 @@
 import React, {FC} from 'react';
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {Callout, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import {Text} from '@ui-kitten/components';
 
-import {QuestsMapProps} from './quests-map.types';
 import styles from './quests-map.styles';
 import {useMapLogic} from './quests-map.hooks';
+import {QuestsMapProps} from './quests-map.types';
 
 export const QuestsMap: FC<QuestsMapProps> = ({quests}) => {
-  const {mapRef, onUserLocationChange} = useMapLogic(quests);
+  const {mapRef, onUserLocationChange, goToQuest} = useMapLogic(quests);
 
   return (
     <MapView
@@ -16,17 +17,21 @@ export const QuestsMap: FC<QuestsMapProps> = ({quests}) => {
       showsUserLocation
       showsMyLocationButton
       onUserLocationChange={onUserLocationChange}>
-      {quests.map(quest => (
+      {quests.map(q => (
         <Marker
-          key={quest.id}
-          identifier={quest.id.toString()}
+          key={q.id}
+          identifier={q.id.toString()}
           coordinate={{
-            latitude: +quest.latitude,
-            longitude: +quest.longitude,
+            latitude: +q.latitude,
+            longitude: +q.longitude,
           }}
-          title={quest.title}
-          description={quest.description}
-        />
+          title={q.title}
+          description={q.description}
+          onPress={() => goToQuest(q.id)}>
+          <Callout>
+            <Text>{q.title}</Text>
+          </Callout>
+        </Marker>
       ))}
     </MapView>
   );

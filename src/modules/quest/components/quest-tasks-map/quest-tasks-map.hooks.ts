@@ -1,16 +1,16 @@
 import {useRef} from 'react';
 import MapView from 'react-native-maps';
 
-import Milestone from 'types/milestone';
+import QuestTasks from 'types/quest/quest-task';
 
-export const useMapLogic = (milestones: Milestone[]) => {
+export const useMapLogic = (questTasks: QuestTasks[]) => {
   const mapRef = useRef<MapView>(null);
 
-  const fitToMilestones = () => {
-    if (!milestones.length) return;
+  const fitToQuestTasks = () => {
+    if (!questTasks.length) return;
 
-    if (milestones.length === 1) {
-      const {latitude, longitude} = milestones[0];
+    if (questTasks.length === 1) {
+      const {latitude, longitude} = questTasks[0];
       if (!latitude || !longitude) return;
 
       mapRef.current?.setCamera({
@@ -19,7 +19,7 @@ export const useMapLogic = (milestones: Milestone[]) => {
       });
     } else {
       mapRef.current?.fitToSuppliedMarkers(
-        milestones.map(m => m.uuid),
+        questTasks.map(t => t.uuid),
         {
           edgePadding: {top: 100, right: 100, bottom: 100, left: 100},
           animated: false,
@@ -28,5 +28,5 @@ export const useMapLogic = (milestones: Milestone[]) => {
     }
   };
 
-  return {mapRef, fitToMilestones};
+  return {mapRef, fitToQuestTasks};
 };

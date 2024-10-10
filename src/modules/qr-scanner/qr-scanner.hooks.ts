@@ -5,6 +5,7 @@ import {
   useCameraPermission,
   useCodeScanner,
 } from 'react-native-vision-camera';
+
 import {NavigationProp} from '../navigation/navigation.types';
 
 export const useQrScannerLogic = () => {
@@ -16,11 +17,14 @@ export const useQrScannerLogic = () => {
 
   const codeScanner = useCodeScanner({
     codeTypes: ['qr'],
-    onCodeScanned: codes => {
-      const milestoneUuid = codes[0].value;
-      if (!milestoneUuid) return;
+    onCodeScanned: async codes => {
+      const questTaskId = codes[0].value;
+      if (!questTaskId) return;
 
-      navigation.navigate('check-milestone-qr-code', {milestoneUuid});
+      await new Promise(res => setTimeout(res, 1100));
+      navigation.navigate('check-quest-task-qr-code', {
+        questTaskId: +questTaskId,
+      });
     },
   });
 

@@ -4,9 +4,6 @@ import api from 'configs/axios';
 import {UserProfile} from 'types/user';
 import {getDistanceBetweenPointsInKm} from 'src/shared/utils/location';
 
-export const getQuestById = async (questId: number): Promise<Quest> =>
-  (await api.get<Quest>(`/quest/${questId}`)).data;
-
 export const joinQuest = async ({
   questId,
   txHash,

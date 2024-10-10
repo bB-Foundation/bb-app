@@ -5,7 +5,7 @@ import {OmitSafe} from 'types/tools';
 import QuestFilters, {DistanceUnit, TimeOfDay} from 'types/quest/quest-filters';
 
 const initialQuestsFilters = {
-  distance: 5,
+  distance: 7,
   distanceUnit: DistanceUnit.KM,
   minRewards: 1,
 };
@@ -30,14 +30,14 @@ const questsPageSlice = createSlice({
   name: 'questsPage',
   initialState,
   reducers: {
-    // loader
+    // LOADER
     showLoader(state) {
       state.showLoader = true;
     },
     hideLoader(state) {
       state.showLoader = false;
     },
-    // quests filters
+    // QUEST FILTERS
     setDistance(state, {payload}: PayloadAction<number>) {
       state.modalQuestsFilters.distance = payload;
     },

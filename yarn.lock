@@ -4040,6 +4040,7 @@ __metadata:
     react-native-keyboard-aware-scroll-view: ^0.9.5
     react-native-keychain: ^8.2.0
     react-native-maps: ^1.18.0
+    react-native-mmkv: ^3.0.2
     react-native-react-bridge: ^0.12.2
     react-native-safe-area-context: ^4.11.0
     react-native-screens: ^3.34.0
@@ -9352,6 +9353,16 @@ __metadata:
     react-native-web:
       optional: true
   checksum: f2be313b652a9cc1cdcf3eaa3bf8d33ca0ce564d4519371acbbbccf977342ffbd7f8ce36c851ccf7afe31c02a558d06bfd149d14ba9cc0916732a3a589f93b6d
+  languageName: node
+  linkType: hard
+
+"react-native-mmkv@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "react-native-mmkv@npm:3.0.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: a6426a446514abac7f2ce76a54716210ff26e4220317d86cae0efd13b878566ce1112380915a36deb3e5e3498fa1c8910a82065b547f6c24d61aa6a026af01ed
   languageName: node
   linkType: hard
 

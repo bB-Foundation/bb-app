@@ -50,7 +50,8 @@ export const useContentLogic = (geoPosition: GeoPosition) => {
 };
 
 const useQuests = (filters: QuestFilters) => {
-  // TODO DELETE ROW
+  delete filters.city;
+  delete filters.country;
   delete filters.minRewards;
 
   return useQuery<{quests: Quest[]}, Error, QuestWithDistance[]>({

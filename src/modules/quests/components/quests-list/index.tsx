@@ -14,28 +14,30 @@ export const QuestsList: FC<QuestsListProps> = ({quests}) => {
 
   const renderItemHeader = (
     quest: ListRenderItemInfo<QuestWithDistance>,
-  ): React.ReactElement => (
-    <ImageOverlay style={styles.itemHeader}>
-      <View style={styles.itemHeaderDetails}>
-        <Text category="h4" status="control" style={styles.cardTitle}>
-          {quest.item.title}
-        </Text>
-        <Text category="s1" status="control" style={styles.distanceFromQuest}>
-          {Math.round(quest.item.distanceInKm * 1000)}m
-        </Text>
-      </View>
+  ): React.ReactElement => {
+    return (
+      <ImageOverlay style={styles.itemHeader} source={{uri: quest.item.imgUrl}}>
+        <View style={styles.itemHeaderDetails}>
+          <Text category="h4" status="control" style={styles.cardTitle}>
+            {quest.item.title}
+          </Text>
+          <Text category="s1" status="control" style={styles.distanceFromQuest}>
+            {Math.round(quest.item.distanceInKm * 1000)}m
+          </Text>
+        </View>
 
-      <View style={styles.gemsContainer}>
-        <Image
-          style={styles.gemImage}
-          source={require('src/assets/images/quests/assets/gem-white.png')}
-        />
-        <Text category="h4" status="control">
-          {quest.item.milestones.length}
-        </Text>
-      </View>
-    </ImageOverlay>
-  );
+        <View style={styles.gemsContainer}>
+          <Image
+            style={styles.gemImage}
+            source={require('src/assets/images/quests/assets/gem-white.png')}
+          />
+          <Text category="h4" status="control">
+            {quest.item.tasks.length}
+          </Text>
+        </View>
+      </ImageOverlay>
+    );
+  };
 
   const renderItem = (
     quest: ListRenderItemInfo<QuestWithDistance>,

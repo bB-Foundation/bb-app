@@ -7,7 +7,6 @@ import {QuestsStackParamList} from '../navigation/navigation.types';
 import {
   calculateDistanceFromQuestInKm,
   defineUserParticipateQuest,
-  getQuestById,
   joinQuest,
   leaveQuest,
 } from './quest.api';
@@ -17,6 +16,7 @@ import queryKeys from 'configs/query-keys';
 import useCurrentUserProfile from 'hooks/current-user';
 import Quest from 'types/quest';
 import useGeoPosition from 'hooks/geo-position';
+import {getQuestById} from 'src/shared/api/quests';
 
 export const useQuestLogic = () => {
   const {

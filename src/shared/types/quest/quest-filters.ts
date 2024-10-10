@@ -6,7 +6,6 @@ type QuestFilters = {
   distanceUnit: DistanceUnit;
   latitude: string;
   longitude: string;
-  //
   country?: string;
   city?: string;
   category?: QuestCategory;

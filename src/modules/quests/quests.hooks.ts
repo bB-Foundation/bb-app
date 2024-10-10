@@ -22,12 +22,12 @@ export const useQuestsLogic = () => {
     isGetPermissionError,
   } = useGeoPosition();
 
-  // show loader on mount
+  /** show loader on mount */
   useEffect(() => {
     dispatch(showLoaderFn());
   }, [dispatch]);
 
-  // hide loader on error
+  /** hide loader on error */
   useEffect(() => {
     if (getGeoPositionError || isPermissionDenied || isGetPermissionError) {
       dispatch(hideLoader());

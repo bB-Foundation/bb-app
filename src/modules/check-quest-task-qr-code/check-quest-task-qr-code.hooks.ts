@@ -57,9 +57,7 @@ export const useCheckQrCode = () => {
                       routes: [
                         {
                           name: 'quest',
-                          params: {
-                            questId: 1,
-                          },
+                          params: {questId},
                         },
                       ],
                     },

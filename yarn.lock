@@ -2558,6 +2558,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-masked-view/masked-view@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "@react-native-masked-view/masked-view@npm:0.3.1"
+  peerDependencies:
+    react: ">=16"
+    react-native: ">=0.57"
+  checksum: 880059020709ce856c448657c2d67a905f2ebcd3f42c1c4d344d732761cb2de98efb600172df5591d943f562393dbca42802e8a903b974aa2b038b441c5718fb
+  languageName: node
+  linkType: hard
+
 "@react-native/assets-registry@npm:0.75.2":
   version: 0.75.2
   resolution: "@react-native/assets-registry@npm:0.75.2"
@@ -3699,6 +3709,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"add@npm:^2.0.6":
+  version: 2.0.6
+  resolution: "add@npm:2.0.6"
+  checksum: e2d23d40494565dfed4acd65e478570c444db5ac6c053551ed429c39ea0f2c99d83df63e7befec936df601827d2254d06a2fb6f7dcfd2022e810b25eab818b8c
+  languageName: node
+  linkType: hard
+
 "agent-base@npm:^7.0.2, agent-base@npm:^7.1.0, agent-base@npm:^7.1.1":
   version: 7.1.1
   resolution: "agent-base@npm:7.1.1"
@@ -4016,6 +4033,7 @@ __metadata:
     "@eva-design/eva": ^2.2.0
     "@hookform/resolvers": ^3.9.0
     "@miblanchard/react-native-slider": ^2.6.0
+    "@react-native-masked-view/masked-view": ^0.3.1
     "@react-native/babel-preset": 0.75.2
     "@react-native/eslint-config": 0.75.2
     "@react-native/metro-config": 0.75.2
@@ -4033,6 +4051,7 @@ __metadata:
     "@types/react-test-renderer": ^18.0.0
     "@ui-kitten/components": ^5.3.1
     "@ui-kitten/eva-icons": ^5.3.1
+    add: ^2.0.6
     axios: ^1.7.7
     babel-jest: ^29.7.0
     babel-plugin-module-resolver: ^5.0.2
@@ -4050,11 +4069,13 @@ __metadata:
     react-native-geolocation-service: ^5.3.1
     react-native-keyboard-aware-scroll-view: ^0.9.5
     react-native-keychain: ^8.2.0
+    react-native-linear-gradient: ^2.8.3
     react-native-maps: ^1.18.0
-    react-native-mmkv: ^3.0.2
+    react-native-mmkv: 2.12.2
     react-native-react-bridge: ^0.12.2
     react-native-safe-area-context: ^4.11.0
     react-native-screens: ^3.34.0
+    react-native-skeleton-placeholder: ^5.2.4
     react-native-svg: ^15.6.0
     react-native-svg-transformer: ^1.5.0
     react-native-toast-message: ^2.2.0
@@ -4065,6 +4086,7 @@ __metadata:
     retry: ^0.13.1
     starknet: ^6.11.0
     typescript: 5.0.4
+    yarn: ^1.22.22
     yup: ^1.4.0
   languageName: unknown
   linkType: soft
@@ -9351,6 +9373,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-linear-gradient@npm:^2.8.3":
+  version: 2.8.3
+  resolution: "react-native-linear-gradient@npm:2.8.3"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: f980d324e551bbc475c6406bdc5250a08242020cbe653412fa169bbdf51e28a502e225de105b4d696d6a1a1b733d44782469020f4936d8b3ce0e2c78e51cf58f
+  languageName: node
+  linkType: hard
+
 "react-native-maps@npm:^1.18.0":
   version: 1.18.0
   resolution: "react-native-maps@npm:1.18.0"
@@ -9367,13 +9399,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-mmkv@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "react-native-mmkv@npm:3.0.2"
+"react-native-mmkv@npm:2.12.2":
+  version: 2.12.2
+  resolution: "react-native-mmkv@npm:2.12.2"
   peerDependencies:
     react: "*"
-    react-native: "*"
-  checksum: a6426a446514abac7f2ce76a54716210ff26e4220317d86cae0efd13b878566ce1112380915a36deb3e5e3498fa1c8910a82065b547f6c24d61aa6a026af01ed
+    react-native: ">=0.71.0"
+  checksum: 8c79504a89fefd7f9c290a4a6bb24f1f9ef9e2a69d20d0f7d882b89f3943556e9c919c9d46583e44ab698f25213489277fccb6d4c856cce310267c5f907388f1
   languageName: node
   linkType: hard
 
@@ -9413,6 +9445,18 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 28c1f6e556c318ffcbd79d153b9612cc8a0b8d8b70f909d3cde2fd6d0586a7c151a449e57400d8996f4ee6c3b5140c5c4f643a427e974f6dc573b2bcd8eb7356
+  languageName: node
+  linkType: hard
+
+"react-native-skeleton-placeholder@npm:^5.2.4":
+  version: 5.2.4
+  resolution: "react-native-skeleton-placeholder@npm:5.2.4"
+  peerDependencies:
+    "@react-native-masked-view/masked-view": ^0.2.8
+    react: ">=0.14.8"
+    react-native: ">=0.50.1"
+    react-native-linear-gradient: ^2.5.6
+  checksum: c90176c55d0a8342724c38ed5af8baff8ed879b04feeff027574c3c405f3d1be193614bd65e30ddf46407cb951d412f6cc5e2aa4a8e179c589c865f83bdae39e
   languageName: node
   linkType: hard
 
@@ -11473,6 +11517,16 @@ __metadata:
     y18n: ^5.0.5
     yargs-parser: ^21.1.1
   checksum: 73b572e863aa4a8cbef323dd911d79d193b772defd5a51aab0aca2d446655216f5002c42c5306033968193bdbf892a7a4c110b0d77954a7fdf563e653967b56a
+  languageName: node
+  linkType: hard
+
+"yarn@npm:^1.22.22":
+  version: 1.22.22
+  resolution: "yarn@npm:1.22.22"
+  bin:
+    yarn: bin/yarn.js
+    yarnpkg: bin/yarn.js
+  checksum: 59aeef5ccfd3347287f939448e6d3594f0a42f74025b9bdc2a277641c1d4070c07a38b6e7c35e695f77410b0269a5a43c78535786564f86f39c9f781e6efa311
   languageName: node
   linkType: hard
 

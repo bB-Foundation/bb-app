@@ -1,16 +1,11 @@
-import {useCallback, useEffect, useRef, useState} from 'react';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useEffect, useRef, useState} from 'react';
 import MapView from 'react-native-maps';
-
-import {NavigationProp} from 'src/modules/navigation/navigation.types';
 
 import QuestTask from 'types/quest/quest-task';
 import {fitToQuestTasks} from '../../quest-tasks-map.api';
 
 export const useMapLogic = (questTasks: QuestTask[]) => {
   const mapRef = useRef<MapView>(null);
-
-  const navigation = useNavigation<NavigationProp>();
 
   const [isNavigationAnimationFinished, setIsNavigationAnimationFinished] =
     useState(false);
@@ -22,17 +17,12 @@ export const useMapLogic = (questTasks: QuestTask[]) => {
   const onMapLoaded = () => setIsMapLoaded(true);
 
   /** Toggle the flag after the navigation animation ends */
-  useFocusEffect(
-    useCallback(() => {
-      const unsubscribe = navigation.addListener('transitionEnd', e => {
-        if (e.data.closing === false) {
-          setIsNavigationAnimationFinished(true);
-        }
-      });
-
-      return () => unsubscribe;
-    }, [navigation]),
-  );
+  useEffect(() => {
+    (async () => {
+      await new Promise(res => setTimeout(res, 700));
+      setIsNavigationAnimationFinished(true);
+    })();
+  }, []);
 
   /** Fit the map to the quest tasks when the map is loaded */
   useEffect(() => {
@@ -45,6 +35,19 @@ export const useMapLogic = (questTasks: QuestTask[]) => {
 
     setTimeout(() => setIsMapPositionSet(true), 200);
   }, [isMapLoaded, questTasks]);
+
+  /** Toggle the flag after the navigation animation ends */
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const unsubscribe = navigation.addListener('transitionEnd', e => {
+  //       if (e.data.closing === false) {
+  //         setIsNavigationAnimationFinished(true);
+  //       }
+  //     });
+
+  //     return () => unsubscribe;
+  //   }, [navigation]),
+  // );
 
   return {mapRef, isNavigationAnimationFinished, isMapPositionSet, onMapLoaded};
 };

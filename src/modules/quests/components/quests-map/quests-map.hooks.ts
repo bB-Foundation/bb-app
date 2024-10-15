@@ -1,22 +1,29 @@
-import {useNavigation} from '@react-navigation/native';
 import {useEffect, useRef, useState} from 'react';
+import {Platform} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import MapView, {UserLocationChangeEvent} from 'react-native-maps';
+import {useQueryClient} from '@tanstack/react-query';
 
 import QuestWithDistance from 'types/quest/quest-with-distance';
 import {NavigationProp} from 'src/modules/navigation/navigation.types';
+import queryKeys from 'configs/query-keys';
+import {fitToQuests} from './quests-map.api';
 
 export const useMapLogic = (quests: QuestWithDistance[]) => {
   const mapRef = useRef<MapView>(null);
 
   const navigation = useNavigation<NavigationProp>();
 
-  const [isCameraMovedToUserPoint, setIsCameraMovedToUserPoint] =
-    useState(false);
+  const queryClient = useQueryClient();
+
+  const [isCameraMovedToUserPoint, setIsCameraSetToUserPoint] = useState(false);
 
   const [startingUserCoordinates, setStartingUserCoordinates] = useState<{
     latitude: number;
     longitude: number;
   }>();
+
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
 
   const onUserLocationChange = (e: UserLocationChangeEvent) => {
     if (isCameraMovedToUserPoint) return;
@@ -29,46 +36,31 @@ export const useMapLogic = (quests: QuestWithDistance[]) => {
     });
 
     setStartingUserCoordinates(coordinate);
-    setIsCameraMovedToUserPoint(true);
+    setIsCameraSetToUserPoint(true);
   };
 
-  const goToQuest = (questId: number) => {
-    navigation.navigate('quest', {questId});
+  const goToQuest = (quest: QuestWithDistance) => {
+    const queryKey = queryKeys.getQuestById(quest.id);
+    queryClient.setQueryData(queryKey, quest);
+
+    navigation.navigate('quest', {questId: quest.id});
   };
 
-  /** fit map to all quests markers */
+  const onMapLoaded = () => {
+    if (Platform.OS === 'ios') return;
+    setIsMapLoaded(true);
+  };
+
+  /** Fit map to all quests */
   useEffect(() => {
-    if (!quests.length) return;
+    if (!startingUserCoordinates) return;
+    if (Platform.OS === 'android' && !isMapLoaded) return;
 
-    if (quests.length === 1) {
-      if (!startingUserCoordinates) return;
+    const map = mapRef.current;
+    if (!map) return;
 
-      mapRef.current?.fitToCoordinates(
-        [
-          {
-            latitude: startingUserCoordinates.latitude,
-            longitude: startingUserCoordinates.longitude,
-          },
-          {
-            latitude: +quests[0].latitude,
-            longitude: +quests[0].longitude,
-          },
-        ],
-        {
-          edgePadding: {top: 100, right: 100, bottom: 100, left: 100},
-          animated: true,
-        },
-      );
-    } else {
-      mapRef.current?.fitToSuppliedMarkers(
-        quests.map(quest => quest.id.toString()),
-        {
-          edgePadding: {top: 100, right: 100, bottom: 100, left: 100},
-          animated: true,
-        },
-      );
-    }
-  }, [quests, startingUserCoordinates]);
+    fitToQuests(map, quests, startingUserCoordinates);
+  }, [quests, startingUserCoordinates, isMapLoaded]);
 
-  return {mapRef, onUserLocationChange, goToQuest};
+  return {mapRef, onUserLocationChange, goToQuest, onMapLoaded};
 };

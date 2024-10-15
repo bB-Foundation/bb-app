@@ -76,6 +76,7 @@ export const QuestsList: FC<QuestsListProps> = ({quests}) => {
       contentContainerStyle={styles.listContent}
       data={quests}
       renderItem={renderItem}
+      keyExtractor={item => item.id.toString()}
       scrollEnabled={false}
     />
   );

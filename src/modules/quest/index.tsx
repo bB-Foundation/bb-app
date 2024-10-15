@@ -7,7 +7,7 @@ import Page from 'components/page';
 import ImageOverlay from 'components/image-overlay';
 import AdvantageItem from './components/advantage-item';
 import themedStyles from './quest.styles';
-import {QuestTasksMap} from './components/quest-tasks-map';
+import QuestTasksMap from './components/quest-tasks-map';
 
 const Quest: FC = () => {
   const {quest, isUserParticipateQuest, distanceFromQuestInKm} =

@@ -1,35 +1,16 @@
 import React, {FC} from 'react';
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import {Platform} from 'react-native';
 
-import styles from './quest-tasks-map.styles';
-import {useMapLogic} from './quest-tasks-map.hooks';
+import {QuestTasksMapAndroid} from './components/map-android';
 import {QuestTasksMapProps} from './quest-tasks-map.types';
+import {QuestTasksMapIos} from './components/map-ios';
 
-export const QuestTasksMap: FC<QuestTasksMapProps> = ({questTasks}) => {
-  const {mapRef, fitToQuestTasks} = useMapLogic(questTasks);
-
-  return (
-    <MapView
-      ref={mapRef}
-      provider={PROVIDER_GOOGLE}
-      style={styles.root}
-      showsUserLocation
-      showsMyLocationButton
-      onMapReady={fitToQuestTasks}>
-      {questTasks.map(t => {
-        if (!t.latitude || !t.longitude) return null;
-
-        return (
-          <Marker
-            key={t.uuid}
-            identifier={t.uuid}
-            coordinate={{
-              latitude: +t.latitude,
-              longitude: +t.longitude,
-            }}
-          />
-        );
-      })}
-    </MapView>
+const QuestTasksMap: FC<QuestTasksMapProps> = ({questTasks}) => {
+  return Platform.OS === 'ios' ? (
+    <QuestTasksMapIos questTasks={questTasks} />
+  ) : (
+    <QuestTasksMapAndroid questTasks={questTasks} />
   );
 };
+
+export default QuestTasksMap;

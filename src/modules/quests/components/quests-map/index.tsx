@@ -7,7 +7,7 @@ import {useMapLogic} from './quests-map.hooks';
 import {QuestsMapProps} from './quests-map.types';
 
 export const QuestsMap: FC<QuestsMapProps> = ({quests}) => {
-  const {mapRef, onUserLocationChange, goToQuest, onMapLoaded} =
+  const {mapRef, onUserLocationChange, goToQuest, onMapLoaded, onMapReady} =
     useMapLogic(quests);
 
   return (
@@ -18,6 +18,7 @@ export const QuestsMap: FC<QuestsMapProps> = ({quests}) => {
       showsUserLocation
       showsMyLocationButton
       onUserLocationChange={onUserLocationChange}
+      onMapReady={onMapReady}
       onMapLoaded={onMapLoaded}>
       {quests.map(q => (
         <Marker

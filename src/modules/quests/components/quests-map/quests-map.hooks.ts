@@ -25,6 +25,8 @@ export const useMapLogic = (quests: QuestWithDistance[]) => {
 
   const [isMapLoaded, setIsMapLoaded] = useState(false);
 
+  const [isMapReady, setIsMapReady] = useState(false);
+
   const onUserLocationChange = (e: UserLocationChangeEvent) => {
     if (isCameraMovedToUserPoint) return;
 
@@ -51,10 +53,26 @@ export const useMapLogic = (quests: QuestWithDistance[]) => {
     setIsMapLoaded(true);
   };
 
-  /** Fit map to all quests */
+  const onMapReady = () => {
+    if (Platform.OS === 'android') return;
+    setIsMapReady(true);
+  };
+
+  /** Fit ios map to all quests */
   useEffect(() => {
-    if (!startingUserCoordinates) return;
-    if (Platform.OS === 'android' && !isMapLoaded) return;
+    if (Platform.OS === 'android') return;
+    if (!startingUserCoordinates || !isMapReady) return;
+
+    const map = mapRef.current;
+    if (!map) return;
+
+    fitToQuests(map, quests, startingUserCoordinates);
+  }, [quests, startingUserCoordinates, isMapReady]);
+
+  /** Fit android map to all quests */
+  useEffect(() => {
+    if (Platform.OS === 'ios') return;
+    if (!startingUserCoordinates || !isMapLoaded) return;
 
     const map = mapRef.current;
     if (!map) return;
@@ -62,5 +80,5 @@ export const useMapLogic = (quests: QuestWithDistance[]) => {
     fitToQuests(map, quests, startingUserCoordinates);
   }, [quests, startingUserCoordinates, isMapLoaded]);
 
-  return {mapRef, onUserLocationChange, goToQuest, onMapLoaded};
+  return {mapRef, onUserLocationChange, goToQuest, onMapLoaded, onMapReady};
 };

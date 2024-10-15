@@ -12,10 +12,15 @@ export default StyleSheet.create({
     marginVertical: 8,
   },
   itemHeader: {
-    minHeight: 220,
-    padding: 24,
-    objectFit: 'contain',
+    height: 220,
   },
+  headerImage: {
+    height: 220,
+    position: 'absolute',
+    width: '100%',
+    zIndex: -1,
+  },
+  headerContentContainer: {padding: 24, flex: 1},
   cardTitle: {
     flex: 1,
   },

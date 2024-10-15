@@ -12,6 +12,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@d11/react-native-fast-image": "^8.8.0",
     "@eva-design/eva": "^2.2.0",
     "@hookform/resolvers": "^3.9.0",
     "@miblanchard/react-native-slider": "^2.6.0",

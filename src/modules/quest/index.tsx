@@ -1,12 +1,13 @@
 import React, {FC} from 'react';
 import {Image, View} from 'react-native';
 import {Button, Card, Text, useStyleSheet} from '@ui-kitten/components';
+import FastImage from '@d11/react-native-fast-image';
 
 import {useButtonHandlers, useQuestLogic} from './quest.hooks';
 import Page from 'components/page';
 import ImageOverlay from 'components/image-overlay';
 import AdvantageItem from './components/advantage-item';
-import themedStyles from './quest.styles';
+import themedStyles, {imageStyles} from './quest.styles';
 import QuestTasksMap from './components/quest-tasks-map';
 
 const Quest: FC = () => {
@@ -46,7 +47,9 @@ const Quest: FC = () => {
   return (
     <Page isBottomTabContainer>
       <View style={styles.container}>
-        <ImageOverlay style={styles.image} source={{uri: quest.imgUrl}} />
+        <FastImage style={imageStyles.root} source={{uri: quest.imgUrl}} />
+        <ImageOverlay style={styles.imageOverlay} />
+
         <Card
           style={styles.bookingCard}
           appearance="filled"

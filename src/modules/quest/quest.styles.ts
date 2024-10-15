@@ -1,11 +1,19 @@
 import {StyleService} from '@ui-kitten/components';
 
+export const imageStyles = StyleService.create({
+  root: {
+    height: 360,
+    position: 'absolute',
+    width: '100%',
+  },
+});
+
 export default StyleService.create({
   container: {
     flex: 1,
     backgroundColor: 'background-basic-color-2',
   },
-  image: {
+  imageOverlay: {
     height: 360,
   },
   bookingCard: {

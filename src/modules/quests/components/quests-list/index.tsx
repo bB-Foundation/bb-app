@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
-import {Image, ListRenderItemInfo, View} from 'react-native';
+import {ListRenderItemInfo, View} from 'react-native';
 import {Button, Layout, Text, Card, List} from '@ui-kitten/components';
+import FastImage from '@d11/react-native-fast-image';
 
 import styles from './list.styles';
 import ImageOverlay from 'components/image-overlay';
@@ -16,24 +17,34 @@ export const QuestsList: FC<QuestsListProps> = ({quests}) => {
     quest: ListRenderItemInfo<QuestWithDistance>,
   ): React.ReactElement => {
     return (
-      <ImageOverlay style={styles.itemHeader} source={{uri: quest.item.imgUrl}}>
-        <View style={styles.itemHeaderDetails}>
-          <Text category="h4" status="control" style={styles.cardTitle}>
-            {quest.item.title}
-          </Text>
-          <Text category="s1" status="control" style={styles.distanceFromQuest}>
-            {Math.round(quest.item.distanceInKm * 1000)}m
-          </Text>
-        </View>
+      <ImageOverlay style={styles.itemHeader}>
+        <FastImage
+          style={styles.headerImage}
+          source={{uri: quest.item.imgUrl}}
+        />
 
-        <View style={styles.gemsContainer}>
-          <Image
-            style={styles.gemImage}
-            source={require('src/assets/images/quests/assets/gem-white.png')}
-          />
-          <Text category="h4" status="control">
-            {quest.item.tasks.length}
-          </Text>
+        <View style={styles.headerContentContainer}>
+          <View style={styles.itemHeaderDetails}>
+            <Text category="h4" status="control" style={styles.cardTitle}>
+              {quest.item.title}
+            </Text>
+            <Text
+              category="s1"
+              status="control"
+              style={styles.distanceFromQuest}>
+              {Math.round(quest.item.distanceInKm * 1000)}m
+            </Text>
+          </View>
+
+          <View style={styles.gemsContainer}>
+            <FastImage
+              style={styles.gemImage}
+              source={require('src/assets/images/quests/assets/gem-white.png')}
+            />
+            <Text category="h4" status="control">
+              {quest.item.tasks.length}
+            </Text>
+          </View>
         </View>
       </ImageOverlay>
     );

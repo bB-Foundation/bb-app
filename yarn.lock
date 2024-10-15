@@ -1621,6 +1621,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@d11/react-native-fast-image@npm:^8.8.0":
+  version: 8.8.0
+  resolution: "@d11/react-native-fast-image@npm:8.8.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 0adfaebcde35949120a285954f1e3cb2544ad1c61c0f8ddfc0a4b2b91053bdce9caadfdbd63edd16d6072fef2b1a8d3728ddbc6276a950965ffa6e746c511094
+  languageName: node
+  linkType: hard
+
 "@esbuild/aix-ppc64@npm:0.24.0":
   version: 0.24.0
   resolution: "@esbuild/aix-ppc64@npm:0.24.0"
@@ -4002,6 +4012,7 @@ __metadata:
     "@babel/core": ^7.20.0
     "@babel/preset-env": ^7.20.0
     "@babel/runtime": ^7.20.0
+    "@d11/react-native-fast-image": ^8.8.0
     "@eva-design/eva": ^2.2.0
     "@hookform/resolvers": ^3.9.0
     "@miblanchard/react-native-slider": ^2.6.0

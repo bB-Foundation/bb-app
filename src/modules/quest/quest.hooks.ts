@@ -48,7 +48,7 @@ const useDefineUserParticipateQuest = (quest: Quest | undefined) => {
   const {data: currentUserProfile} = useCurrentUserProfile();
 
   const isUserParticipateQuest = useMemo(() => {
-    if (!quest?.users || !currentUserProfile) return;
+    if (!quest?.users.length || !currentUserProfile) return;
 
     return defineUserParticipateQuest(quest, currentUserProfile);
   }, [quest, currentUserProfile]);

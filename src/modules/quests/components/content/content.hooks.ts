@@ -8,7 +8,7 @@ import queryKeys from 'configs/query-keys';
 import QuestFilters from 'types/quest/quest-filters';
 import QuestWithDistance from 'types/quest/quest-with-distance';
 import {calculateQuestsDistance, getQuests} from './content.api';
-import {hideLoader} from 'src/redux-store/slices/quests-page';
+import {hideLoader, showLoader} from 'src/redux-store/slices/quests-page';
 import {Errors} from 'src/enums/errors';
 import {RootState} from 'src/redux-store';
 import Quest from 'types/quest';
@@ -23,7 +23,7 @@ export const useContentLogic = (geoPosition: GeoPosition) => {
   const {
     data: quests = [],
     error: loadQuestsError,
-    isSuccess,
+    isLoading: areLoadingQuests,
   } = useQuests({
     ...questsFilters,
     latitude: geoPosition.coords.latitude.toFixed(6).toString(),
@@ -37,10 +37,14 @@ export const useContentLogic = (geoPosition: GeoPosition) => {
     });
   }
 
-  /** hide loader after quests are loaded or after error */
+  /** hide loader after quests are loaded */
   useEffect(() => {
-    dispatch(hideLoader());
-  }, [isSuccess, dispatch]);
+    if (areLoadingQuests) {
+      dispatch(showLoader());
+    } else {
+      dispatch(hideLoader());
+    }
+  }, [areLoadingQuests, dispatch]);
 
   return {
     quests,

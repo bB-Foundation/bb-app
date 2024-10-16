@@ -68,7 +68,8 @@ const Quest: FC = () => {
             <Text category="h4">{quest.tasks.length}</Text>
           </View>
 
-          {isUserParticipateQuest ? (
+          {isUserParticipateQuest ===
+          undefined ? null : isUserParticipateQuest ? (
             <Button
               style={styles.bookButton}
               onPress={() =>

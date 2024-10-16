@@ -25,7 +25,10 @@ import {
   verifyEmail as verifyEmailAction,
 } from 'src/redux-store/slices/email-verification-page';
 import {Errors} from 'src/enums/errors';
-import {storeUserPrivateKey} from 'src/shared/utils/secure-storage';
+import {
+  storeUserPassword,
+  storeUserPrivateKey,
+} from 'src/shared/utils/secure-storage';
 
 export const useFormLogic = () => {
   const dispatch = useDispatch();
@@ -118,7 +121,7 @@ export const useCreateWallet = () => {
     ref: webBrowserRef,
     onMessage: onWebBrowserMessage,
     emit: emitToWebBrowser,
-  } = useWebViewMessage(message => {
+  } = useWebViewMessage(async message => {
     switch (message.type) {
       case WebAppEvents.CREATE_ACCOUNT_RESULT: {
         if (isErrorMessage(message.data)) {
@@ -134,6 +137,8 @@ export const useCreateWallet = () => {
           stopSubmitting();
           return;
         }
+
+        await storeUserPassword('');
 
         navigation.reset({index: 0, routes: [{name: 'new-account-congrats'}]});
         break;

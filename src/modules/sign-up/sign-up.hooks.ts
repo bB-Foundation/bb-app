@@ -10,6 +10,7 @@ import {signUp, signUpFormSchema} from './sign-up.api';
 import {NavigationProp} from '../navigation/navigation.types';
 import {getApiOrUnknownErrorMessage} from 'src/shared/utils/errors';
 import useSignIn from 'hooks/sign-in';
+import {storeUserPassword} from 'src/shared/utils/secure-storage';
 
 export const useIsPasswordVisible = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -35,6 +36,8 @@ export const useFormLogic = () => {
     try {
       await signUpAsync(data);
       await signIn(data);
+      await storeUserPassword(data.password);
+
       navigation.navigate('email-verification', {
         email: data.email,
       });

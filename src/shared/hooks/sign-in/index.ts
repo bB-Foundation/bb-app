@@ -4,15 +4,13 @@ import {logIn} from './sign-in.api';
 import {
   storeJwtAccessToken,
   storeJwtRefreshToken,
-  storeUserPassword,
 } from '../../utils/secure-storage';
 
 const useSignIn = () =>
   useMutation({
     mutationFn: logIn,
-    onSuccess: async ({accessToken, refreshToken}, {password}) => {
+    onSuccess: async ({accessToken, refreshToken}) => {
       await Promise.all([
-        storeUserPassword(password),
         storeJwtAccessToken(accessToken),
         storeJwtRefreshToken(refreshToken),
       ]);

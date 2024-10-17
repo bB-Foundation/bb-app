@@ -9,6 +9,7 @@ const useCurrentUserProfile = () =>
     queryFn: getCurrentUserProfile,
     staleTime: Infinity,
     gcTime: Infinity,
+    retry: 0,
   });
 
 export default useCurrentUserProfile;

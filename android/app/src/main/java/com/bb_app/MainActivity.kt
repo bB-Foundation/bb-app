@@ -8,6 +8,9 @@ import com.facebook.react.defaults.DefaultReactActivityDelegate
 /** react-native-screens */
 import android.os.Bundle;
 
+/** react-native-splash-screen */
+import org.devio.rn.splashscreen.SplashScreen;
+
 class MainActivity : ReactActivity() {
 
   /**
@@ -18,7 +21,8 @@ class MainActivity : ReactActivity() {
 
   /** react-native-screens */
   override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(null)
+    SplashScreen.show(this);
+    super.onCreate(null);
   }
 
   /**

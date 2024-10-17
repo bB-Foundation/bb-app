@@ -3,13 +3,15 @@ import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
+import SplashScreen from 'react-native-splash-screen';
+import axios from 'axios';
 
 import {SignInFormFields} from './sign-in.types';
 import {signInFormSchema} from './sign-in.api';
 import {NavigationProp} from '../navigation/navigation.types';
 import useSignIn from 'hooks/sign-in';
 import {getApiOrUnknownErrorMessage} from 'src/shared/utils/errors';
-import {getJwtAccessToken} from 'src/shared/utils/secure-storage';
+import useCurrentUserProfile from 'hooks/current-user';
 
 export const useIsPasswordVisible = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -68,12 +70,19 @@ export const useButtonHandlers = () => {
 export const useCheckAuth = () => {
   const navigation = useNavigation<NavigationProp>();
 
+  const {error, isSuccess} = useCurrentUserProfile();
+
+  /** Redirect to main screen if user is authorized */
   useEffect(() => {
-    (async () => {
-      const accessToken = await getJwtAccessToken();
-      if (accessToken) {
-        navigation.reset({index: 0, routes: [{name: 'main'}]});
-      }
-    })();
-  }, [navigation]);
+    const isUnauthorizedResponse =
+      axios.isAxiosError(error) && error.response?.status === 401;
+
+    const isNotUnauthorizedError = error && !isUnauthorizedResponse;
+
+    if (isSuccess || isNotUnauthorizedError) {
+      navigation.reset({index: 0, routes: [{name: 'main'}]});
+    }
+
+    setTimeout(() => SplashScreen.hide(), 1000);
+  }, [isSuccess, error, navigation]);
 };

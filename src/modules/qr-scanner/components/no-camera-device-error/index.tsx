@@ -7,7 +7,9 @@ import styles from './no-camera-device-error.styles';
 const NoCameraDeviceError = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Camera error</Text>
+      <Text category="h6" style={styles.text}>
+        Camera error
+      </Text>
     </View>
   );
 };

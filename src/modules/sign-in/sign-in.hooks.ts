@@ -4,7 +4,6 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import SplashScreen from 'react-native-splash-screen';
-import axios from 'axios';
 
 import {SignInFormFields} from './sign-in.types';
 import {signInFormSchema} from './sign-in.api';
@@ -70,12 +69,7 @@ export const useCheckAuth = () => {
 
   /** Redirect to main screen if user is authorized */
   useEffect(() => {
-    const isUnauthorizedResponse =
-      axios.isAxiosError(error) && error.response?.status === 401;
-
-    const isNotUnauthorizedError = error && !isUnauthorizedResponse;
-
-    if (isSuccess || isNotUnauthorizedError) {
+    if (isSuccess) {
       navigation.reset({index: 0, routes: [{name: 'main'}]});
     }
 

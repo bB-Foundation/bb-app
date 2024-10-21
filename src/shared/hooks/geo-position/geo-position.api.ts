@@ -18,12 +18,6 @@ export const requestLocationPermission = async () => {
 
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      {
-        title: 'Location Permission',
-        message: "Allow to access this device's location?",
-        buttonNegative: 'Cancel',
-        buttonPositive: 'OK',
-      },
     );
 
     return granted === PermissionsAndroid.RESULTS.GRANTED ? true : false;

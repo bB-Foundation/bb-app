@@ -1603,6 +1603,8 @@ PODS:
     - SDWebImageWebPCoder (~> 0.14)
   - RNKeychain (8.2.0):
     - React-Core
+  - RNPermissions (5.0.1):
+    - React-Core
   - RNScreens (3.34.0):
     - DoubleConversion
     - glog
@@ -1718,6 +1720,7 @@ DEPENDENCIES:
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - "RNFastImage (from `../node_modules/@d11/react-native-fast-image`)"
   - RNKeychain (from `../node_modules/react-native-keychain`)
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - VisionCamera (from `../node_modules/react-native-vision-camera`)
@@ -1882,6 +1885,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@d11/react-native-fast-image"
   RNKeychain:
     :path: "../node_modules/react-native-keychain"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNSVG:
@@ -1970,6 +1975,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: 090213d32d8b3bb83a4dcb7d12c18f0152591906
   RNFastImage: c19a8226e823abe8eed10272d71d9dbd501f2e9d
   RNKeychain: bfe3d12bf4620fe488771c414530bf16e88f3678
+  RNPermissions: c8895cdfa96a9a656b4ad84214f1f72ee1dff37f
   RNScreens: 19719a9c326e925498ac3b2d35c4e50fe87afc06
   RNSVG: 4590aa95758149fa27c5c83e54a6a466349a1688
   SDWebImage: 2d6d229046fea284d62e36bfb8ebe8287dfc5b10
@@ -1978,6 +1984,6 @@ SPEC CHECKSUMS:
   VisionCamera: cb84d0d8485b3e67c91b62931d3aa88f49747c92
   Yoga: a1d7895431387402a674fd0d1c04ec85e87909b8
 
-PODFILE CHECKSUM: fb18a43aef00a57d647efd8856e88ed133fdd8f3
+PODFILE CHECKSUM: 36711b32902f7631c18fd0ad9b5a02eea24af364
 
 COCOAPODS: 1.15.2

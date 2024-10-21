@@ -11,7 +11,9 @@ const Quests: FC = () => {
 
   return (
     <Page isBottomTabContainer>
-      {geoPosition && <Content geoPosition={geoPosition} />}
+      {geoPosition && !isGeoPermissionProblem && (
+        <Content geoPosition={geoPosition} />
+      )}
 
       {showLoader && <Loader />}
 

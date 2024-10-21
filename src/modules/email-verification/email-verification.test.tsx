@@ -1,106 +1,146 @@
-// import React from 'react';
-// import {render, fireEvent, act, waitFor} from '@testing-library/react-native';
+import React from 'react';
+import {render, fireEvent, act, waitFor} from '@testing-library/react-native';
+import Toast from 'react-native-toast-message';
 
-// import EmailVerification from '.';
-// import {Providers} from '../../configs/tests';
-// import * as hooks from './email-verification.hooks';
+import EmailVerification from '.';
+import {Providers, setupTestStore} from '../../configs/tests';
+import * as hooks from './email-verification.hooks';
 
-// jest.mock('@react-navigation/native', () => ({
-//   ...jest.requireActual('@react-navigation/native'),
-//   useRoute: jest.fn(),
-// }));
+jest.mock('@react-navigation/native', () => ({
+  ...jest.requireActual('@react-navigation/native'),
+  useRoute: jest.fn(),
+}));
 
-// const useFormLogicMock = {
-//   verificationCode: '',
-//   isValidVerificationCode: false,
-//   isSubmitting: false,
-//   setVerificationCode: jest.fn(),
-//   onSubmit: jest.fn(),
-//   resendEmailVerification: jest.fn(),
-// };
+jest.mock('react-native-react-bridge/lib/web', () => ({
+  webViewRender: jest.fn(),
+}));
 
-// describe('EmailVerification component', () => {
-//   afterEach(() => {
-//     jest.clearAllMocks();
-//     jest.restoreAllMocks();
-//   });
+jest.mock('react-native-webview', () => 'WebView');
 
-//   it('should call submitHandler on submit button press', async () => {
-//     const spy = jest.spyOn(hooks, 'useFormLogic');
-//     const submitHandlerMock = jest.fn();
-//     spy.mockReturnValue({
-//       ...useFormLogicMock,
-//       isValidVerificationCode: true,
-//       onSubmit: submitHandlerMock,
-//     });
+describe('EmailVerification component', () => {
+  const storeRef = setupTestStore();
 
-//     const {getByTestId} = render(
-//       <Providers>
-//         <EmailVerification />
-//       </Providers>,
-//     );
+  afterEach(() => {
+    jest.clearAllMocks();
+    jest.restoreAllMocks();
+  });
 
-//     await act(async () => {
-//       fireEvent.press(getByTestId('submit-button'));
-//     });
+  it('should call submitHandler with valid verification code on submit button press', async () => {
+    const spy = jest.spyOn(hooks, 'useFormLogic');
+    const onSubmit = jest.fn();
+    spy.mockReturnValue({onSubmit});
 
-//     await waitFor(() => expect(submitHandlerMock).toHaveBeenCalled());
-//   });
+    const {getByTestId} = render(
+      <Providers>
+        <EmailVerification />
+      </Providers>,
+      {wrapper: storeRef.wrapper},
+    );
 
-//   it('should not call submitHandler because verification code is invalid', async () => {
-//     const spy = jest.spyOn(hooks, 'useFormLogic');
-//     const submitHandlerMock = jest.fn();
-//     spy.mockReturnValue({...useFormLogicMock, onSubmit: submitHandlerMock});
+    const codeFiled = getByTestId('code-field');
 
-//     const {getByTestId} = render(
-//       <Providers>
-//         <EmailVerification />
-//       </Providers>,
-//     );
+    fireEvent.changeText(codeFiled, '123456');
 
-//     await act(async () => {
-//       fireEvent.press(getByTestId('submit-button'));
-//     });
+    jest.useFakeTimers();
 
-//     await waitFor(() => expect(submitHandlerMock).not.toHaveBeenCalled());
-//   });
+    await act(async () => fireEvent.press(getByTestId('submit-button')));
 
-//   it('should call resendEmailVerification on resend button press', async () => {
-//     const spy = jest.spyOn(hooks, 'useFormLogic');
-//     const resendEmailVerification = jest.fn();
-//     spy.mockReturnValue({
-//       ...useFormLogicMock,
-//       resendEmailVerification,
-//     });
+    jest.runAllTimers();
 
-//     const {getByTestId} = render(
-//       <Providers>
-//         <EmailVerification />
-//       </Providers>,
-//     );
+    await waitFor(() => expect(onSubmit).toHaveBeenCalled());
+  });
 
-//     await act(async () => {
-//       fireEvent.press(getByTestId('resend-verification-code-button'));
-//     });
+  it('should show error toast on submit error response', async () => {
+    const testSpy = jest.spyOn(Toast, 'show');
 
-//     await waitFor(() => expect(resendEmailVerification).toHaveBeenCalled());
-//   });
+    const {getByTestId} = render(
+      <Providers>
+        <EmailVerification />
+      </Providers>,
+      {wrapper: storeRef.wrapper},
+    );
 
-//   it('should call exitToSignIn on exit button press', async () => {
-//     const spy = jest.spyOn(hooks, 'useButtonHandlers');
-//     const exitToSignIn = jest.fn();
-//     spy.mockReturnValue({exitToSignIn});
+    const codeFiled = getByTestId('code-field');
 
-//     const {getByTestId} = render(
-//       <Providers>
-//         <EmailVerification />
-//       </Providers>,
-//     );
+    fireEvent.changeText(codeFiled, '123456');
 
-//     await act(async () => {
-//       fireEvent.press(getByTestId('exit-button'));
-//     });
+    await act(async () => fireEvent.press(getByTestId('submit-button')));
 
-//     await waitFor(() => expect(exitToSignIn).toHaveBeenCalled());
-//   });
-// });
+    await waitFor(() =>
+      expect(testSpy).toHaveBeenCalledWith({
+        type: 'error',
+        text1: expect.any(String),
+        text2: expect.any(String),
+      }),
+    );
+  });
+
+  it('should not call submitHandler because verification code is invalid', async () => {
+    const spy = jest.spyOn(hooks, 'useFormLogic');
+    const onSubmit = jest.fn();
+    spy.mockReturnValue({onSubmit: onSubmit});
+
+    const {getByTestId} = render(
+      <Providers>
+        <EmailVerification />
+      </Providers>,
+      {wrapper: storeRef.wrapper},
+    );
+
+    const codeFiled = getByTestId('code-field');
+
+    fireEvent.changeText(codeFiled, '123');
+
+    await act(async () => {
+      fireEvent.press(getByTestId('submit-button'));
+    });
+
+    await waitFor(() => expect(onSubmit).not.toHaveBeenCalled());
+  });
+
+  it('should call resendEmailVerification on resend button press', async () => {
+    const spy = jest.spyOn(hooks, 'useButtonHandlers');
+    const resendEmailVerificationHandler = jest.fn();
+    spy.mockReturnValue({
+      exitToSignIn: jest.fn(),
+      resendEmailVerificationHandler,
+    });
+
+    const {getByTestId} = render(
+      <Providers>
+        <EmailVerification />
+      </Providers>,
+      {wrapper: storeRef.wrapper},
+    );
+
+    await act(async () => {
+      fireEvent.press(getByTestId('resend-verification-code-button'));
+    });
+
+    await waitFor(() =>
+      expect(resendEmailVerificationHandler).toHaveBeenCalled(),
+    );
+  });
+
+  it('should call exitToSignIn on exit button press', async () => {
+    const spy = jest.spyOn(hooks, 'useButtonHandlers');
+    const exitToSignIn = jest.fn();
+    spy.mockReturnValue({
+      exitToSignIn,
+      resendEmailVerificationHandler: jest.fn(),
+    });
+
+    const {getByTestId} = render(
+      <Providers>
+        <EmailVerification />
+      </Providers>,
+      {wrapper: storeRef.wrapper},
+    );
+
+    await act(async () => {
+      fireEvent.press(getByTestId('exit-button'));
+    });
+
+    await waitFor(() => expect(exitToSignIn).toHaveBeenCalled());
+  });
+});

@@ -72,6 +72,7 @@ const Quest: FC = () => {
           undefined ? null : isUserParticipateQuest ? (
             <Button
               style={styles.bookButton}
+              testID="leave-quest-button"
               onPress={() =>
                 leaveQuestHandler({questId: quest.id, txHash: 'txHash'})
               }>
@@ -80,6 +81,7 @@ const Quest: FC = () => {
           ) : (
             <Button
               style={styles.bookButton}
+              testID="join-quest-button"
               onPress={() =>
                 joinQuestHandler({questId: quest.id, txHash: 'txHash'})
               }>

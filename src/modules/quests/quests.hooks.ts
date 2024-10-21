@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useEffect, useMemo} from 'react';
 import {RootState} from 'src/redux-store';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -22,6 +22,10 @@ export const useQuestsLogic = () => {
     isGetPermissionError,
   } = useGeoPosition();
 
+  const isGeoPermissionProblem = useMemo(
+    () => !!getGeoPositionError || isPermissionDenied || isGetPermissionError,
+    [getGeoPositionError, isPermissionDenied, isGetPermissionError],
+  );
   /** show loader on mount */
   useEffect(() => {
     dispatch(showLoaderFn());
@@ -29,10 +33,10 @@ export const useQuestsLogic = () => {
 
   /** hide loader on error */
   useEffect(() => {
-    if (getGeoPositionError || isPermissionDenied || isGetPermissionError) {
+    if (isGeoPermissionProblem) {
       dispatch(hideLoader());
     }
-  }, [getGeoPositionError, isPermissionDenied, isGetPermissionError, dispatch]);
+  }, [isGeoPermissionProblem, dispatch]);
 
-  return {geoPosition, showLoader};
+  return {geoPosition, showLoader, isGeoPermissionProblem};
 };

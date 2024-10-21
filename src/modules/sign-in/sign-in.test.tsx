@@ -15,6 +15,13 @@ import {SignInFormFields} from './sign-in.types';
 import {signInFormSchema} from './sign-in.api';
 import {Providers, testUserCredentials} from '../../configs/tests';
 
+jest.mock('@react-navigation/native', () => ({
+  ...jest.requireActual('@react-navigation/native'),
+  reset: jest.fn(),
+}));
+
+jest.spyOn(hooks, 'useCheckAuth').mockReturnValue();
+
 const useButtonHandlersMock = {
   onSignUpButtonPress: jest.fn(),
   onForgotPasswordButtonPress: jest.fn(),
@@ -108,9 +115,13 @@ describe('SignIn component', () => {
       </Providers>,
     );
 
+    jest.useFakeTimers();
+
     await act(async () => {
       fireEvent.press(getByTestId('toggle-password-visibility-button'));
     });
+
+    jest.runAllTimers();
 
     await waitFor(() => {
       expect(togglePasswordVisibility).toHaveBeenCalled();

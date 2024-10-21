@@ -26,10 +26,6 @@ export const useFormLogic = () => {
 
   const formData = useForm({
     resolver: yupResolver<SignInFormFields>(signInFormSchema),
-    defaultValues: {
-      email: 'test@gmail.com',
-      password: '12345Aa!',
-    },
   });
   const {handleSubmit} = formData;
 

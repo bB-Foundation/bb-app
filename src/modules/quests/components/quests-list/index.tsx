@@ -65,7 +65,8 @@ export const QuestsList: FC<QuestsListProps> = ({quests}) => {
       <Card
         style={styles.item}
         onPress={() => goToQuest(quest.item)}
-        header={() => renderItemHeader(quest)}>
+        header={() => renderItemHeader(quest)}
+        testID={`quest-card-${quest.item.id}`}>
         <Layout style={styles.itemStyxContainer} level="2">
           <Text style={styles.itemStyxText} category="h6">
             {playersAmountLabel}

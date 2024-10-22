@@ -15,7 +15,8 @@ const Quest: FC = () => {
   const {quest, isUserParticipateQuest, distanceFromQuestInKm} =
     useQuestLogic();
 
-  const {joinQuestHandler, leaveQuestHandler} = useButtonHandlers();
+  const {isSubmittingQuest, joinQuestHandler, leaveQuestHandler} =
+    useButtonHandlers();
 
   const styles = useStyleSheet(themedStyles);
 
@@ -72,6 +73,7 @@ const Quest: FC = () => {
             <Button
               style={styles.bookButton}
               testID="leave-quest-button"
+              disabled={isSubmittingQuest}
               onPress={() =>
                 leaveQuestHandler({questId: quest.id, txHash: 'txHash'})
               }>
@@ -81,6 +83,7 @@ const Quest: FC = () => {
             <Button
               style={styles.bookButton}
               testID="join-quest-button"
+              disabled={isSubmittingQuest}
               onPress={() =>
                 joinQuestHandler({questId: quest.id, txHash: 'txHash'})
               }>

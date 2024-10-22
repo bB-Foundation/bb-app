@@ -27,6 +27,7 @@ export default StyleService.create({
     position: 'absolute',
     bottom: 17,
     right: 22,
+    minWidth: 155,
   },
   optionList: {
     flexDirection: 'row',

@@ -1,4 +1,4 @@
-import {useMemo} from 'react';
+import {useMemo, useState} from 'react';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
@@ -57,6 +57,8 @@ const useDefineUserParticipateQuest = (quest: Quest | undefined) => {
 };
 
 export const useButtonHandlers = () => {
+  const [isSubmittingQuest, setIsSubmittingQuest] = useState(false);
+
   const queryClient = useQueryClient();
 
   const refetchCurrentQuest = async (questId: number) =>
@@ -66,6 +68,8 @@ export const useButtonHandlers = () => {
 
   const joinQuestHandler = async (data: JoinQuestData) => {
     try {
+      setIsSubmittingQuest(true);
+
       await joinQuest(data);
 
       await refetchCurrentQuest(data.questId);
@@ -81,11 +85,15 @@ export const useButtonHandlers = () => {
         text1: 'Error',
         text2: getApiOrUnknownErrorMessage(error),
       });
+    } finally {
+      setIsSubmittingQuest(false);
     }
   };
 
   const leaveQuestHandler = async (data: LeaveQuestData) => {
     try {
+      setIsSubmittingQuest(true);
+
       await leaveQuest(data);
 
       await refetchCurrentQuest(data.questId);
@@ -101,8 +109,10 @@ export const useButtonHandlers = () => {
         text1: 'Error',
         text2: getApiOrUnknownErrorMessage(error),
       });
+    } finally {
+      setIsSubmittingQuest(false);
     }
   };
 
-  return {joinQuestHandler, leaveQuestHandler};
+  return {joinQuestHandler, leaveQuestHandler, isSubmittingQuest};
 };

@@ -26,7 +26,7 @@ import {
 } from 'src/redux-store/slices/email-verification-page';
 import {Errors} from 'src/enums/errors';
 import {
-  storeUserPassword,
+  clearUserPassword,
   storeUserPrivateKey,
 } from 'src/shared/utils/secure-storage';
 
@@ -138,7 +138,7 @@ export const useCreateWallet = () => {
           return;
         }
 
-        await storeUserPassword('');
+        await clearUserPassword();
 
         navigation.reset({index: 0, routes: [{name: 'new-account-congrats'}]});
         break;

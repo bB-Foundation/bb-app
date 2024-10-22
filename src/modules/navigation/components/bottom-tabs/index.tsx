@@ -3,6 +3,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import QuestsStack from '../quests-stack';
 import QrCodeStack from '../qr-code-stack';
+import { UserProfile } from 'src/modules/user-profile';
 
 const BottomTabs = () => {
   const BottomTab = createBottomTabNavigator();
@@ -26,6 +27,15 @@ const BottomTabs = () => {
         component={QrCodeStack}
         options={{
           tabBarLabel: 'QR scanner',
+          tabBarLabelStyle: {fontSize: 16},
+          tabBarIcon: () => null,
+        }}
+      />
+      <BottomTab.Screen
+        name="user-profile"
+        component={UserProfile}
+        options={{
+          tabBarLabel: 'User',
           tabBarLabelStyle: {fontSize: 16},
           tabBarIcon: () => null,
         }}

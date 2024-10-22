@@ -17,6 +17,7 @@
     "@eva-design/eva": "^2.2.0",
     "@hookform/resolvers": "^3.9.0",
     "@miblanchard/react-native-slider": "^2.6.0",
+    "@react-native-clipboard/clipboard": "^1.14.2",
     "@react-native-masked-view/masked-view": "^0.3.1",
     "@react-navigation/bottom-tabs": "^6.6.1",
     "@react-navigation/native": "^6.1.18",

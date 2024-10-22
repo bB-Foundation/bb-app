@@ -30,6 +30,9 @@ const getToken = async (tokenName: string) => {
   }
 };
 
+const clearToken = (tokenName: string) =>
+  Keychain.resetGenericPassword({service: tokenName});
+
 export const storeJwtAccessToken = async (tokenValue: string) => {
   try {
     await storeToken(TokenNames.JWT_ACCESS, tokenValue);
@@ -45,6 +48,9 @@ export const getJwtAccessToken = async () => {
     throw error;
   }
 };
+
+export const clearJwtAccessToken = async () =>
+  clearToken(TokenNames.JWT_ACCESS);
 
 export const storeJwtRefreshToken = async (tokenValue: string) => {
   try {
@@ -62,6 +68,9 @@ export const getJwtRefreshToken = async () => {
   }
 };
 
+export const clearJwtRefreshToken = async () =>
+  clearToken(TokenNames.JWT_REFRESH);
+
 export const storeUserPassword = async (password: string) => {
   try {
     await storeToken(TokenNames.USER_PASSWORD, password);
@@ -78,6 +87,9 @@ export const getUserPassword = async () => {
   }
 };
 
+export const clearUserPassword = async () =>
+  clearToken(TokenNames.USER_PASSWORD);
+
 export const storeUserPrivateKey = async (privateKey: string) => {
   try {
     await storeToken(TokenNames.USER_PRIVATE_KEY, privateKey);
@@ -93,3 +105,14 @@ export const getUserPrivateKey = async () => {
     throw error;
   }
 };
+
+export const clearUserPrivateKey = async () =>
+  clearToken(TokenNames.USER_PRIVATE_KEY);
+
+export const clearSecureStorage = () =>
+  Promise.all([
+    clearJwtAccessToken(),
+    clearJwtRefreshToken(),
+    clearUserPassword(),
+    clearUserPrivateKey(),
+  ]);

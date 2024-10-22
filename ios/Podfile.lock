@@ -1595,6 +1595,8 @@ PODS:
     - React-logger (= 0.75.2)
     - React-perflogger (= 0.75.2)
     - React-utils (= 0.75.2)
+  - RNCClipboard (1.14.2):
+    - React-Core
   - RNCMaskedView (0.3.1):
     - React-Core
   - RNDeviceInfo (13.1.0):
@@ -1719,6 +1721,7 @@ DEPENDENCIES:
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCodegen (from `build/generated/ios`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - "RNFastImage (from `../node_modules/@d11/react-native-fast-image`)"
@@ -1882,6 +1885,8 @@ EXTERNAL SOURCES:
     :path: build/generated/ios
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNCClipboard:
+    :path: "../node_modules/@react-native-clipboard/clipboard"
   RNCMaskedView:
     :path: "../node_modules/@react-native-masked-view/masked-view"
   RNDeviceInfo:
@@ -1977,6 +1982,7 @@ SPEC CHECKSUMS:
   React-utils: 81a715d9c0a2a49047e77a86f3a2247408540deb
   ReactCodegen: 60973d382704c793c605b9be0fc7f31cb279442f
   ReactCommon: 6ef348087d250257c44c0204461c03f036650e9b
+  RNCClipboard: 5e503962f0719ace8f7fdfe9c60282b526305c85
   RNCMaskedView: 090213d32d8b3bb83a4dcb7d12c18f0152591906
   RNDeviceInfo: e13b7d68878fba693c9fbb13ca4d56ad57d95917
   RNFastImage: c19a8226e823abe8eed10272d71d9dbd501f2e9d

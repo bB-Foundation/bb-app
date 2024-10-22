@@ -1,4 +1,4 @@
-import {useState, useEffect, FC} from 'react';
+import React, {useState, useEffect, FC} from 'react';
 
 import {DelayedProps} from './delayed.types';
 
@@ -14,7 +14,7 @@ const Delayed: FC<DelayedProps> = ({children, waitBeforeShow = 500}) => {
     return () => clearTimeout(timer);
   }, [waitBeforeShow]);
 
-  return isShown ? children : null;
+  return <>{isShown ? children : null}</>;
 };
 
 export default Delayed;

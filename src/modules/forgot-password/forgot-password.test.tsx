@@ -70,7 +70,9 @@ describe('ForgotPassword component', () => {
       fireEvent.press(getByTestId('submit-button'));
     });
 
-    expect(queryByTestId('email-input-message')).toBeTruthy();
+    await waitFor(() =>
+      expect(queryByTestId('email-input-message')).toBeTruthy(),
+    );
   });
 
   it('should call goBack on back button press', async () => {

@@ -72,7 +72,9 @@ describe('SignUp component', () => {
       fireEvent.press(getByTestId('submit-button'));
     });
 
-    expect(queryByTestId('email-input-message')).toBeTruthy();
+    await waitFor(() =>
+      expect(queryByTestId('email-input-message')).toBeTruthy(),
+    );
   });
 
   it('should show password error message if password is invalid', async () => {
@@ -86,7 +88,9 @@ describe('SignUp component', () => {
       fireEvent.press(getByTestId('submit-button'));
     });
 
-    expect(queryByTestId('password-input-message')).toBeTruthy();
+    await waitFor(() =>
+      expect(queryByTestId('password-input-message')).toBeTruthy(),
+    );
   });
 
   it('should call togglePasswordVisibility on password visibility button press', async () => {

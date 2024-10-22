@@ -75,7 +75,9 @@ describe('RestorePassword component', () => {
       fireEvent.press(getByTestId('submit-button'));
     });
 
-    expect(queryByTestId('password-input-message')).toBeTruthy();
+    await waitFor(() =>
+      expect(queryByTestId('password-input-message')).toBeTruthy(),
+    );
   });
 
   it('should call togglePasswordVisibility on password visibility button press', async () => {

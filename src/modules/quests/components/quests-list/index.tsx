@@ -9,13 +9,16 @@ import {useQuestsListLogic} from './quests-list.hooks';
 import {translateQuestCategory} from 'src/shared/api/quests';
 import QuestWithDistance from 'types/quest/quest-with-distance';
 import {QuestsListProps} from './quests-list.types';
+import {getDistanceFromQuest} from './quests-list.api';
 
-export const QuestsList: FC<QuestsListProps> = ({quests}) => {
+export const QuestsList: FC<QuestsListProps> = ({quests, geoPosition}) => {
   const {goToQuest} = useQuestsListLogic();
 
   const renderItemHeader = (
     quest: ListRenderItemInfo<QuestWithDistance>,
   ): React.ReactElement => {
+    const distanceLabel = getDistanceFromQuest(geoPosition.coords, quest.item);
+
     return (
       <ImageOverlay style={styles.itemHeader}>
         <FastImage
@@ -32,7 +35,7 @@ export const QuestsList: FC<QuestsListProps> = ({quests}) => {
               category="s1"
               status="control"
               style={styles.distanceFromQuest}>
-              {Math.round(quest.item.distanceInKm * 1000)}m
+              {distanceLabel}
             </Text>
           </View>
 

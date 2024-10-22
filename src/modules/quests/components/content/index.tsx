@@ -22,7 +22,7 @@ export const Content: FC<ContentProps> = ({geoPosition}) => {
 
       {selectedTabIndex === 0 && <QuestsMap quests={quests} />}
 
-      {selectedTabIndex === 1 && <QuestsList quests={quests} />}
+      {selectedTabIndex === 1 && <QuestsList quests={quests} geoPosition={geoPosition} />}
     </>
   );
 };

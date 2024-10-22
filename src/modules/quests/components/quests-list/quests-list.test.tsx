@@ -2,7 +2,7 @@ import React from 'react';
 import {act, fireEvent, render, waitFor} from '@testing-library/react-native';
 
 import {QuestsList} from '.';
-import {basketballQuest, Providers, setupTestStore} from 'configs/tests';
+import {basketballQuest, mockGeoPosition, Providers, setupTestStore} from 'configs/tests';
 import * as hooks from './quests-list.hooks';
 
 describe('QuestsList component', () => {
@@ -16,7 +16,7 @@ describe('QuestsList component', () => {
   it('should render quests list', async () => {
     const {getByTestId} = render(
       <Providers>
-        <QuestsList quests={[basketballQuest]} />
+        <QuestsList quests={[basketballQuest]} geoPosition={mockGeoPosition.geoPosition} />
       </Providers>,
       {wrapper: storeRef.wrapper},
     );
@@ -32,7 +32,10 @@ describe('QuestsList component', () => {
 
     const {getByTestId} = render(
       <Providers>
-        <QuestsList quests={[basketballQuest]} />
+        <QuestsList
+          quests={[basketballQuest]}
+          geoPosition={mockGeoPosition.geoPosition}
+        />
       </Providers>,
       {wrapper: storeRef.wrapper},
     );

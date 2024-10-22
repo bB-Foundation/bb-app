@@ -9,6 +9,7 @@ import ImageOverlay from 'components/image-overlay';
 import AdvantageItem from './components/advantage-item';
 import themedStyles, {imageStyles} from './quest.styles';
 import QuestTasksMap from './components/quest-tasks-map';
+import {getDistanceLabel} from './quest.api';
 
 const Quest: FC = () => {
   const {quest, isUserParticipateQuest, distanceFromQuestInKm} =
@@ -24,20 +25,18 @@ const Quest: FC = () => {
     const playersHint =
       quest.users.length > 1 || quest.users.length === 0 ? 'players' : 'player';
 
+    const distanceLabel = getDistanceLabel(distanceFromQuestInKm);
+
+    const statusLabel =
+      quest.status[0].toUpperCase() + quest.status.slice(1).toLocaleLowerCase();
+
     return (
       <View style={styles.footerContainer}>
         <View style={styles.optionList}>
           <View style={styles.advantagesContainer}>
             <AdvantageItem hint={playersHint} value={quest.users.length} />
-            <AdvantageItem hint="Status" value={quest.status} />
-            <AdvantageItem
-              hint="From you"
-              value={
-                distanceFromQuestInKm === undefined
-                  ? ''
-                  : `${Math.round(distanceFromQuestInKm * 1000)}m`
-              }
-            />
+            <AdvantageItem hint="Status" value={statusLabel} />
+            <AdvantageItem hint="From you" value={distanceLabel} />
           </View>
         </View>
       </View>

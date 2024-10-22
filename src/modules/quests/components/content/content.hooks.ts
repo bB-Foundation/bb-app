@@ -7,7 +7,11 @@ import {GeoPosition} from 'react-native-geolocation-service';
 import queryKeys from 'configs/query-keys';
 import QuestFilters from 'types/quest/quest-filters';
 import QuestWithDistance from 'types/quest/quest-with-distance';
-import {calculateQuestsDistance, getQuests} from './content.api';
+import {
+  calculateQuestsDistance,
+  formatQuestFilterValues,
+  getQuests,
+} from './content.api';
 import {hideLoader, showLoader} from 'src/redux-store/slices/quests-page';
 import {Errors} from 'src/enums/errors';
 import {RootState} from 'src/redux-store';
@@ -54,13 +58,13 @@ export const useContentLogic = (geoPosition: GeoPosition) => {
 };
 
 const useQuests = (filters: QuestFilters) => {
-  delete filters.city;
-  delete filters.country;
   delete filters.minRewards;
 
+  const updatedFilters = formatQuestFilterValues(filters);
+
   return useQuery<{quests: Quest[]}, Error, QuestWithDistance[]>({
-    queryKey: queryKeys.getQuests(filters),
-    queryFn: () => getQuests(filters),
-    select: ({quests}) => calculateQuestsDistance(filters, quests),
+    queryKey: queryKeys.getQuests(updatedFilters),
+    queryFn: () => getQuests(updatedFilters),
+    select: ({quests}) => calculateQuestsDistance(updatedFilters, quests),
   });
 };

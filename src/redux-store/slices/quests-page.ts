@@ -42,6 +42,10 @@ const questsPageSlice = createSlice({
       state.modalQuestsFilters.distance = payload;
     },
     setCountry(state, {payload}: PayloadAction<string | undefined>) {
+      if (state.modalQuestsFilters.country !== payload) {
+        state.modalQuestsFilters.city = undefined;
+      }
+
       state.modalQuestsFilters.country = payload;
     },
     setCity(state, {payload}: PayloadAction<string | undefined>) {

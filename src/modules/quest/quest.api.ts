@@ -35,3 +35,21 @@ export const calculateDistanceFromQuestInKm = (
     +quest.longitude,
   );
 };
+
+export const getDistanceLabel = (distanceInKm: number | undefined): string => {
+  if (distanceInKm === undefined) return '';
+
+  let distanceLabel = '';
+
+  if (distanceInKm < 1) {
+    distanceLabel = `${Math.round(distanceInKm * 1000)}m`;
+  } else {
+    if (distanceInKm.toFixed(1).toString().split('.')[1] === '0') {
+      distanceLabel = `${distanceInKm.toFixed(0)} km`;
+    } else {
+      distanceLabel = `${distanceInKm.toFixed(1)} km`;
+    }
+  }
+
+  return distanceLabel;
+};

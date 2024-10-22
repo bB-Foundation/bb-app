@@ -7,7 +7,6 @@ export default StyleSheet.create({
   },
   value: {
     fontSize: 17,
-    textTransform: 'capitalize',
   },
   hint: {
     fontSize: 16,

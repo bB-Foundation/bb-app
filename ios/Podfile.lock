@@ -1597,6 +1597,8 @@ PODS:
     - React-utils (= 0.75.2)
   - RNCMaskedView (0.3.1):
     - React-Core
+  - RNDeviceInfo (13.1.0):
+    - React-Core
   - RNFastImage (8.8.0):
     - React-Core
     - SDWebImage (~> 5.18.7)
@@ -1718,6 +1720,7 @@ DEPENDENCIES:
   - ReactCodegen (from `build/generated/ios`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - "RNFastImage (from `../node_modules/@d11/react-native-fast-image`)"
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
@@ -1881,6 +1884,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNCMaskedView:
     :path: "../node_modules/@react-native-masked-view/masked-view"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNFastImage:
     :path: "../node_modules/@d11/react-native-fast-image"
   RNKeychain:
@@ -1973,6 +1978,7 @@ SPEC CHECKSUMS:
   ReactCodegen: 60973d382704c793c605b9be0fc7f31cb279442f
   ReactCommon: 6ef348087d250257c44c0204461c03f036650e9b
   RNCMaskedView: 090213d32d8b3bb83a4dcb7d12c18f0152591906
+  RNDeviceInfo: e13b7d68878fba693c9fbb13ca4d56ad57d95917
   RNFastImage: c19a8226e823abe8eed10272d71d9dbd501f2e9d
   RNKeychain: bfe3d12bf4620fe488771c414530bf16e88f3678
   RNPermissions: c8895cdfa96a9a656b4ad84214f1f72ee1dff37f
@@ -1984,6 +1990,6 @@ SPEC CHECKSUMS:
   VisionCamera: cb84d0d8485b3e67c91b62931d3aa88f49747c92
   Yoga: a1d7895431387402a674fd0d1c04ec85e87909b8
 
-PODFILE CHECKSUM: 36711b32902f7631c18fd0ad9b5a02eea24af364
+PODFILE CHECKSUM: 037f3e0a9d8853285924826ee1ede6273ea7cd45
 
 COCOAPODS: 1.15.2

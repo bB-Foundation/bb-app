@@ -1,6 +1,7 @@
 import React from 'react';
 import {View} from 'react-native';
 import {Button} from '@ui-kitten/components';
+import {hasNotch} from 'react-native-device-info';
 
 import styles from './top-bar.styles';
 import {useTopBarLogic} from './top-bar.hooks';
@@ -13,7 +14,10 @@ export const TopBar = () => {
       {/* <Button status="basic" style={styles.button}>
         Sort by
       </Button> */}
-      <Button status="basic" style={styles.button} onPress={openFiltersModal}>
+      <Button
+        status="basic"
+        style={[styles.button, hasNotch() ? null : styles.buttonMargin]}
+        onPress={openFiltersModal}>
         Filter
       </Button>
     </View>

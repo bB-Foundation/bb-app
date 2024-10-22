@@ -7,4 +7,5 @@ export default StyleSheet.create({
     gap: 16,
   },
   button: {flex: 1},
+  buttonMargin: {marginTop: 10},
 });

@@ -33,6 +33,7 @@
     "react-native": "0.75.2",
     "react-native-aes-crypto": "^3.0.3",
     "react-native-confirmation-code-field": "^7.4.0",
+    "react-native-device-info": "^13.1.0",
     "react-native-element-dropdown": "^2.12.1",
     "react-native-geolocation-service": "^5.3.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",

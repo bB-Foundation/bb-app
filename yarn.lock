@@ -4079,6 +4079,7 @@ __metadata:
     react-native: 0.75.2
     react-native-aes-crypto: ^3.0.3
     react-native-confirmation-code-field: ^7.4.0
+    react-native-device-info: ^13.1.0
     react-native-dotenv: ^3.4.11
     react-native-element-dropdown: ^2.12.1
     react-native-geolocation-service: ^5.3.1
@@ -9408,6 +9409,15 @@ __metadata:
     react-native:
       optional: true
   checksum: 1b12535c5037994cb4c5aee4a0d72d0034bb41bc8cda15aec99e1570174b5980fef5d3c54e450a87a387af26265f74813bdb889aef600e3a15242ac940c0f29d
+  languageName: node
+  linkType: hard
+
+"react-native-device-info@npm:^13.1.0":
+  version: 13.1.0
+  resolution: "react-native-device-info@npm:13.1.0"
+  peerDependencies:
+    react-native: "*"
+  checksum: e05cd870981b8366bcb43f89d8565f123b1c3f727d399db03d7ac5e5cda6d06da3d326d06291e11d4920223dbd3db22631a50e2c3d58d8a8c62e196e59518e8e
   languageName: node
   linkType: hard
 

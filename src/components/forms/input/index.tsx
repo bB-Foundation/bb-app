@@ -6,6 +6,7 @@ import {Controller} from 'react-hook-form';
 import {useInput} from './input.hooks';
 import {inputStyles} from './input.styles';
 import {InputProps} from './input.types';
+import Delayed from 'hooks/delayed';
 
 export const Input: FC<InputProps> = ({name, ...props}) => {
   const {control, fieldError, errorMessage} = useInput(name);
@@ -25,12 +26,14 @@ export const Input: FC<InputProps> = ({name, ...props}) => {
           />
 
           {errorMessage && (
-            <Text
-              testID={`${name}-input-message`}
-              style={inputStyles.errorMessage}
-              status="danger">
-              {errorMessage}
-            </Text>
+            <Delayed waitBeforeShow={5}>
+              <Text
+                testID={`${name}-input-message`}
+                style={inputStyles.errorMessage}
+                status="danger">
+                {errorMessage}
+              </Text>
+            </Delayed>
           )}
         </View>
       )}

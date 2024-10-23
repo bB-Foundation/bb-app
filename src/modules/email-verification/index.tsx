@@ -14,11 +14,13 @@ import Page from 'components/page';
 import webApp from './components/web-app';
 import {VerificationCodeField} from './components/verification-code-field';
 import {SubmitButton} from './components/submit-button';
+import {ResendEmailTimer} from './components/resend-email-timer';
 
 const EmailVerification: FC = () => {
-  const {onSubmit} = useFormLogic();
+  const {isResendEmailUsed, isSubmitting, onSubmit} = useFormLogic();
 
-  const {resendEmailVerificationHandler, exitToSignIn} = useButtonHandlers();
+  const {resendEmailVerificationHandler, exitToSignIn, onResendEmailTimerEnd} =
+    useButtonHandlers();
 
   const {webBrowserRef, onWebBrowserMessage} = useCreateWallet();
 
@@ -49,13 +51,18 @@ const EmailVerification: FC = () => {
 
             <VerificationCodeField />
 
-            <Button
-              appearance="ghost"
-              status="basic"
-              onPress={resendEmailVerificationHandler}
-              testID="resend-verification-code-button">
-              Resend verification code
-            </Button>
+            {isResendEmailUsed ? (
+              <ResendEmailTimer onFinishCb={onResendEmailTimerEnd} />
+            ) : (
+              <Button
+                appearance="ghost"
+                status="basic"
+                onPress={resendEmailVerificationHandler}
+                disabled={isSubmitting}
+                testID="resend-verification-code-button">
+                Resend verification code
+              </Button>
+            )}
           </Layout>
         </View>
 

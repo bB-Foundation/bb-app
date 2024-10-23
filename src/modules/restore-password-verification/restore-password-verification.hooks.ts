@@ -6,7 +6,7 @@ import Toast from 'react-native-toast-message';
 
 import {NavigationProp} from '../navigation/navigation.types';
 import {verifyPasswordRestore} from './restore-password-verification.api';
-import { getApiOrUnknownErrorMessage } from 'src/shared/utils/errors';
+import {getApiOrUnknownErrorMessage} from 'src/shared/utils/errors';
 
 export const useFormLogic = () => {
   const [verificationCode, setVerificationCode] = useState('');
@@ -49,7 +49,7 @@ export const useButtonHandlers = () => {
         text: 'Cancel',
         style: 'cancel',
       },
-      {text: 'OK', onPress: () => navigation.replace('sign-in')},
+      {text: 'OK', onPress: () => navigation.popToTop()},
     ]);
 
   return {exitToSignIn};

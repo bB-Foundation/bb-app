@@ -26,7 +26,7 @@ export const useFormLogic = () => {
   const formData = useForm({
     resolver: yupResolver<SignInFormFields>(signInFormSchema),
   });
-  const {handleSubmit} = formData;
+  const {handleSubmit, reset} = formData;
 
   const {mutateAsync: signIn, isPending: isSubmitting} = useSignIn();
 
@@ -44,6 +44,15 @@ export const useFormLogic = () => {
   };
 
   const submitHandler = handleSubmit(onSubmit);
+
+  /** Clean form on screen blur */
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      setTimeout(reset, 300);
+    });
+
+    return unsubscribe;
+  }, [navigation, reset]);
 
   return {formData, isSubmitting, submitHandler};
 };

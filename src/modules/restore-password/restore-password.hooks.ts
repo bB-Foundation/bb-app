@@ -68,7 +68,7 @@ export const useButtonHandlers = () => {
         text: 'Cancel',
         style: 'cancel',
       },
-      {text: 'OK', onPress: () => navigation.replace('sign-in')},
+      {text: 'OK', onPress: () => navigation.popToTop()},
     ]);
 
   return {exitToSignIn};

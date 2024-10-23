@@ -22,6 +22,7 @@ import {useWebViewMessage} from 'react-native-react-bridge';
 import {RootState} from 'src/redux-store';
 import {
   setIsSubmitting,
+  setResendEmailUsed,
   verifyEmail as verifyEmailAction,
 } from 'src/redux-store/slices/email-verification-page';
 import {Errors} from 'src/enums/errors';
@@ -35,7 +36,7 @@ export const useFormLogic = () => {
 
   const {mutateAsync: verifyEmailAsync} = useVerifyEmail();
 
-  const {verificationCode} = useSelector(
+  const {verificationCode, isResendEmailUsed, isSubmitting} = useSelector(
     (state: RootState) => state.emailVerificationPage,
   );
 
@@ -55,6 +56,8 @@ export const useFormLogic = () => {
   };
 
   return {
+    isResendEmailUsed,
+    isSubmitting,
     onSubmit,
   };
 };
@@ -64,12 +67,21 @@ export const useButtonHandlers = () => {
 
   const route = useRoute<RouteProp<RootStackParamList, 'email-verification'>>();
 
+  const {isSubmitting} = useSelector(
+    (state: RootState) => state.emailVerificationPage,
+  );
+
+  const dispatch = useDispatch();
+
   const {mutateAsync: resendEmailVerificationAsync} =
     useResendEmailVerification();
 
   const resendEmailVerificationHandler = async () => {
+    if (isSubmitting) return;
+
     try {
       await resendEmailVerificationAsync(route.params.email);
+      dispatch(setResendEmailUsed(true));
     } catch (error) {
       Toast.show({
         type: 'error',
@@ -88,7 +100,11 @@ export const useButtonHandlers = () => {
       {text: 'OK', onPress: () => navigation.popToTop()},
     ]);
 
-  return {exitToSignIn, resendEmailVerificationHandler};
+  const onResendEmailTimerEnd = () => {
+    dispatch(setResendEmailUsed(false));
+  };
+
+  return {exitToSignIn, resendEmailVerificationHandler, onResendEmailTimerEnd};
 };
 
 const useVerifyEmail = () => useMutation({mutationFn: verifyEmail});

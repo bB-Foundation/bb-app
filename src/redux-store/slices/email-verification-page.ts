@@ -4,12 +4,14 @@ type EmailVerificationPageState = {
   verificationCode: string;
   isSubmitting: boolean;
   isEmailVerified: boolean;
+  isResendEmailUsed: boolean;
 };
 
 const initialState: EmailVerificationPageState = {
   verificationCode: '',
   isSubmitting: false,
   isEmailVerified: false,
+  isResendEmailUsed: false,
 };
 
 const emailVerificationPageSlice = createSlice({
@@ -25,9 +27,12 @@ const emailVerificationPageSlice = createSlice({
     verifyEmail(state, {payload}: PayloadAction<boolean>) {
       state.isEmailVerified = payload;
     },
+    setResendEmailUsed(state, {payload}: PayloadAction<boolean>) {
+      state.isResendEmailUsed = payload;
+    },
   },
 });
 
-export const {setVerificationCode, setIsSubmitting, verifyEmail} =
+export const {setVerificationCode, setIsSubmitting, verifyEmail, setResendEmailUsed} =
   emailVerificationPageSlice.actions;
 export const emailVerificationPage = emailVerificationPageSlice.reducer;

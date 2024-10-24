@@ -1,13 +1,13 @@
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {useNavigation} from '@react-navigation/native';
-import {useMutation} from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 
 import {ForgotPasswordFormFields} from './forgot-password.types';
-import {forgotPassword, forgotPasswordFormSchema} from './forgot-password.api';
+import {forgotPasswordFormSchema} from './forgot-password.api';
 import {NavigationProp} from '../navigation/navigation.types';
-import { getApiOrUnknownErrorMessage } from 'src/shared/utils/errors';
+import {getApiOrUnknownErrorMessage} from 'src/shared/utils/errors';
+import {useForgotPassword} from 'hooks/forgot-password';
 
 export const useFormLogic = () => {
   const navigation = useNavigation<NavigationProp>();
@@ -23,7 +23,16 @@ export const useFormLogic = () => {
   const onSubmit = async ({email}: ForgotPasswordFormFields) => {
     try {
       await forgotPasswordAsync(email);
-      navigation.navigate('restore-password-verification');
+
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'restore-password-verification',
+            params: {email},
+          },
+        ],
+      });
     } catch (error) {
       Toast.show({
         type: 'error',
@@ -47,5 +56,3 @@ export const useButtonHandlers = () => {
 
   return {goBack};
 };
-
-const useForgotPassword = () => useMutation({mutationFn: forgotPassword});

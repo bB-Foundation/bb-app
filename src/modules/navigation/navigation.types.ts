@@ -4,7 +4,7 @@ export type RootStackParamList = {
   'sign-in': undefined;
   'sign-up': undefined;
   'forgot-password': undefined;
-  'restore-password-verification': undefined;
+  'restore-password-verification': {email: string};
   'restore-password': {verificationCode: string};
   'restore-password-congrats': undefined;
   'email-verification': {email: string};

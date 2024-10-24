@@ -15,7 +15,7 @@ import {
   NavigationProp,
   RootStackParamList,
 } from '../navigation/navigation.types';
-import { getApiOrUnknownErrorMessage } from 'src/shared/utils/errors';
+import {getApiOrUnknownErrorMessage} from 'src/shared/utils/errors';
 
 export const useIsPasswordVisible = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -44,7 +44,11 @@ export const useFormLogic = () => {
         ...data,
         code: route.params.verificationCode,
       });
-      navigation.navigate('restore-password-congrats');
+
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'restore-password-congrats'}],
+      });
     } catch (error) {
       Toast.show({
         type: 'error',
@@ -68,7 +72,11 @@ export const useButtonHandlers = () => {
         text: 'Cancel',
         style: 'cancel',
       },
-      {text: 'OK', onPress: () => navigation.popToTop()},
+      {
+        text: 'OK',
+        onPress: () =>
+          navigation.reset({index: 0, routes: [{name: 'sign-in'}]}),
+      },
     ]);
 
   return {exitToSignIn};

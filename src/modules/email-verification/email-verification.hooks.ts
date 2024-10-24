@@ -97,7 +97,11 @@ export const useButtonHandlers = () => {
         text: 'Cancel',
         style: 'cancel',
       },
-      {text: 'OK', onPress: () => navigation.popToTop()},
+      {
+        text: 'OK',
+        onPress: () =>
+          navigation.reset({index: 0, routes: [{name: 'sign-in'}]}),
+      },
     ]);
 
   const onResendEmailTimerEnd = () => {

@@ -38,8 +38,9 @@ export const useFormLogic = () => {
       await signIn(data);
       await storeUserPassword(data.password);
 
-      navigation.navigate('email-verification', {
-        email: data.email,
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'email-verification', params: {email: data.email}}],
       });
     } catch (error) {
       Toast.show({

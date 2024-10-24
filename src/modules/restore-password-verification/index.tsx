@@ -6,10 +6,12 @@ import rootStyles from './restore-password-verification.styles';
 import {
   useButtonHandlers,
   useFormLogic,
+  useResendEmail,
 } from './restore-password-verification.hooks';
 import MailIcon from '../../assets/images/subscribe.svg';
 import Page from 'components/page';
 import CodeField from 'components/forms/code-field';
+import {ResendEmailTimer} from './components/resend-email-timer';
 
 const RestorePasswordVerification: FC = () => {
   const {exitToSignIn} = useButtonHandlers();
@@ -23,6 +25,9 @@ const RestorePasswordVerification: FC = () => {
   } = useFormLogic();
 
   const styles = useStyleSheet(rootStyles);
+
+  const {isResendEmailUsed, resendEmailHandler, onResendEmailTimerEnd} =
+    useResendEmail();
 
   return (
     <Page>
@@ -45,6 +50,19 @@ const RestorePasswordVerification: FC = () => {
               value={verificationCode}
               setValue={setVerificationCode}
             />
+
+            {isResendEmailUsed ? (
+              <ResendEmailTimer onFinishCb={onResendEmailTimerEnd} />
+            ) : (
+              <Button
+                appearance="ghost"
+                status="basic"
+                onPress={resendEmailHandler}
+                disabled={isSubmitting}
+                testID="resend-verification-code-button">
+                Resend verification code
+              </Button>
+            )}
           </Layout>
         </View>
 

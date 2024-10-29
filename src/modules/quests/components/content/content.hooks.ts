@@ -58,8 +58,6 @@ export const useContentLogic = (geoPosition: GeoPosition) => {
 };
 
 const useQuests = (filters: QuestFilters) => {
-  delete filters.minRewards;
-
   const updatedFilters = formatQuestFilterValues(filters);
 
   return useQuery<{quests: Quest[]}, Error, QuestWithDistance[]>({

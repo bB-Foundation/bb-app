@@ -10,6 +10,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  NSString *googleApiKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"GOOGLE_API_KEY"];
+  [GMSServices provideAPIKey:googleApiKey];
 
   self.moduleName = @"bB_app";
   // You can add your custom initial props in the dictionary below.

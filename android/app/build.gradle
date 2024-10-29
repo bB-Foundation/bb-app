@@ -84,6 +84,12 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+
+        def googleApiKey = System.getenv("GOOGLE_API_KEY") ?: ""
+
+        manifestPlaceholders = [
+            GOOGLE_API_KEY: googleApiKey
+        ]
     }
     signingConfigs {
         debug {

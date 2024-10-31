@@ -1,7 +1,12 @@
 import {useCallback, useEffect, useState} from 'react';
 import {Alert} from 'react-native';
 import {useMutation} from '@tanstack/react-query';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -21,6 +26,7 @@ import {DeployAccountData, Web3AccountData} from './email-verification.types';
 import {useWebViewMessage} from 'react-native-react-bridge';
 import {RootState} from 'src/redux-store';
 import {
+  resetState,
   setIsSubmitting,
   setResendEmailUsed,
   verifyEmail as verifyEmailAction,
@@ -207,4 +213,17 @@ export const useCreateWallet = () => {
     webBrowserRef,
     onWebBrowserMessage,
   };
+};
+
+/** clear state on screen blur */
+export const useResetEmailVerificationState = () => {
+  const dispatch = useDispatch();
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        dispatch(resetState());
+      };
+    }, [dispatch]),
+  );
 };

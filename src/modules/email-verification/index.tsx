@@ -8,6 +8,7 @@ import {
   useButtonHandlers,
   useCreateWallet,
   useFormLogic,
+  useResetEmailVerificationState,
 } from './email-verification.hooks';
 import MailIcon from '../../assets/images/subscribe.svg';
 import Page from 'components/page';
@@ -23,6 +24,8 @@ const EmailVerification: FC = () => {
     useButtonHandlers();
 
   const {webBrowserRef, onWebBrowserMessage} = useCreateWallet();
+
+  useResetEmailVerificationState();
 
   const styles = useStyleSheet(rootStyles);
 

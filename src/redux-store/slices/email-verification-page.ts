@@ -30,9 +30,15 @@ const emailVerificationPageSlice = createSlice({
     setResendEmailUsed(state, {payload}: PayloadAction<boolean>) {
       state.isResendEmailUsed = payload;
     },
+    resetState: () => initialState,
   },
 });
 
-export const {setVerificationCode, setIsSubmitting, verifyEmail, setResendEmailUsed} =
-  emailVerificationPageSlice.actions;
+export const {
+  setVerificationCode,
+  setIsSubmitting,
+  verifyEmail,
+  setResendEmailUsed,
+  resetState,
+} = emailVerificationPageSlice.actions;
 export const emailVerificationPage = emailVerificationPageSlice.reducer;

@@ -3,8 +3,12 @@ import {Button} from '@ui-kitten/components';
 
 import {useButtonLogic} from './submit-button.hooks';
 
-export const SubmitButton: FC = () => {
-  const {submitHandler} = useButtonLogic();
+type SubmitButtonProps = {
+  afterSubmitCb?: () => void;
+};
+
+export const SubmitButton: FC<SubmitButtonProps> = ({afterSubmitCb}) => {
+  const {submitHandler} = useButtonLogic({afterSubmitCb});
 
   return <Button onPress={submitHandler}>APPLY</Button>;
 };

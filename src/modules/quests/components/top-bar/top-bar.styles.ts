@@ -8,4 +8,5 @@ export default StyleSheet.create({
   },
   button: {flex: 1},
   buttonMargin: {marginTop: 10},
+  modalContent: {paddingTop: 20},
 });

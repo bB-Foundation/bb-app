@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from 'src/redux-store';
@@ -14,6 +14,11 @@ export const useSliderLogic = () => {
   const [distanceLabelValue, setDistanceLabelValue] = useState(distance);
 
   const setDistanceHandler = (value: number) => dispatch(setDistance(value));
+
+  /** update slider value */
+  useEffect(() => {
+    setDistanceLabelValue(distance);
+  }, [distance]);
 
   return {distanceLabelValue, setDistanceLabelValue, setDistanceHandler};
 };

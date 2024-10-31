@@ -4,11 +4,11 @@ export default StyleService.create({
   container: {
     backgroundColor: 'background-basic-color-1',
     gap: 32,
-    flex: 1,
+    flexGrow: 1,
   },
   content: {
     gap: 32,
-    flex: 1,
+    flexGrow: 1,
   },
   row: {
     flexDirection: 'row',
@@ -22,5 +22,6 @@ export default StyleService.create({
     marginTop: 'auto',
     paddingHorizontal: 16,
     paddingBottom: 16,
+    gap: 12,
   },
 });

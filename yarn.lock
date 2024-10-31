@@ -1631,6 +1631,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@egjs/hammerjs@npm:^2.0.17":
+  version: 2.0.17
+  resolution: "@egjs/hammerjs@npm:2.0.17"
+  dependencies:
+    "@types/hammerjs": ^2.0.36
+  checksum: 8945137cec5837edd70af3f2e0ea621543eb0aa3b667e6269ec6485350f4d120c2434b37c7c30b1cf42a65275dd61c1f24626749c616696d3956ac0c008c4766
+  languageName: node
+  linkType: hard
+
 "@esbuild/aix-ppc64@npm:0.24.0":
   version: 0.24.0
   resolution: "@esbuild/aix-ppc64@npm:0.24.0"
@@ -3261,6 +3270,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/hammerjs@npm:^2.0.36":
+  version: 2.0.46
+  resolution: "@types/hammerjs@npm:2.0.46"
+  checksum: caba6ec788d19905c71092670b58514b3d1f5eee5382bf9205e8df688d51e7857b7994e2dd7aed57fac8977bdf0e456d67fbaf23440a4385b8ce25fe2af1ec39
+  languageName: node
+  linkType: hard
+
 "@types/istanbul-lib-coverage@npm:*, @types/istanbul-lib-coverage@npm:^2.0.0, @types/istanbul-lib-coverage@npm:^2.0.1":
   version: 2.0.6
   resolution: "@types/istanbul-lib-coverage@npm:2.0.6"
@@ -4095,12 +4111,14 @@ __metadata:
     react-dom: ^18.3.1
     react-hook-form: ^7.53.0
     react-native: 0.75.2
+    react-native-actions-sheet: ^0.9.7
     react-native-aes-crypto: ^3.0.3
     react-native-confirmation-code-field: ^7.4.0
     react-native-device-info: ^13.1.0
     react-native-dotenv: ^3.4.11
     react-native-element-dropdown: ^2.12.1
     react-native-geolocation-service: ^5.3.1
+    react-native-gesture-handler: ^2.20.2
     react-native-keyboard-aware-scroll-view: ^0.9.5
     react-native-keychain: ^8.2.0
     react-native-linear-gradient: ^2.8.3
@@ -6517,7 +6535,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hoist-non-react-statics@npm:^3.2.1":
+"hoist-non-react-statics@npm:^3.2.1, hoist-non-react-statics@npm:^3.3.0":
   version: 3.3.2
   resolution: "hoist-non-react-statics@npm:3.3.2"
   dependencies:
@@ -9252,7 +9270,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.6.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -9408,6 +9426,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-actions-sheet@npm:^0.9.7":
+  version: 0.9.7
+  resolution: "react-native-actions-sheet@npm:0.9.7"
+  peerDependencies:
+    react-native: "*"
+    react-native-gesture-handler: "*"
+    react-native-safe-area-context: "*"
+  checksum: 48c6eeb7bf7e4607346dfaccdcbb09c6f74d306f9674941174475e54ec6ca0b9efab1c0dc250e19e1cd10b70afece013fc1758acf413c5cf33cfd73bbcf82431
+  languageName: node
+  linkType: hard
+
 "react-native-aes-crypto@npm:^3.0.3":
   version: 3.0.3
   resolution: "react-native-aes-crypto@npm:3.0.3"
@@ -9486,6 +9515,21 @@ __metadata:
   version: 5.3.1
   resolution: "react-native-geolocation-service@npm:5.3.1"
   checksum: 9a625c9f87811933491055fd8cbd1ef46f97fbbe0262714ad1d9aa969a8900dcb4abc47e58fe162400a81bcdee79324dfcc8e631862df9a22d59ac84af9acfde
+  languageName: node
+  linkType: hard
+
+"react-native-gesture-handler@npm:^2.20.2":
+  version: 2.20.2
+  resolution: "react-native-gesture-handler@npm:2.20.2"
+  dependencies:
+    "@egjs/hammerjs": ^2.0.17
+    hoist-non-react-statics: ^3.3.0
+    invariant: ^2.2.4
+    prop-types: ^15.7.2
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 8d9e7496615dad4e6bb6dd1c750c2d3b2e57c6173a1d466b4503b28b159b1dbbb1e7527c3d4bda12324422200c07835f34d81c9bd3cd1b7f594b22949bef274a
   languageName: node
   linkType: hard
 

@@ -1,15 +1,30 @@
-import {useNavigation} from '@react-navigation/native';
+import {useRef} from 'react';
+import {useDispatch} from 'react-redux';
+import {ActionSheetRef} from 'react-native-actions-sheet';
 
-import {NavigationProp} from 'src/modules/navigation/navigation.types';
+import {clearModalQuestsFilters} from 'src/redux-store/slices/quests-page';
 
 export const useTopBarLogic = () => {
-  const navigation = useNavigation<NavigationProp>();
+  const filtersModalRef = useRef<ActionSheetRef>(null);
+
+  const dispatch = useDispatch();
 
   const openFiltersModal = () => {
-    navigation.navigate('quests-filters-modal');
+    filtersModalRef.current?.show();
+  };
+
+  const onFiltersModalClose = () => {
+    dispatch(clearModalQuestsFilters());
+  };
+
+  const onFiltersModalApply = () => {
+    filtersModalRef.current?.hide();
   };
 
   return {
+    filtersModalRef,
     openFiltersModal,
+    onFiltersModalClose,
+    onFiltersModalApply,
   };
 };

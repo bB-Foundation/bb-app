@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from 'src/redux-store';
@@ -15,6 +15,11 @@ export const useSliderLogic = () => {
 
   const setMinRewardsHandler = (rewards: number) =>
     dispatch(setMinRewards(rewards));
+
+  /** update slider value */
+  useEffect(() => {
+    setMinRewardsLabelValue(minRewards);
+  }, [minRewards]);
 
   return {minRewardsLabelValue, setMinRewardsLabelValue, setMinRewardsHandler};
 };

@@ -7,6 +7,12 @@ import QuestFilters, {DistanceUnit, TimeOfDay} from 'types/quest/quest-filters';
 const initialQuestsFilters = {
   distance: 7,
   distanceUnit: DistanceUnit.KM,
+  country: undefined,
+  city: undefined,
+  category: undefined,
+  startDate: undefined,
+  endDate: undefined,
+  timeOfDay: undefined,
   minRewards: 1,
 };
 
@@ -73,6 +79,9 @@ const questsPageSlice = createSlice({
     clearModalQuestsFilters(state) {
       state.modalQuestsFilters = state.questsFilters;
     },
+    resetModalQuestsFilters(state) {
+      state.modalQuestsFilters = initialQuestsFilters;
+    },
   },
 });
 
@@ -89,5 +98,6 @@ export const {
   setMinRewards,
   applyFilters,
   clearModalQuestsFilters,
+  resetModalQuestsFilters,
 } = questsPageSlice.actions;
 export const questsPage = questsPageSlice.reducer;

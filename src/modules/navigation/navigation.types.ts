@@ -10,7 +10,6 @@ export type RootStackParamList = {
   'email-verification': {email: string};
   'new-account-congrats': undefined;
   main: undefined;
-  'quests-filters-modal': undefined;
 };
 
 export type QuestsStackParamList = {

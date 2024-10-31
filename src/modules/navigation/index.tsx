@@ -16,7 +16,6 @@ import EmailVerification from '../email-verification';
 import NewAccountCongrats from '../new-account-congrats';
 import RestorePasswordCongrats from '../restore-password-congrats';
 import RestorePassword from '../restore-password';
-import {QuestsFiltersModal} from '../quests-filters-modal';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -26,36 +25,29 @@ const Navigator: FC = () => {
   return (
     <>
       <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}>
-          <Stack.Screen name="sign-in" component={SignIn} />
-          <Stack.Screen name="sign-up" component={SignUp} />
-          <Stack.Screen name="forgot-password" component={ForgotPassword} />
-          <Stack.Screen
-            name="restore-password-verification"
-            component={RestorePasswordVerification}
-          />
-          <Stack.Screen name="restore-password" component={RestorePassword} />
-          <Stack.Screen
-            name="restore-password-congrats"
-            component={RestorePasswordCongrats}
-          />
-          <Stack.Screen
-            name="email-verification"
-            component={EmailVerification}
-          />
-          <Stack.Screen
-            name="new-account-congrats"
-            component={NewAccountCongrats}
-          />
-          <Stack.Screen name="main" component={BottomTabs} />
-          <Stack.Group screenOptions={{presentation: 'modal'}}>
+        <Stack.Navigator>
+          <Stack.Group screenOptions={{headerShown: false}}>
+            <Stack.Screen name="sign-in" component={SignIn} />
+            <Stack.Screen name="sign-up" component={SignUp} />
+            <Stack.Screen name="forgot-password" component={ForgotPassword} />
             <Stack.Screen
-              name="quests-filters-modal"
-              component={QuestsFiltersModal}
+              name="restore-password-verification"
+              component={RestorePasswordVerification}
             />
+            <Stack.Screen name="restore-password" component={RestorePassword} />
+            <Stack.Screen
+              name="restore-password-congrats"
+              component={RestorePasswordCongrats}
+            />
+            <Stack.Screen
+              name="email-verification"
+              component={EmailVerification}
+            />
+            <Stack.Screen
+              name="new-account-congrats"
+              component={NewAccountCongrats}
+            />
+            <Stack.Screen name="main" component={BottomTabs} />
           </Stack.Group>
         </Stack.Navigator>
       </NavigationContainer>

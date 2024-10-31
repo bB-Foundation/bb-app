@@ -1605,6 +1605,27 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.18.7)
     - SDWebImageWebPCoder (~> 0.14)
+  - RNGestureHandler (2.20.2):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNKeychain (8.2.0):
     - React-Core
   - RNPermissions (5.0.1):
@@ -1725,6 +1746,7 @@ DEPENDENCIES:
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - "RNFastImage (from `../node_modules/@d11/react-native-fast-image`)"
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -1893,6 +1915,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-device-info"
   RNFastImage:
     :path: "../node_modules/@d11/react-native-fast-image"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
   RNKeychain:
     :path: "../node_modules/react-native-keychain"
   RNPermissions:
@@ -1986,6 +2010,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: 090213d32d8b3bb83a4dcb7d12c18f0152591906
   RNDeviceInfo: e13b7d68878fba693c9fbb13ca4d56ad57d95917
   RNFastImage: c19a8226e823abe8eed10272d71d9dbd501f2e9d
+  RNGestureHandler: 511250b190a284388f9dd0d2e56c1df76f14cfb8
   RNKeychain: bfe3d12bf4620fe488771c414530bf16e88f3678
   RNPermissions: c8895cdfa96a9a656b4ad84214f1f72ee1dff37f
   RNScreens: 19719a9c326e925498ac3b2d35c4e50fe87afc06

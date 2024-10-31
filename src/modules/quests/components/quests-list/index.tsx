@@ -10,9 +10,11 @@ import {translateQuestCategory} from 'src/shared/api/quests';
 import QuestWithDistance from 'types/quest/quest-with-distance';
 import {QuestsListProps} from './quests-list.types';
 import {getDistanceFromQuest} from './quests-list.api';
+import {NoQuests} from '../no-quests';
+import Delayed from 'hooks/delayed';
 
 export const QuestsList: FC<QuestsListProps> = ({quests, geoPosition}) => {
-  const {goToQuest} = useQuestsListLogic();
+  const {showLoader, goToQuest} = useQuestsListLogic();
 
   const renderItemHeader = (
     quest: ListRenderItemInfo<QuestWithDistance>,
@@ -93,6 +95,13 @@ export const QuestsList: FC<QuestsListProps> = ({quests, geoPosition}) => {
       renderItem={renderItem}
       keyExtractor={item => item.id.toString()}
       scrollEnabled={false}
+      ListEmptyComponent={
+        showLoader ? null : (
+          <Delayed waitBeforeShow={20}>
+            <NoQuests />
+          </Delayed>
+        )
+      }
     />
   );
 };

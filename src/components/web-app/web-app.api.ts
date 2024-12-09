@@ -10,13 +10,21 @@ import {
   ProviderInterface,
   DeployAccountContractPayload,
   Account,
+  Call,
 } from 'starknet';
+import {get} from 'lodash';
 
 export enum WebAppEvents {
   'CREATE_ACCOUNT' = 'CREATE_ACCOUNT',
-  'DEPLOY_ACCOUNT' = 'DEPLOY_ACCOUNT',
   'CREATE_ACCOUNT_RESULT' = 'CREATE_ACCOUNT_RESULT',
+  'DEPLOY_ACCOUNT' = 'DEPLOY_ACCOUNT',
   'DEPLOY_ACCOUNT_RESULT' = 'DEPLOY_ACCOUNT_RESULT',
+  'FINISH_QUEST_TASK' = 'FINISH_QUEST_TASK',
+  'FINISH_QUEST_TASK_RESULT' = 'FINISH_QUEST_TASK_RESULT',
+  'JOIN_QUEST' = 'JOIN_QUEST',
+  'JOIN_QUEST_RESULT' = 'JOIN_QUEST_RESULT',
+  'SWAP_LOOMI' = 'SWAP_LOOMI',
+  'SWAP_LOOMI_RESULT' = 'SWAP_LOOMI_RESULT',
 }
 
 export const web3Data = {
@@ -25,7 +33,8 @@ export const web3Data = {
   name: 'bBApp',
   chainId: 'SN_SEPOLIA',
   version: '0.0.1',
-  nodeUrl: 'https://free-rpc.nethermind.io/sepolia-juno/v0_7',
+  nodeUrl:
+    'https://starknet-sepolia.g.alchemy.com/starknet/version/rpc/v0_7/InWtKkBR8TTaiQTtcu_KR1i0e64V_vBl',
 };
 
 export const createAccount = (accountClassHash: string) => {
@@ -102,19 +111,34 @@ export const deployAccount = async (
 ): Promise<{
   txHash: string;
   accountAddress: string;
+  account: Account;
 }> => {
+  if (!deployAccountPayload.contractAddress)
+    throw new Error('No contract address');
+
   const account = new Account(
     provider,
-    deployAccountPayload.contractAddress!,
+    deployAccountPayload.contractAddress,
     privateKey,
   );
 
-  try {
-    const {transaction_hash: txHash, contract_address: accountAddress} =
-      await account.deployAccount(deployAccountPayload);
+  const {transaction_hash: txHash, contract_address: accountAddress} =
+    await account.deployAccount(deployAccountPayload);
 
-    return {txHash, accountAddress};
-  } catch (error) {
-    throw error;
-  }
+  return {txHash, accountAddress, account};
 };
+
+export const calculateMaxFee = async ({
+  account,
+  TX,
+}: {
+  account: Account;
+  TX: Call;
+}) => {
+  const feeEstimate = await account.estimateFee([TX]);
+  const buffer = BigInt(200);
+  return feeEstimate.overall_fee * buffer;
+};
+
+export const isErrorMessage = (message: unknown): boolean =>
+  Boolean(get(message, 'data.error'));

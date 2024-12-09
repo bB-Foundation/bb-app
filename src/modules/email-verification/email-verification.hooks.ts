@@ -11,11 +11,10 @@ import Toast from 'react-native-toast-message';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {
+  assignBbId,
   getDeployAccountAdditionalData,
-  isErrorMessage,
   resendEmailVerification,
   verifyEmail,
-  WebAppEvents,
 } from './email-verification.api';
 import {
   NavigationProp,
@@ -34,8 +33,14 @@ import {
 import {Errors} from 'src/enums/errors';
 import {
   clearUserPassword,
+  storeUserAccountAddress,
   storeUserPrivateKey,
 } from 'src/shared/utils/secure-storage';
+import {isErrorMessage, WebAppEvents} from 'components/web-app/web-app.api';
+import {
+  CreateAccountEvent,
+  DeployAccountEvent,
+} from 'components/web-app/web-app.types';
 
 export const useFormLogic = () => {
   const dispatch = useDispatch();
@@ -150,7 +155,7 @@ export const useCreateWallet = () => {
   } = useWebViewMessage(async message => {
     switch (message.type) {
       case WebAppEvents.CREATE_ACCOUNT_RESULT: {
-        if (isErrorMessage(message.data)) {
+        if (isErrorMessage(message)) {
           stopSubmitting();
           return;
         }
@@ -159,14 +164,26 @@ export const useCreateWallet = () => {
         break;
       }
       case WebAppEvents.DEPLOY_ACCOUNT_RESULT: {
-        if (isErrorMessage(message.data)) {
+        if (isErrorMessage(message)) {
           stopSubmitting();
           return;
         }
 
-        await clearUserPassword();
+        try {
+          const {txHash} = message.data as {txHash: string};
+          if (!txHash) throw Error('No txHash');
 
-        navigation.reset({index: 0, routes: [{name: 'new-account-congrats'}]});
+          await clearUserPassword();
+          await assignBbId(txHash);
+
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'new-account-congrats'}],
+          });
+        } catch (error) {
+          stopSubmitting();
+        }
+
         break;
       }
     }
@@ -176,10 +193,11 @@ export const useCreateWallet = () => {
   useEffect(() => {
     if (!isEmailVerified) return;
 
-    emitToWebBrowser({
+    const event: CreateAccountEvent = {
       type: WebAppEvents.CREATE_ACCOUNT,
       data: undefined,
-    });
+    };
+    emitToWebBrowser(event);
   }, [isEmailVerified, emitToWebBrowser]);
 
   /** deploy account after getting private key */
@@ -188,7 +206,10 @@ export const useCreateWallet = () => {
       try {
         if (!web3AccountData) return;
 
-        await storeUserPrivateKey(web3AccountData.privateKey);
+        await Promise.all([
+          storeUserPrivateKey(web3AccountData.privateKey),
+          storeUserAccountAddress(web3AccountData.accountAddress),
+        ]);
 
         const additionalData = await getDeployAccountAdditionalData(
           web3AccountData.privateKey,
@@ -199,10 +220,11 @@ export const useCreateWallet = () => {
           ...additionalData,
         };
 
-        emitToWebBrowser({
+        const event: DeployAccountEvent = {
           type: WebAppEvents.DEPLOY_ACCOUNT,
           data,
-        });
+        };
+        emitToWebBrowser(event);
       } catch (error) {
         stopSubmitting();
       }

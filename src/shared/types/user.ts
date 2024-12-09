@@ -10,6 +10,7 @@ type User = {
 };
 
 export type UserProfile = {
+  userId: number;
   bbId: string;
   email: string;
 };

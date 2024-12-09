@@ -22,8 +22,14 @@ export type QuestsStackParamList = {
 export type QrCodeStackParamList = {
   'qr-scanner-camera': undefined;
   'check-quest-task-qr-code': {
-    questTaskId: number;
+    questId: number;
+    taskId: number;
+    taskCode: string;
   };
+};
+
+export type SwapStackParamList = {
+  main: undefined;
 };
 
 export type NavigationProp = NativeStackNavigationProp<

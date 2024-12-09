@@ -2,6 +2,7 @@ import React, {FC} from 'react';
 import {Image, View} from 'react-native';
 import {Button, Card, Text, useStyleSheet} from '@ui-kitten/components';
 import FastImage from '@d11/react-native-fast-image';
+import WebView from 'react-native-webview';
 
 import {useButtonHandlers, useQuestLogic} from './quest.hooks';
 import Page from 'components/page';
@@ -10,13 +11,20 @@ import AdvantageItem from './components/advantage-item';
 import themedStyles, {imageStyles} from './quest.styles';
 import QuestTasksMap from './components/quest-tasks-map';
 import {getDistanceLabel} from './quest.api';
+import webApp from 'components/web-app';
 
 const Quest: FC = () => {
-  const {quest, isUserParticipateQuest, distanceFromQuestInKm} =
-    useQuestLogic();
+  const {
+    quest,
+    isUserParticipateQuest,
+    distanceFromQuestInKm,
+    webComponentData,
+    isSubmittingQuest,
+  } = useQuestLogic();
 
-  const {isSubmittingQuest, joinQuestHandler, leaveQuestHandler} =
-    useButtonHandlers();
+  const {joinQuestHandler, leaveQuestHandler} = useButtonHandlers();
+
+  const {webBrowserRef, onWebBrowserMessage} = webComponentData;
 
   const styles = useStyleSheet(themedStyles);
 
@@ -46,6 +54,12 @@ const Quest: FC = () => {
 
   return (
     <Page isBottomTabContainer>
+      <WebView
+        ref={webBrowserRef}
+        source={{html: webApp}}
+        onMessage={onWebBrowserMessage}
+      />
+
       <View style={styles.container}>
         <FastImage style={imageStyles.root} source={{uri: quest.imgUrl}} />
         <ImageOverlay style={styles.imageOverlay} />
@@ -74,9 +88,7 @@ const Quest: FC = () => {
               style={styles.bookButton}
               testID="leave-quest-button"
               disabled={isSubmittingQuest}
-              onPress={() =>
-                leaveQuestHandler({questId: quest.id, txHash: 'txHash'})
-              }>
+              onPress={leaveQuestHandler}>
               Leave the quest
             </Button>
           ) : (
@@ -84,9 +96,7 @@ const Quest: FC = () => {
               style={styles.bookButton}
               testID="join-quest-button"
               disabled={isSubmittingQuest}
-              onPress={() =>
-                joinQuestHandler({questId: quest.id, txHash: 'txHash'})
-              }>
+              onPress={joinQuestHandler}>
               Join the quest
             </Button>
           )}

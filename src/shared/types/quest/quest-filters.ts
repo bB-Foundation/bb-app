@@ -22,8 +22,8 @@ export enum TimeOfDay {
 }
 
 export enum DistanceUnit {
-  KM = 'KM',
-  MILES = 'MILES',
+  KM = 'km',
+  MILES = 'miles',
 }
 
 export default QuestFilters;

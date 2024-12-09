@@ -12,7 +12,7 @@ import {
 } from './email-verification.hooks';
 import MailIcon from '../../assets/images/subscribe.svg';
 import Page from 'components/page';
-import webApp from './components/web-app';
+import webApp from 'components/web-app';
 import {VerificationCodeField} from './components/verification-code-field';
 import {SubmitButton} from './components/submit-button';
 import {ResendEmailTimer} from './components/resend-email-timer';

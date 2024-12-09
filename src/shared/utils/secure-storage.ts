@@ -5,6 +5,7 @@ enum TokenNames {
   JWT_REFRESH = 'JWT_REFRESH',
   USER_PASSWORD = 'USER_PASSWORD',
   USER_PRIVATE_KEY = 'USER_PRIVATE_KEY',
+  USER_ACCOUNT_ADDRESS = 'USER_ACCOUNT_ADDRESS',
 }
 
 const storeToken = async (tokenName: string, tokenValue: string) => {
@@ -108,6 +109,22 @@ export const getUserPrivateKey = async () => {
 
 export const clearUserPrivateKey = async () =>
   clearToken(TokenNames.USER_PRIVATE_KEY);
+
+export const storeUserAccountAddress = async (accountAddress: string) => {
+  try {
+    await storeToken(TokenNames.USER_ACCOUNT_ADDRESS, accountAddress);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getUserAccountAddress = async () => {
+  try {
+    return await getToken(TokenNames.USER_ACCOUNT_ADDRESS);
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const clearSecureStorage = () =>
   Promise.all([

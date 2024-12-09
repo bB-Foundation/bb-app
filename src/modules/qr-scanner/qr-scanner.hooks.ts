@@ -18,12 +18,22 @@ export const useQrScannerLogic = () => {
   const codeScanner = useCodeScanner({
     codeTypes: ['qr'],
     onCodeScanned: async codes => {
-      const questTaskId = codes[0].value;
-      if (!questTaskId) return;
+      const questTaskStringData = codes[0].value;
+      if (!questTaskStringData) return;
 
-      await new Promise(res => setTimeout(res, 1100));
+      const {
+        questId,
+        taskId,
+        code,
+      }: {questId: number; taskId: number; code: string} =
+        JSON.parse(questTaskStringData);
+      if (!taskId || !code || !questId) throw new Error('Invalid QR code data');
+
+      await new Promise(res => setTimeout(res, 700));
       navigation.navigate('check-quest-task-qr-code', {
-        questTaskId: +questTaskId,
+        questId,
+        taskId,
+        taskCode: code,
       });
     },
   });

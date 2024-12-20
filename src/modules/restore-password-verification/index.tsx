@@ -47,6 +47,7 @@ const RestorePasswordVerification: FC = () => {
             </Text>
 
             <CodeField
+              cellCount={6}
               value={verificationCode}
               setValue={setVerificationCode}
             />

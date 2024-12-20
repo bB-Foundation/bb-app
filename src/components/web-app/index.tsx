@@ -8,16 +8,52 @@ import {
 import {Account, CallData, Contract, RpcProvider} from 'starknet';
 
 import {
-  calculateMaxFee,
   createAccount,
   deployAccount,
   generateMessage,
+  generateTradeSignatureMessage,
   signMessage,
   web3Data,
   WebAppEvents,
 } from './web-app.api';
 import {Events} from './web-app.types';
 import deployedContracts from 'src/assets/data/deployedContracts';
+
+const originalConsoleLog = console.log;
+console.log = (...args) => {
+  originalConsoleLog(...args); // Keep original behavior
+
+  if (window.ReactNativeWebView) {
+    try {
+      const serializedArgs = args.map(arg => {
+        if (arg instanceof Error) {
+          // Manually serialize Error objects
+          return {
+            message: arg.message,
+            stack: arg.stack,
+            name: arg.name,
+          };
+        }
+        // Serialize objects and other data types
+        return typeof arg === 'object' && arg !== null
+          ? JSON.stringify(arg, null, 2)
+          : String(arg);
+      });
+
+      // Send logs to React Native
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({type: 'log', data: serializedArgs}),
+      );
+    } catch (error) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({
+          type: 'log',
+          data: ['[Unserializable data]', error.message],
+        }),
+      );
+    }
+  }
+};
 
 const WebApp = () => {
   useNativeMessage(async message => {
@@ -32,6 +68,7 @@ const WebApp = () => {
             data: accountData,
           });
         } catch (error) {
+          console.log(error);
           emit({type: WebAppEvents.CREATE_ACCOUNT_RESULT, data: {error}});
         }
 
@@ -156,6 +193,7 @@ const WebApp = () => {
             data: {txHash: txReceipt.transaction_hash},
           });
         } catch (error) {
+          console.log(error);
           emit({type: WebAppEvents.DEPLOY_ACCOUNT_RESULT, data: {error}});
         }
 
@@ -180,9 +218,11 @@ const WebApp = () => {
 
           const joinQuestTx = questContract.populate('join_quest', []);
           // const maxFee = await calculateMaxFee({account, TX: joinQuestTx});
-          const result = await account.execute([joinQuestTx], undefined, 
+          const result = await account.execute(
+            [joinQuestTx],
+            undefined,
             // {maxFee,}
-        );
+          );
           const txReceipt = await provider.waitForTransaction(
             result.transaction_hash,
           );
@@ -196,6 +236,7 @@ const WebApp = () => {
             data: {txHash: txReceipt.transaction_hash},
           });
         } catch (error) {
+          console.log(error);
           emit({type: WebAppEvents.JOIN_QUEST_RESULT, data: {error}});
         }
 
@@ -248,6 +289,7 @@ const WebApp = () => {
             data: {txHash: txReceipt.transaction_hash},
           });
         } catch (error) {
+          console.log(error);
           emit({
             type: WebAppEvents.FINISH_QUEST_TASK_RESULT,
             data: {error},
@@ -260,11 +302,6 @@ const WebApp = () => {
       case WebAppEvents.SWAP_LOOMI: {
         try {
           const {accountAddress, privateKey, tokenIds} = event.data;
-
-          emit({
-            type: WebAppEvents.SWAP_LOOMI_RESULT,
-            data: event.data,
-          });
 
           const provider = new RpcProvider({
             nodeUrl: web3Data.nodeUrl,
@@ -304,7 +341,38 @@ const WebApp = () => {
             data: {txHash: txReceipt.transaction_hash},
           });
         } catch (error) {
+          console.log(error);
           emit({type: WebAppEvents.SWAP_LOOMI_RESULT, data: {error}});
+        }
+
+        break;
+      }
+
+      case WebAppEvents.GENERATE_SIGNATURE: {
+        try {
+          const {
+            privateKey,
+            initiatorId,
+            receiverId,
+            initiatorGemIds,
+            receiverGemIds,
+          } = event.data;
+
+          const messageStructure = generateTradeSignatureMessage({
+            initiatorId,
+            receiverId,
+            initiatorGemIds,
+            receiverGemIds,
+          });
+          const signature = await signMessage(privateKey, messageStructure);
+
+          emit({
+            type: WebAppEvents.GENERATE_SIGNATURE_RESULT,
+            data: {signature},
+          });
+        } catch (error) {
+          console.log(error);
+          emit({type: WebAppEvents.GENERATE_SIGNATURE_RESULT, data: {error}});
         }
 
         break;

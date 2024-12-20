@@ -47,6 +47,8 @@ export const useQuestLogic = () => {
     quest,
   );
 
+  const {data: currentUserProfile} = useCurrentUserProfile();
+
   const isSubmitJoin = useSelector(toggleQuestParticipantsActor, snapshot =>
     snapshot.matches('submitJoin'),
   );
@@ -69,6 +71,8 @@ export const useQuestLogic = () => {
     onMessage: onWebBrowserMessage,
     emit: emitToWebBrowser,
   } = useWebViewMessage(async message => {
+    console.log('🚀 ~ useQuestLogic ~ message:', message);
+
     switch (message.type) {
       case WebAppEvents.JOIN_QUEST_RESULT: {
         if (isErrorMessage(message)) {
@@ -120,13 +124,20 @@ export const useQuestLogic = () => {
 
     (async () => {
       try {
+        if (!currentUserProfile) throw new Error('No current user profile');
+
+        const {userId} = currentUserProfile;
         const [privateKey, accountAddress] = await Promise.all([
-          getUserPrivateKey(),
-          getUserAccountAddress(),
+          getUserPrivateKey(userId),
+          getUserAccountAddress(userId),
         ]);
 
+        console.log('🚀 ~ privateKey:', privateKey);
+        console.log('🚀 ~ privateKey:', accountAddress);
+        console.log('🚀 ~ privateKey:', quest.contractAddress);
+
         if (!privateKey || !accountAddress || !quest.contractAddress)
-          throw Error('Inconsistent JoinQuestEvent data');
+          throw new Error('Inconsistent JoinQuestEvent data');
 
         const event: JoinQuestEvent = {
           type: WebAppEvents.JOIN_QUEST,
@@ -141,7 +152,7 @@ export const useQuestLogic = () => {
         toggleQuestParticipantsActor.send({type: 'reject'});
       }
     })();
-  }, [quest, isSubmitJoin, emitToWebBrowser]);
+  }, [quest, isSubmitJoin, currentUserProfile, emitToWebBrowser]);
 
   // show error messages
   useEffect(() => {

@@ -91,45 +91,77 @@ export const getUserPassword = async () => {
 export const clearUserPassword = async () =>
   clearToken(TokenNames.USER_PASSWORD);
 
-export const storeUserPrivateKey = async (privateKey: string) => {
+export const storeUserPrivateKey = async (
+  privateKey: string,
+  userId: number,
+) => {
   try {
-    await storeToken(TokenNames.USER_PRIVATE_KEY, privateKey);
+    const prevStateString = await getToken(TokenNames.USER_PRIVATE_KEY);
+    const prevState: {[userId: number]: string} | null = prevStateString
+      ? JSON.parse(prevStateString)
+      : null;
+
+    if (prevState) {
+      prevState[userId] = privateKey;
+    }
+
+    const value = prevState ? prevState : {[userId]: privateKey};
+    console.log('🚀 ~ value:', value);
+    await storeToken(TokenNames.USER_PRIVATE_KEY, JSON.stringify(value));
   } catch (error) {
     throw error;
   }
 };
 
-export const getUserPrivateKey = async () => {
+export const getUserPrivateKey = async (userId: number) => {
   try {
-    return await getToken(TokenNames.USER_PRIVATE_KEY);
+    const prevStateString = await getToken(TokenNames.USER_PRIVATE_KEY);
+    const prevState: {[userId: number]: string} | null = prevStateString
+      ? JSON.parse(prevStateString)
+      : null;
+
+    return prevState ? prevState[userId] : null;
   } catch (error) {
     throw error;
   }
 };
 
-export const clearUserPrivateKey = async () =>
-  clearToken(TokenNames.USER_PRIVATE_KEY);
+// export const clearUserPrivateKey = async (userId: number) =>
+//   clearToken(TokenNames.USER_PRIVATE_KEY);
 
-export const storeUserAccountAddress = async (accountAddress: string) => {
+export const storeUserAccountAddress = async (
+  accountAddress: string,
+  userId: number,
+) => {
   try {
-    await storeToken(TokenNames.USER_ACCOUNT_ADDRESS, accountAddress);
+    const prevStateString = await getToken(TokenNames.USER_ACCOUNT_ADDRESS);
+    const prevState: {[userId: number]: string} | null = prevStateString
+      ? JSON.parse(prevStateString)
+      : null;
+
+    if (prevState) {
+      prevState[userId] = accountAddress;
+    }
+
+    const value = prevState ? prevState : {[userId]: accountAddress};
+    await storeToken(TokenNames.USER_ACCOUNT_ADDRESS, JSON.stringify(value));
   } catch (error) {
     throw error;
   }
 };
 
-export const getUserAccountAddress = async () => {
+export const getUserAccountAddress = async (userId: number) => {
   try {
-    return await getToken(TokenNames.USER_ACCOUNT_ADDRESS);
+    const prevStateString = await getToken(TokenNames.USER_ACCOUNT_ADDRESS);
+    const prevState: {[userId: number]: string} | null = prevStateString
+      ? JSON.parse(prevStateString)
+      : null;
+
+    return prevState ? prevState[userId] : null;
   } catch (error) {
     throw error;
   }
 };
 
 export const clearSecureStorage = () =>
-  Promise.all([
-    clearJwtAccessToken(),
-    clearJwtRefreshToken(),
-    clearUserPassword(),
-    clearUserPrivateKey(),
-  ]);
+  Promise.all([clearJwtAccessToken(), clearJwtRefreshToken()]);

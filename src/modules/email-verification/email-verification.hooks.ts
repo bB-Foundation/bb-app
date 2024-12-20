@@ -41,6 +41,7 @@ import {
   CreateAccountEvent,
   DeployAccountEvent,
 } from 'components/web-app/web-app.types';
+import {getCurrentUserProfile} from 'hooks/current-user/current-user-profile.api';
 
 export const useFormLogic = () => {
   const dispatch = useDispatch();
@@ -153,6 +154,8 @@ export const useCreateWallet = () => {
     onMessage: onWebBrowserMessage,
     emit: emitToWebBrowser,
   } = useWebViewMessage(async message => {
+    console.log('🚀 ~ useCreateWal ~ message:', message);
+
     switch (message.type) {
       case WebAppEvents.CREATE_ACCOUNT_RESULT: {
         if (isErrorMessage(message)) {
@@ -171,7 +174,15 @@ export const useCreateWallet = () => {
 
         try {
           const {txHash} = message.data as {txHash: string};
-          if (!txHash) throw Error('No txHash');
+          if (!txHash) throw new Error('No txHash');
+
+          if (!web3AccountData) throw new Error();
+
+          const {userId} = await getCurrentUserProfile();
+          await Promise.all([
+            storeUserPrivateKey(web3AccountData.privateKey, userId),
+            storeUserAccountAddress(web3AccountData.accountAddress, userId),
+          ]);
 
           await clearUserPassword();
           await assignBbId(txHash);
@@ -205,11 +216,6 @@ export const useCreateWallet = () => {
     (async () => {
       try {
         if (!web3AccountData) return;
-
-        await Promise.all([
-          storeUserPrivateKey(web3AccountData.privateKey),
-          storeUserAccountAddress(web3AccountData.accountAddress),
-        ]);
 
         const additionalData = await getDeployAccountAdditionalData(
           web3AccountData.privateKey,

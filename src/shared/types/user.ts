@@ -6,13 +6,14 @@ type User = {
   role: UserRole;
   status: UserStatus;
   fullPublicKey: Nullable<string>;
-  address: Nullable<string>;
+  accountAddress: Nullable<string>;
 };
 
 export type UserProfile = {
   userId: number;
   bbId: string;
   email: string;
+  accountAddress: Nullable<string>;
 };
 
 export enum UserStatus {

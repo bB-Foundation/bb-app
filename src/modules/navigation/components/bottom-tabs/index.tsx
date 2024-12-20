@@ -1,9 +1,15 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
+import QrScannerIcon from 'src/assets/images/bottom-tabs/qr-scanner.svg';
+import MapIcon from 'src/assets/images/bottom-tabs/map.svg';
+import TradeIcon from 'src/assets/images/bottom-tabs/trade.svg';
+import SwapIcon from 'src/assets/images/bottom-tabs/swap.svg';
+import UserIcon from 'src/assets/images/bottom-tabs/user.svg';
 import QuestsStack from '../quests-stack';
 import QrCodeStack from '../qr-code-stack';
 import {UserProfile} from 'src/modules/user-profile';
+import {Trade} from 'src/modules/trade';
 import SwapStack from '../swap-stack';
 
 const BottomTabs = () => {
@@ -18,36 +24,77 @@ const BottomTabs = () => {
         name="quests"
         component={QuestsStack}
         options={{
-          tabBarLabel: 'Quests',
-          tabBarLabelStyle: {fontSize: 16},
-          tabBarIcon: () => null,
+          tabBarActiveTintColor: '#3366ff',
+          tabBarInactiveTintColor: 'gray',
+          tabBarIcon: ({focused}) => (
+            <MapIcon
+              width={27}
+              height={27}
+              fill={focused ? '#3366ff' : 'gray'}
+            />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="trade"
+        component={Trade}
+        options={{
+          tabBarActiveTintColor: '#3366ff',
+          tabBarInactiveTintColor: 'gray',
+          tabBarIcon: ({focused}) => (
+            <TradeIcon
+              width={36}
+              height={36}
+              fill={focused ? '#3366ff' : 'gray'}
+            />
+          ),
         }}
       />
       <BottomTab.Screen
         name="qr-scanner"
         component={QrCodeStack}
         options={{
-          tabBarLabel: 'QR scanner',
-          tabBarLabelStyle: {fontSize: 16},
-          tabBarIcon: () => null,
+          tabBarLabelStyle: {display: 'none'},
+          tabBarActiveTintColor: '#3366ff',
+          tabBarInactiveTintColor: 'gray',
+          tabBarIcon: ({focused}) => (
+            <QrScannerIcon
+              width={35}
+              height={35}
+              fill={focused ? '#3366ff' : 'gray'}
+            />
+          ),
         }}
       />
       <BottomTab.Screen
         name="swap"
         component={SwapStack}
         options={{
-          tabBarLabel: 'Swap',
-          tabBarLabelStyle: {fontSize: 16},
-          tabBarIcon: () => null,
+          tabBarActiveTintColor: '#3366ff',
+          tabBarInactiveTintColor: 'gray',
+          tabBarIcon: ({focused}) => (
+            <SwapIcon
+              width={27}
+              height={27}
+              fill={focused ? '#3366ff' : 'gray'}
+            />
+          ),
         }}
       />
       <BottomTab.Screen
         name="user-profile"
         component={UserProfile}
         options={{
-          tabBarLabel: 'User',
-          tabBarLabelStyle: {fontSize: 16},
-          tabBarIcon: () => null,
+          tabBarLabel: 'user',
+          tabBarActiveTintColor: '#3366ff',
+          tabBarInactiveTintColor: 'gray',
+          tabBarIcon: ({focused}) => (
+            <UserIcon
+              width={27}
+              height={27}
+              fill={focused ? '#3366ff' : 'gray'}
+            />
+          ),
         }}
       />
     </BottomTab.Navigator>

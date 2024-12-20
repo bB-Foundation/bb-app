@@ -1,0 +1,14 @@
+import {useQuery} from '@tanstack/react-query';
+
+import queryKeys from 'configs/query-keys';
+import {GemFilters} from './gems.types';
+import {getGems} from '../../api/gems';
+
+const useGems = (filters: GemFilters) =>
+  useQuery({
+    queryKey: queryKeys.getGems(filters),
+    queryFn: () => getGems(filters),
+    enabled: filters.userId > 0,
+  });
+
+export default useGems;

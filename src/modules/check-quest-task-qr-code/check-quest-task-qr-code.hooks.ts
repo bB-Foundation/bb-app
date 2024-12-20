@@ -20,6 +20,7 @@ import {isErrorMessage, WebAppEvents} from 'components/web-app/web-app.api';
 import {FinishQuestTaskEvent} from 'components/web-app/web-app.types';
 import {Errors} from 'src/enums/errors';
 import {claimQuestTaskReward} from './check-quest-task-qr-code.api';
+import useCurrentUserProfile from 'hooks/current-user';
 
 export const useCheckQrCode = () => {
   const {
@@ -29,6 +30,8 @@ export const useCheckQrCode = () => {
   const navigation = useNavigation<NavigationProp>();
 
   const queryClient = useQueryClient();
+
+  const {data: currentUserProfile} = useCurrentUserProfile();
 
   const errorHandler = useCallback(
     async (errorMessage: string) => {
@@ -51,6 +54,8 @@ export const useCheckQrCode = () => {
     onMessage: onWebBrowserMessage,
     emit: emitToWebBrowser,
   } = useWebViewMessage(async message => {
+    console.log('🚀 ~ useCheckQrCode ~ message:', message);
+
     switch (message.type) {
       case WebAppEvents.FINISH_QUEST_TASK_RESULT: {
         if (isErrorMessage(message)) {
@@ -109,6 +114,8 @@ export const useCheckQrCode = () => {
   useEffect(() => {
     (async () => {
       try {
+        if (!currentUserProfile) throw new Error('No current user profile');
+
         await new Promise(res => setTimeout(res, 1000));
 
         const quest = await queryClient.fetchQuery({
@@ -116,9 +123,10 @@ export const useCheckQrCode = () => {
           queryFn: () => getQuestById(questId),
         });
 
+        const {userId} = currentUserProfile;
         const [privateKey, accountAddress] = await Promise.all([
-          getUserPrivateKey(),
-          getUserAccountAddress(),
+          getUserPrivateKey(userId),
+          getUserAccountAddress(userId),
         ]);
 
         if (!privateKey || !accountAddress || !quest.contractAddress)
@@ -139,7 +147,15 @@ export const useCheckQrCode = () => {
         errorHandler(getApiOrUnknownErrorMessage(error));
       }
     })();
-  }, [taskId, questId, taskCode, queryClient, emitToWebBrowser, errorHandler]);
+  }, [
+    taskId,
+    questId,
+    taskCode,
+    queryClient,
+    currentUserProfile,
+    emitToWebBrowser,
+    errorHandler,
+  ]);
 
   return {webBrowserRef, onWebBrowserMessage};
 };

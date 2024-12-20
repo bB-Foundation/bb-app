@@ -1,5 +1,13 @@
+export enum GemColor {
+  BLUE = 'blue',
+  YELLOW = 'yellow',
+  PINK = 'pink',
+  PURPLE = 'purple',
+  GREEN = 'green',
+}
+
 type GemAttributes = {
-  color: string;
+  color: GemColor;
 };
 
 export type GemMetadata = {

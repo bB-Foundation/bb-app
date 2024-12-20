@@ -30,12 +30,17 @@ type SwapLoomiData = {
   tokenIds: number[];
 };
 
+type GenerateSignatureData = {
+  privateKey: string;
+};
+
 export type Events =
   | CreateAccountEvent
   | DeployAccountEvent
   | JoinQuestEvent
   | FinishQuestTaskEvent
-  | SwapLoomiEvent;
+  | SwapLoomiEvent
+  | GenerateSignatureEvent;
 
 export type CreateAccountEvent = {
   type: WebAppEvents.CREATE_ACCOUNT;
@@ -60,4 +65,16 @@ export type FinishQuestTaskEvent = {
 export type SwapLoomiEvent = {
   type: WebAppEvents.SWAP_LOOMI;
   data: SwapLoomiData;
+};
+
+export type GenerateSignatureEvent = {
+  type: WebAppEvents.GENERATE_SIGNATURE;
+  data: GenerateSignatureData & TradeSignaturePayload;
+};
+
+export type TradeSignaturePayload = {
+  initiatorId: number;
+  receiverId: number;
+  initiatorGemIds: string[];
+  receiverGemIds: string[];
 };

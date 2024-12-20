@@ -7,13 +7,13 @@ import {
 
 import styles from './code-field.styles';
 import {CodeFieldProps} from './code-field.types';
-import {cellCount} from './code-field.api';
 import {useCodeField} from './code-field.hooks';
 
-const CodeField: FC<CodeFieldProps> = ({value, setValue}) => {
+const CodeField: FC<CodeFieldProps> = ({value, setValue, cellCount}) => {
   const {ref, props, getCellOnLayoutHandler} = useCodeField({
     value,
     setValue,
+    cellCount,
   });
 
   return (

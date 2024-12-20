@@ -13,6 +13,7 @@ import {
   Call,
 } from 'starknet';
 import {get} from 'lodash';
+import {TradeSignaturePayload} from './web-app.types';
 
 export enum WebAppEvents {
   'CREATE_ACCOUNT' = 'CREATE_ACCOUNT',
@@ -25,6 +26,8 @@ export enum WebAppEvents {
   'JOIN_QUEST_RESULT' = 'JOIN_QUEST_RESULT',
   'SWAP_LOOMI' = 'SWAP_LOOMI',
   'SWAP_LOOMI_RESULT' = 'SWAP_LOOMI_RESULT',
+  'GENERATE_SIGNATURE' = 'GENERATE_SIGNATURE',
+  'GENERATE_SIGNATURE_RESULT' = 'GENERATE_SIGNATURE_RESULT',
 }
 
 export const web3Data = {
@@ -142,3 +145,25 @@ export const calculateMaxFee = async ({
 
 export const isErrorMessage = (message: unknown): boolean =>
   Boolean(get(message, 'data.error'));
+
+export const generateTradeSignatureMessage = (
+  payload: TradeSignaturePayload,
+): TypedData => ({
+  types: {
+    StarkNetDomain: [
+      {name: 'name', type: 'felt'},
+      {name: 'chainId', type: 'felt'},
+      {name: 'version', type: 'felt'},
+    ],
+    Message: [{name: 'payloadHash', type: 'felt'}],
+  },
+  primaryType: 'Message',
+  domain: {
+    name: web3Data.name,
+    chainId: web3Data.chainId,
+    version: web3Data.version,
+  },
+  message: {
+    payloadHash: hash.starknetKeccak(JSON.stringify(payload)),
+  },
+});

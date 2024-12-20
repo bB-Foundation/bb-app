@@ -13,9 +13,8 @@ const AdvantageItem: FC<ProfileSocialProps> = ({
 }) => {
   return (
     <View {...viewProps} style={[styles.container, style]}>
-      <Text category="s2" style={styles.value}>
-        {value}
-      </Text>
+      {value}
+
       <Text appearance="hint" category="c2" style={styles.hint}>
         {hint}
       </Text>

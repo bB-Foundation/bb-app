@@ -5,9 +5,6 @@ export default StyleSheet.create({
     alignItems: 'center',
     gap: 12,
   },
-  value: {
-    fontSize: 17,
-  },
   hint: {
     fontSize: 16,
   },

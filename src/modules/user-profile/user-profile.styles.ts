@@ -28,4 +28,5 @@ export default StyleSheet.create({
     paddingHorizontal: 16,
     marginTop: 32,
   },
+  advantageItemText: {fontSize: 17},
 });

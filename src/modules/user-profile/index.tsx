@@ -14,12 +14,20 @@ import {SettingsButton} from './components/settings-button/button';
 import {OverlayLoader} from 'components/overlay-loader';
 
 export const UserProfile = () => {
-  const {accountAddress, reducedAccountAddress, isLoading} =
-    useUserProfileLogic();
+  const {
+    isLoading,
+    showOverlayLoader,
+    userEmail,
+    accountAddress,
+    reducedAccountAddress,
+    loomis,
+  } = useUserProfileLogic();
+
+  if (isLoading) return <OverlayLoader />;
 
   return (
     <Page isBottomTabContainer>
-      {isLoading && <OverlayLoader />}
+      {showOverlayLoader && <OverlayLoader />}
 
       <View
         style={[styles.header, hasNotch() ? undefined : styles.headerPaddings]}>
@@ -29,8 +37,8 @@ export const UserProfile = () => {
             source={require('src/assets/images/blank-profile.png')}
           />
 
-          <Text category="h4" style={styles.userName}>
-            Bob Kuper
+          <Text category="h6" style={styles.userName}>
+            {userEmail}
           </Text>
         </View>
 
@@ -62,9 +70,30 @@ export const UserProfile = () => {
       <Divider />
 
       <View style={styles.userStatsView}>
-        <AdvantageItem hint="Rank" value="54" />
-        <AdvantageItem hint="Quests Completed" value="4" />
-        <AdvantageItem hint="Loomi" value="7" />
+        <AdvantageItem
+          hint="Rank"
+          value={
+            <Text category="s2" style={styles.advantageItemText}>
+              ??
+            </Text>
+          }
+        />
+        <AdvantageItem
+          hint="Quests Completed"
+          value={
+            <Text category="s2" style={styles.advantageItemText}>
+              ??
+            </Text>
+          }
+        />
+        <AdvantageItem
+          hint="Loomi"
+          value={
+            <Text category="s2" style={styles.advantageItemText}>
+              {loomis.length}
+            </Text>
+          }
+        />
       </View>
     </Page>
   );

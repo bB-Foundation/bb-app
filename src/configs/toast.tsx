@@ -21,6 +21,15 @@ export default {
       text2Style={styles.text2Style}
     />
   ),
+  info: (props: ToastProps) => (
+    <ErrorToast
+      {...props}
+      text2NumberOfLines={0}
+      style={{...styles.commonContainer, ...styles.infoContainer}}
+      text1Style={styles.text1Style}
+      text2Style={styles.text2Style}
+    />
+  ),
 };
 
 const styles = StyleSheet.create({
@@ -34,6 +43,9 @@ const styles = StyleSheet.create({
   },
   successContainer: {
     borderLeftColor: 'green',
+  },
+  infoContainer: {
+    borderLeftColor: 'blue',
   },
   text1Style: {fontSize: 18},
   text2Style: {fontSize: 16, marginTop: 5},

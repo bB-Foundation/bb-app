@@ -4,6 +4,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {useNavigation} from '@react-navigation/native';
 import {useMutation} from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
+import {Keyboard} from 'react-native';
 
 import {SignUpFormFields} from './sign-up.types';
 import {signUp, signUpFormSchema} from './sign-up.api';
@@ -34,6 +35,8 @@ export const useFormLogic = () => {
 
   const onSubmit = async (data: SignUpFormFields) => {
     try {
+      Keyboard.dismiss();
+
       await signUpAsync(data);
       await signIn(data);
       await storeUserPassword(data.password);
@@ -64,6 +67,7 @@ export const useButtonHandlers = () => {
   const navigation = useNavigation<NavigationProp>();
 
   const onSignInButtonPress = (): void => {
+    Keyboard.dismiss();
     navigation.navigate('sign-in');
   };
 

@@ -4,7 +4,7 @@ import {Button, Text} from '@ui-kitten/components';
 
 import styles from './select-tokens.styles';
 import {Gem} from '../../../../components/gem';
-import {useSelectTokens} from './select-tokens.hooks';
+import {useLayout, useSelectTokens} from './select-tokens.hooks';
 import {GemColor} from 'types/gem';
 import {OverlayLoader} from 'components/overlay-loader';
 import {SelectTokensProps} from './select-tokens.types';
@@ -22,11 +22,13 @@ export const SelectTokens: FC<SelectTokensProps> = ({
     onSubmitButtonPress,
   } = useSelectTokens({userId, submitHandler, submitValidator});
 
+  const {mainContainerMarginTop} = useLayout();
+
   return (
     <>
       {isLoading && <OverlayLoader />}
 
-      <View style={styles.container}>
+      <View style={[styles.container, {marginTop: mainContainerMarginTop}]}>
         <Text category="h6">Select gems</Text>
 
         <View style={styles.gemsContainer}>

@@ -3,6 +3,7 @@ import {View} from 'react-native';
 import {Button, Text} from '@ui-kitten/components';
 import {Dropdown} from 'react-native-element-dropdown';
 import {useSelector} from '@xstate/react';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {UserProfile} from 'types/user';
 import {fetUserByBbId} from './select-recipient.api';
@@ -24,6 +25,9 @@ export const SelectRecipient: FC = () => {
       snapshot.children[TradingMachinesIds.CREATE_TRADE] as CreateTradeActor,
   );
 
+  const {top} = useSafeAreaInsets();
+  const mainContainerMarginTop = top ? 0 : 16;
+
   const selectRecipient = () => {
     if (!selectedRecipientUser) return;
     createTradeActor.send({
@@ -43,7 +47,12 @@ export const SelectRecipient: FC = () => {
   }, [searchUserBbId]);
 
   return (
-    <View style={{flex: 1, paddingHorizontal: 16}}>
+    <View
+      style={{
+        flex: 1,
+        paddingHorizontal: 16,
+        marginTop: mainContainerMarginTop,
+      }}>
       <Text category="h6">Select user for trade</Text>
 
       <Dropdown

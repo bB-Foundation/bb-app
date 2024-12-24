@@ -1,4 +1,6 @@
 import {useMemo, useState} from 'react';
+import {Keyboard} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import useGems from 'hooks/gems';
 import {stackGemsByColor} from 'src/shared/api/gems';
@@ -22,7 +24,7 @@ export const useSelectAmount = ({
     return stackGemsByColor(gems)[gemColor] ?? [];
   }, [gems, gemColor]);
 
-  const onSubmitButtonPress = () => {
+  const onSubmitButtonPress = async () => {
     try {
       const gemsAmount = defaultGemsAmountValidator(
         gemsAmountStr,
@@ -32,6 +34,9 @@ export const useSelectAmount = ({
       if (submitValidator) {
         submitValidator(gemsAmount);
       }
+
+      Keyboard.dismiss();
+      await new Promise(resolve => setTimeout(resolve, 50));
 
       const gemsIdsForTrade = gemsOfSelectedColor
         .slice(0, gemsAmount)
@@ -50,4 +55,12 @@ export const useSelectAmount = ({
     setGemsAmountStr,
     onSubmitButtonPress,
   };
+};
+
+export const useLayout = () => {
+  const {top} = useSafeAreaInsets();
+
+  const mainContainerMarginTop = top ? 0 : 16;
+
+  return {mainContainerMarginTop};
 };

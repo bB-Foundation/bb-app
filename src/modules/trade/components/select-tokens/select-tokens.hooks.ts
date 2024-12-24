@@ -1,5 +1,6 @@
 import {useEffect, useMemo, useState} from 'react';
 import Toast from 'react-native-toast-message';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import useGems from 'hooks/gems';
 import {GemColor} from 'types/gem';
@@ -66,4 +67,12 @@ export const useSelectTokens = ({
     selectGemColor,
     onSubmitButtonPress,
   };
+};
+
+export const useLayout = () => {
+  const {top} = useSafeAreaInsets();
+
+  const mainContainerMarginTop = top ? 0 : 16;
+
+  return {mainContainerMarginTop};
 };

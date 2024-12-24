@@ -1,4 +1,5 @@
 import React, {FC} from 'react';
+import {Button} from '@ui-kitten/components';
 
 import {SelectRecipient} from '../select-recipient';
 import {SelectTokens} from '../select-tokens';
@@ -9,7 +10,6 @@ import {WaitFinish} from '../wait-finish';
 import {SignTrade} from '../sign-trade';
 import {useCreateTrade, useHandlers} from './create-trade.hooks';
 import {Finish} from '../finish';
-import {Button} from '@ui-kitten/components';
 
 export const CreateTrade: FC = () => {
   const {tradeStatus, data} = useCreateTrade();
@@ -88,8 +88,13 @@ export const CreateTrade: FC = () => {
       {(isFindRecipient ||
         isViewTokens ||
         isViewTokenAmount ||
-        isReviewOffer) && (
-        <Button onPress={exitHandler} appearance="ghost" status="basic">
+        isReviewOffer ||
+        isSendingRequest) && (
+        <Button
+          onPress={exitHandler}
+          disabled={isSendingRequest}
+          appearance="ghost"
+          status="basic">
           Exit
         </Button>
       )}

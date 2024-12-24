@@ -11,6 +11,7 @@ import {NavigationProp} from '../navigation/navigation.types';
 import useSignIn from 'hooks/sign-in';
 import {getApiOrUnknownErrorMessage} from 'src/shared/utils/errors';
 import useCurrentUserProfile from 'hooks/current-user';
+import {Keyboard} from 'react-native';
 
 export const useIsPasswordVisible = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -32,6 +33,7 @@ export const useFormLogic = () => {
 
   const onSubmit = async (data: SignInFormFields) => {
     try {
+      Keyboard.dismiss();
       await signIn(data);
       navigation.reset({index: 0, routes: [{name: 'main'}]});
     } catch (error) {
@@ -61,10 +63,12 @@ export const useButtonHandlers = () => {
   const navigation = useNavigation<NavigationProp>();
 
   const onSignUpButtonPress = (): void => {
+    Keyboard.dismiss();
     navigation.navigate('sign-up');
   };
 
   const onForgotPasswordButtonPress = (): void => {
+    Keyboard.dismiss();
     navigation.navigate('forgot-password');
   };
 

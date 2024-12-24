@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from 'react';
-import {Alert} from 'react-native';
+import {Alert, Keyboard} from 'react-native';
 import {useMutation} from '@tanstack/react-query';
 import {
   RouteProp,
@@ -54,6 +54,7 @@ export const useFormLogic = () => {
 
   const onSubmit = async () => {
     try {
+      Keyboard.dismiss();
       dispatch(setIsSubmitting(true));
       await verifyEmailAsync(verificationCode);
       dispatch(verifyEmailAction(true));
@@ -111,8 +112,10 @@ export const useButtonHandlers = () => {
       },
       {
         text: 'OK',
-        onPress: () =>
-          navigation.reset({index: 0, routes: [{name: 'sign-in'}]}),
+        onPress: () => {
+          Keyboard.dismiss();
+          navigation.reset({index: 0, routes: [{name: 'sign-in'}]});
+        },
       },
     ]);
 

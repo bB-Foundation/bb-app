@@ -32,7 +32,7 @@ export const tradingMachine = setup({
   },
   guards: {},
 }).createMachine({
-  /** @xstate-layout N4IgpgJg5mDOIC5QBcBOBDCBLAdlAdAO7pbK5QAqGEYA8gGb1iqwDEA9o8wNoAMAuolAAHdrFJZ2OISAAeiAJwBWAIz4FAdg1KNKgBwAWBSpN6ANCACeiFQoX4AzEoUA2A3t7GDWhxoC+fhZomOREJGR4VJh0XCys6ADGCWDCyHyCSCCi4mRSMvIIygb4SnoATHoaZe4uCmVKLhbWCA4KDviGBk4uTuUuvFoBQdShxBKR1DFMLPhYEAA2YKyysMjoyGD46PQbqAAUSry8AJSswdh4YeOUkwzTsLMLYOky2RJ5mQWl7QYqBjpGPQ6BS8JRNRAOPQ-XgqJQOX4uJSAlxDEDnUbhchRGh3ZgPWBgdCoBIACyxt1ibAgUk2uAAbuwANabdGXMYRG7RXEzAlE0nkrmUhD09gJdaSHDpF6ZN65aSfRBItTaKG2Mq1WG8MrghBlDTFIxlWy2LoDBzVVGsgjsgU4yn4XnEskTQX3VjMVDsVD4YTzdb0L0AW3wVquHOxUzxDsJTttkZYwpwDLFcqlAleYne8tAXwMZXwprKZVa8JUvgMOrKnnwiNBvl08JhSiUlpGlzmi1YqyJaXTMszcvyiC0+GLBgGGhBRn01Ur-Q6vl8qnHkJciNbIUuiWSqQjrGpOFpSaZLLbBG3KWQEcTyfFUjTGREA4lQ4QKjKdRKRaRAz0JsaVgQl06jaM4-xAr0BgooEaJnvgCSoISGx7geR4MsyIZwQhSFgNeIophKD4ZjkL4Km+H7FCoPRlpofzLg4lYaC4+BaP03h6ECf6wgEME4OwNDwJkVrEVmr4ALRwqOdR6kceZHEWOrwjWhyHPqcnqh+G4XNamIuna9wiYOZHFsxShFtOCiGromg6u++aamZ9RaA2xhaRi1wRtyDwdmAhmkTmw4uHojhgbw8J9HoyiVsoLH6ExtRdC45luWyumcvpUaOvyenxoJT4kR8AW6oYX7VMYll1NZGiMfmRqVP0a5QVqCgpeeSSXhGfmFXINi8LUjiVK0RYOC4GjyYpY2OAYXSHAMdS-GUrWPIsXXZj1CASVJRZjbwclalWKiVlCJQ9G0pRGuaDgqEt2HrLhkyra+KgDPm+qjf0KiTkaza2doHTONRkLvv8Gh6DxfhAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QBcBOBDCBLAdlAdAO7pbK5QAqGEYA8gGb1iqwDEA9o8wNoAMAuolAAHdrFJZ2OISAAeiAIy8AnAFZ8AFgBsWgBz6du3r1UAaEAE9FvXZoDMCgEwB2BRseqNyu1tUBfP3M0THIiEjI8Kkw6LhZWdABjBLBhZD5BJBBRcTIpGXkEJV0tfG8XXQUdBWUtN3MrBDsPfEdqu14XRy9fVTsAoOpQ4glI6himFnwsCAAbMFZZWGR0ZDB8dHpV1AAKLWNjAEpWYOw8MJHKMYYJ2CnZsHSZbIk8zIKKu3xnEyc7DWdVEY7Mp6ogHOpnLoAUYoXtapV+iATkNwuQojRrsxbrAwOhUAkABZoq6xNgQKRrXAAN3YAGs1sizsMIpdopjJji8YTiWzSQhqewEitJDh0o9Ms9ctI3ohHLpPgpPIq9t9nHLdGZLIo7Op5bUNMCNb0gYjGQRmTyMaT8Jz8UTRrybqxmKh2Kh8MIZit6G6ALb4M3nFno8ZYm24u2W0Msfk4GlCqVigRPMQvaWgAp7WwKSFOZx2XTKfO6DSghCOFz4dp7BRNWqqVQ1PqBJGDM6JZKpEOsck4SlxukMtsEDspZAh2Px4VSJMZESpqX5awKWxeHOFwsaYpdMvlfBwrx-RxZ4Gm4d3OasJZ4tLJiULkVLhDOZwtP68F-KXhr3Q7rXlvZ8HlfMATcXgCx0fwW0DBJUFxVZu17fsaXpANz1g+CwAnAUExFWcUxyR8ZUKDoSlcPRlCMVpVC0Asy0VWwaJcD8tDlXglFUBQAhbHB2BoeBMjNAi0yfABaXoWmUCtvm-RxjArMtROBfBKgLA0ixXfRnDPEImVRB0rRuYTF2IxwdRUpUaI-D91U1BotyrHxFX2PQui0bToPPC0DOjW5pjmYyiIzRB3Mcfdc0qLQNA4jV6NUV9eFY74HA0TwOl0HTTnNfTWUMsNbW5Hz2QE+dCNeYLyxLfBVArNdlC8FxqmcXc1RaFdnDhKK9kcZRMtCUcuzGQLyrkRQ5VfSF3DVKKzI0bRdwqFp9H+LNPHi8C+rOfywGG9NRoQcTJOk4x3HkuSFAWz4aOBHVf1rMyuM83SCAwlYsKG+8yr2gonELTQukLWoNWcGotHoypqpUXpPFYis5W4vwgA */
   context: {
     userId: 0,
     tradeOffers: [],
@@ -68,10 +68,10 @@ export const tradingMachine = setup({
             },
             onError: 'idle',
           },
-        }
+        },
       },
 
-      initial: 'idle',
+      initial: 'searchingTradeOffers',
     },
 
     acceptTrade: {
@@ -83,7 +83,7 @@ export const tradingMachine = setup({
           data: {userId, currentTrade: event.currentTrade},
         }),
 
-        onDone: "waitingTradeOffers"
+        onDone: 'waitingTradeOffers',
       },
     },
 
@@ -101,7 +101,7 @@ export const tradingMachine = setup({
         src: 'createTradeMachine',
         id: TradingMachinesIds.CREATE_TRADE,
         input: ({context: {userId}}) => ({data: {userId}}),
-        onDone: "waitingTradeOffers"
+        onDone: 'waitingTradeOffers',
       },
     },
   },

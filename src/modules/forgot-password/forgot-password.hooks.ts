@@ -1,4 +1,5 @@
 import {useForm} from 'react-hook-form';
+import {Keyboard} from 'react-native';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
@@ -22,6 +23,7 @@ export const useFormLogic = () => {
 
   const onSubmit = async ({email}: ForgotPasswordFormFields) => {
     try {
+      Keyboard.dismiss();
       await forgotPasswordAsync(email);
 
       navigation.reset({
@@ -51,6 +53,7 @@ export const useButtonHandlers = () => {
   const navigation = useNavigation<NavigationProp>();
 
   const goBack = (): void => {
+    Keyboard.dismiss();
     navigation.goBack();
   };
 

@@ -13,6 +13,7 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
   },
   tokensInput: {
+    color: 'black',
     fontSize: 24,
     fontWeight: 'bold',
     padding: 0,

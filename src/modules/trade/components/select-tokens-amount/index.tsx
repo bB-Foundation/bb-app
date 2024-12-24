@@ -4,7 +4,7 @@ import {Button, Input, Text} from '@ui-kitten/components';
 import FastImage from '@d11/react-native-fast-image';
 
 import {OverlayLoader} from 'components/overlay-loader';
-import {useSelectAmount} from './select-tokens-amount.hooks';
+import {useLayout, useSelectAmount} from './select-tokens-amount.hooks';
 import styles, {imageStyles} from './select-tokens-amount.styles';
 import {SelectTokensAmountProps} from './select-tokens-amount.types';
 
@@ -22,12 +22,14 @@ export const SelectTokensAmount: FC<SelectTokensAmountProps> = ({
     onSubmitButtonPress,
   } = useSelectAmount({userId, gemColor, submitHandler, submitValidator});
 
+  const {mainContainerMarginTop} = useLayout();
+
   return (
     <>
       {isLoading && <OverlayLoader />}
 
       {!!gemsOfSelectedColor.length && (
-        <View style={styles.container}>
+        <View style={[styles.container, {marginTop: mainContainerMarginTop}]}>
           <Text category="h6">Select gems amount</Text>
 
           <View style={styles.imageWrapper}>
@@ -48,12 +50,14 @@ export const SelectTokensAmount: FC<SelectTokensAmountProps> = ({
             />
           </View>
 
-          <Button
-            onPress={onSubmitButtonPress}
-            disabled={!gemsAmountStr}
-            style={styles.submitButton}>
-            NEXT
-          </Button>
+          <View style={styles.submitButtonWrapper}>
+            <Button
+              onPress={onSubmitButtonPress}
+              disabled={!gemsAmountStr}
+              style={styles.submitButton}>
+              NEXT
+            </Button>
+          </View>
         </View>
       )}
     </>

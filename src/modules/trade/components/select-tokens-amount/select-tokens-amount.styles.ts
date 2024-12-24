@@ -17,8 +17,11 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  submitButton: {
+  submitButtonWrapper: {
     marginTop: 'auto',
+  },
+  submitButton: {
+    marginTop: 16,
   },
   inputWrapper: {
     marginTop: 32,

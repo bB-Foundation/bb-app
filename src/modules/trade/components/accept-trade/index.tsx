@@ -83,8 +83,15 @@ export const AcceptTrade = () => {
         />
       )}
 
-      {(isViewTokens || isViewTokenAmount || isReviewOffer) && (
-        <Button onPress={exitHandler} appearance="ghost" status="basic">
+      {(isViewTokens ||
+        isViewTokenAmount ||
+        isReviewOffer ||
+        isSendingRequest) && (
+        <Button
+          onPress={exitHandler}
+          disabled={isSendingRequest}
+          appearance="ghost"
+          status="basic">
           Exit
         </Button>
       )}

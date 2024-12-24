@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {Alert} from 'react-native';
+import {Alert, Keyboard} from 'react-native';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {useMutation} from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
@@ -24,6 +24,7 @@ export const useFormLogic = () => {
 
   const onSubmit = async () => {
     try {
+      Keyboard.dismiss();
       await verifyPasswordRestoreAsync(verificationCode);
 
       navigation.reset({
@@ -59,8 +60,10 @@ export const useButtonHandlers = () => {
       },
       {
         text: 'OK',
-        onPress: () =>
-          navigation.reset({index: 0, routes: [{name: 'sign-in'}]}),
+        onPress: () => {
+          Keyboard.dismiss();
+          navigation.reset({index: 0, routes: [{name: 'sign-in'}]});
+        },
       },
     ]);
 

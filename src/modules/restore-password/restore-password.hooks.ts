@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {Alert} from 'react-native';
+import {Alert, Keyboard} from 'react-native';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
@@ -40,6 +40,8 @@ export const useFormLogic = () => {
 
   const onSubmit = async (data: RestorePasswordFormFields) => {
     try {
+      Keyboard.dismiss();
+
       await restorePasswordAsync({
         ...data,
         code: route.params.verificationCode,
@@ -74,8 +76,10 @@ export const useButtonHandlers = () => {
       },
       {
         text: 'OK',
-        onPress: () =>
-          navigation.reset({index: 0, routes: [{name: 'sign-in'}]}),
+        onPress: () => {
+          Keyboard.dismiss();
+          navigation.reset({index: 0, routes: [{name: 'sign-in'}]});
+        },
       },
     ]);
 

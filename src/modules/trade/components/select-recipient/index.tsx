@@ -14,7 +14,7 @@ import {CreateTradeActor} from '../../api/create-trade-machine';
 export const SelectRecipient: FC = () => {
   const [users, setUsers] = useState<UserProfile[]>([]);
 
-  const [searchUserBbId, setSearchUserBbId] = useState('GA-284988');
+  const [searchUserBbId, setSearchUserBbId] = useState('');
 
   const [selectedRecipientUser, setSelectedRecipientUser] =
     useState<UserProfile>();

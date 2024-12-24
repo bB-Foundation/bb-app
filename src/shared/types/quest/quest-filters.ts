@@ -16,9 +16,9 @@ type QuestFilters = {
 };
 
 export enum TimeOfDay {
-  MORNING = 'MORNING',
-  AFTERNOON = 'AFTERNOON',
-  EVENING = 'EVENING',
+  MORNING = 'morning',
+  AFTERNOON = 'afternoon',
+  EVENING = 'evening',
 }
 
 export enum DistanceUnit {

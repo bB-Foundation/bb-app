@@ -17,10 +17,10 @@ type Quest = {
 };
 
 export enum QuestStatus {
-  PENDING = 'PENDING',
-  LAUNCHED = 'LAUNCHED',
-  COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED',
+  PENDING = 'pending',
+  LAUNCHED = 'launched',
+  COMPLETED = 'completed',
+  CANCELLED = 'canceled',
 }
 
 export enum QuestDifficultyLevel {
@@ -30,11 +30,11 @@ export enum QuestDifficultyLevel {
 }
 
 export enum QuestCategory {
-  SPORTS_FITNESS = 'SPORTS_FITNESS',
-  NUTRITION_HEALTH = 'NUTRITION_HEALTH',
-  ARTS = 'ARTS',
-  EDUCATION = 'EDUCATION',
-  ENVIRONMENT = 'ENVIRONMENT',
+  SPORTS_FITNESS = 'SportsFitness',
+  NUTRITION_HEALTH = 'NutritionHealth',
+  ARTS = 'Arts',
+  EDUCATION = 'Education',
+  ENVIRONMENT = 'Environment',
 }
 
 export default Quest;

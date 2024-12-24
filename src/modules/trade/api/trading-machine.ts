@@ -54,7 +54,7 @@ export const tradingMachine = setup({
       states: {
         idle: {
           after: {
-            '500': 'searchingTradeOffers',
+            '60000': 'searchingTradeOffers',
           },
         },
 

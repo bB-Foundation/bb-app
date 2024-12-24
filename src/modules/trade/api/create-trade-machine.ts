@@ -152,7 +152,7 @@ export const createTradeMachine = setup({
       states: {
         idle: {
           after: {
-            '2000': 'checkingAcceptance',
+            '60000': 'checkingAcceptance',
           },
         },
         checkingAcceptance: {
@@ -210,7 +210,7 @@ export const createTradeMachine = setup({
       states: {
         idle: {
           after: {
-            '2000': 'checkingFinish',
+            '60000': 'checkingFinish',
           },
         },
         checkingFinish: {

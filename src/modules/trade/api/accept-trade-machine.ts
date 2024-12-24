@@ -145,7 +145,7 @@ export const acceptTradeMachine = setup({
       states: {
         idle: {
           after: {
-            '2000': 'checkingSign',
+            '60000': 'checkingSign',
           },
         },
 
@@ -196,13 +196,13 @@ export const acceptTradeMachine = setup({
     },
 
     canceled: {
-      type: "final"
-    }
+      type: 'final',
+    },
   },
 
   on: {
-    exit: ".canceled"
-  }
+    exit: '.canceled',
+  },
 });
 
 export type AcceptTradeActor = ActorRefFrom<typeof acceptTradeMachine>;

@@ -49,6 +49,38 @@ export const useCheckQrCode = () => {
     [navigation],
   );
 
+  const resetToQuestPage = useCallback(
+    () =>
+      navigation.reset({
+        index: 1,
+        routes: [
+          {
+            name: 'main',
+            state: {routes: [{name: 'quests'}]},
+          },
+          {
+            name: 'main',
+            state: {
+              routes: [
+                {
+                  name: 'quests',
+                  state: {
+                    routes: [
+                      {
+                        name: 'quest',
+                        params: {questId},
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      }),
+    [navigation, questId],
+  );
+
   const {
     ref: webBrowserRef,
     onMessage: onWebBrowserMessage,
@@ -69,33 +101,7 @@ export const useCheckQrCode = () => {
           await claimQuestTaskReward({taskId, txHash});
           markTaskAsCompleted(taskId);
 
-          navigation.reset({
-            index: 1,
-            routes: [
-              {
-                name: 'main',
-                state: {routes: [{name: 'quests'}]},
-              },
-              {
-                name: 'main',
-                state: {
-                  routes: [
-                    {
-                      name: 'quests',
-                      state: {
-                        routes: [
-                          {
-                            name: 'quest',
-                            params: {questId},
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          });
+          resetToQuestPage();
 
           await new Promise(res => setTimeout(res, 500));
           Toast.show({
@@ -116,14 +122,26 @@ export const useCheckQrCode = () => {
       try {
         if (!currentUserProfile) throw new Error('No current user profile');
 
-        await new Promise(res => setTimeout(res, 1000));
+        const {userId} = currentUserProfile;
 
         const quest = await queryClient.fetchQuery({
           queryKey: queryKeys.getQuestById(questId),
           queryFn: () => getQuestById(questId),
         });
 
-        const {userId} = currentUserProfile;
+        const isUserParticipateQuest = quest.users.find(u => u.id === userId);
+        if (!isUserParticipateQuest) {
+          resetToQuestPage();
+
+          await new Promise(res => setTimeout(res, 500));
+          Toast.show({
+            type: 'info',
+            text1: 'You need to join quest fist',
+            text2: 'Join the quest before completing the task',
+          });
+          return;
+        }
+
         const [privateKey, accountAddress] = await Promise.all([
           getUserPrivateKey(userId),
           getUserAccountAddress(userId),
@@ -155,6 +173,7 @@ export const useCheckQrCode = () => {
     currentUserProfile,
     emitToWebBrowser,
     errorHandler,
+    resetToQuestPage,
   ]);
 
   return {webBrowserRef, onWebBrowserMessage};

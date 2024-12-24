@@ -1,6 +1,7 @@
 import {Nullable} from './tools';
 
 type User = {
+  id: number;
   bbId: string;
   email: string;
   role: UserRole;

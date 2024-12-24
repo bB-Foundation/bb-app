@@ -132,10 +132,6 @@ export const useQuestLogic = () => {
           getUserAccountAddress(userId),
         ]);
 
-        console.log('🚀 ~ privateKey:', privateKey);
-        console.log('🚀 ~ privateKey:', accountAddress);
-        console.log('🚀 ~ privateKey:', quest.contractAddress);
-
         if (!privateKey || !accountAddress || !quest.contractAddress)
           throw new Error('Inconsistent JoinQuestEvent data');
 

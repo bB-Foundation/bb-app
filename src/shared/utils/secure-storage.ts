@@ -106,7 +106,6 @@ export const storeUserPrivateKey = async (
     }
 
     const value = prevState ? prevState : {[userId]: privateKey};
-    console.log('🚀 ~ value:', value);
     await storeToken(TokenNames.USER_PRIVATE_KEY, JSON.stringify(value));
   } catch (error) {
     throw error;

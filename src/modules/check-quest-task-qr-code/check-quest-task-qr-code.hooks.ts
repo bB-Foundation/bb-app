@@ -122,6 +122,8 @@ export const useCheckQrCode = () => {
       try {
         if (!currentUserProfile) throw new Error('No current user profile');
 
+        await new Promise(res => setTimeout(res, 1000));
+
         const {userId} = currentUserProfile;
 
         const quest = await queryClient.fetchQuery({

@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react';
+import {Keyboard} from 'react-native';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {useNavigation} from '@react-navigation/native';
@@ -11,7 +12,6 @@ import {NavigationProp} from '../navigation/navigation.types';
 import useSignIn from 'hooks/sign-in';
 import {getApiOrUnknownErrorMessage} from 'src/shared/utils/errors';
 import useCurrentUserProfile from 'hooks/current-user';
-import {Keyboard} from 'react-native';
 
 export const useIsPasswordVisible = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -78,14 +78,16 @@ export const useButtonHandlers = () => {
 export const useCheckAuth = () => {
   const navigation = useNavigation<NavigationProp>();
 
-  const {error, isSuccess} = useCurrentUserProfile();
+  const {data: currentUserProfile, error, isSuccess} = useCurrentUserProfile();
 
   /** Redirect to main screen if user is authorized */
   useEffect(() => {
-    if (isSuccess) {
+    const isValidUser = currentUserProfile && currentUserProfile.bbId;
+
+    if (isSuccess && isValidUser) {
       navigation.reset({index: 0, routes: [{name: 'main'}]});
     }
 
-    setTimeout(() => SplashScreen.hide(), 1000);
-  }, [isSuccess, error, navigation]);
+    setTimeout(() => SplashScreen.hide(), 1300);
+  }, [isSuccess, error, navigation, currentUserProfile]);
 };

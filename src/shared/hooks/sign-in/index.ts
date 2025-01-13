@@ -1,6 +1,6 @@
 import {useMutation} from '@tanstack/react-query';
 
-import {logIn} from './sign-in.api';
+import {signIn} from '../../api/sign-in';
 import {
   storeJwtAccessToken,
   storeJwtRefreshToken,
@@ -8,7 +8,7 @@ import {
 
 const useSignIn = () =>
   useMutation({
-    mutationFn: logIn,
+    mutationFn: signIn,
     onSuccess: async ({accessToken, refreshToken}) => {
       await Promise.all([
         storeJwtAccessToken(accessToken),

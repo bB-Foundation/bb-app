@@ -29,7 +29,7 @@ export const SelectRecipient: FC = () => {
   const mainContainerMarginTop = top ? 0 : 16;
 
   const selectRecipient = () => {
-    if (!selectedRecipientUser) return;
+    if (!selectedRecipientUser || !selectedRecipientUser.bbId) return;
     createTradeActor.send({
       type: 'selectRecipient',
       receiverBbId: selectedRecipientUser.bbId,

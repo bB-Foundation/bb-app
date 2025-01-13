@@ -1,7 +1,8 @@
 import api from 'configs/axios';
-import {AuthData, SignInData} from './sign-in.types';
 
-export const logIn = async (data: SignInData): Promise<AuthData> =>
+import {AuthData, SignInData} from '../hooks/sign-in/sign-in.types';
+
+export const signIn = async (data: SignInData): Promise<AuthData> =>
   (await api.post<AuthData>('/auth/signin', data)).data;
 
 export const refreshAuthToken = async (

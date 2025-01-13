@@ -12,7 +12,7 @@ type User = {
 
 export type UserProfile = {
   userId: number;
-  bbId: string;
+  bbId: Nullable<string>;
   email: string;
   accountAddress: Nullable<string>;
 };

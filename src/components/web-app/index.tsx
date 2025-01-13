@@ -8,6 +8,7 @@ import {
 import {Account, CallData, Contract, RpcProvider} from 'starknet';
 
 import {
+  calculateMaxFee,
   createAccount,
   deployAccount,
   generateMessage,
@@ -149,14 +150,14 @@ const WebApp = () => {
             'approve_transfer',
             [],
           );
-          // const approveTransferMaxFee = await calculateMaxFee({
-          //   account,
-          //   TX: approveTransferTx,
-          // });
+          const approveTransferMaxFee = await calculateMaxFee({
+            account,
+            TX: approveTransferTx,
+          });
           const approveTransferResult = await account.execute(
             [approveTransferTx],
             undefined,
-            // {maxFee: approveTransferMaxFee},
+            {maxFee: approveTransferMaxFee},
           );
 
           await provider.waitForTransaction(
@@ -171,15 +172,13 @@ const WebApp = () => {
           const sbtContract = new Contract(sbtAbi, sbtAddress, provider);
 
           const sbtMintTx = sbtContract.populate('mint', []);
-          // const maxFee = await calculateMaxFee({
-          //   account,
-          //   TX: sbtMintTx,
-          // });
-          const result = await account.execute(
-            [sbtMintTx],
-            undefined,
-            // {maxFee,}
-          );
+          const maxFee = await calculateMaxFee({
+            account,
+            TX: sbtMintTx,
+          });
+          const result = await account.execute([sbtMintTx], undefined, {
+            maxFee,
+          });
 
           const txReceipt = await provider.waitForTransaction(
             result.transaction_hash,
@@ -217,12 +216,10 @@ const WebApp = () => {
           const questContract = new Contract(questAbi, questAddress, provider);
 
           const joinQuestTx = questContract.populate('join_quest', []);
-          // const maxFee = await calculateMaxFee({account, TX: joinQuestTx});
-          const result = await account.execute(
-            [joinQuestTx],
-            undefined,
-            // {maxFee,}
-          );
+          const maxFee = await calculateMaxFee({account, TX: joinQuestTx});
+          const result = await account.execute([joinQuestTx], undefined, {
+            maxFee,
+          });
           const txReceipt = await provider.waitForTransaction(
             result.transaction_hash,
           );
@@ -264,18 +261,13 @@ const WebApp = () => {
             taskId,
             taskCode,
           ]);
-          // TODO Fix  calculateMaxFee
-          // const maxFee = await calculateMaxFee({
-          //   account,
-          //   TX: claimTaskRewardTx,
-          // });
-          const result = await account.execute(
-            [claimTaskRewardTx],
-            undefined,
-            //    {
-            //   maxFee,
-            // }
-          );
+          const maxFee = await calculateMaxFee({
+            account,
+            TX: claimTaskRewardTx,
+          });
+          const result = await account.execute([claimTaskRewardTx], undefined, {
+            maxFee,
+          });
           const txReceipt = await provider.waitForTransaction(
             result.transaction_hash,
           );
@@ -320,13 +312,13 @@ const WebApp = () => {
           );
 
           const swapGemsTx = gemContract.populate('swap', [tokenIds]);
-          // const maxFee = await calculateMaxFee({account, TX: swapGemsTx});
+          const maxFee = await calculateMaxFee({account, TX: swapGemsTx});
           const result = await account.execute(
             [swapGemsTx],
             undefined,
-            //   {
-            //   maxFee,
-            // }
+              {
+              maxFee,
+            }
           );
           const txReceipt = await provider.waitForTransaction(
             result.transaction_hash,

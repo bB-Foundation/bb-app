@@ -1,15 +1,11 @@
 import {ActorRefFrom, assign, fromPromise, setup} from 'xstate';
+import {io, Socket} from 'socket.io-client';
 
 import {GemColor} from 'types/gem';
 import {Trade} from 'types/trade';
-import {
-  checkIfTradeAccepted,
-  checkIfTradeFinished,
-  initializeTrade,
-  signTradeByInitiator,
-} from './trade.api';
+import {initializeTrade, signTradeByInitiator} from './trade.api';
 import {InitializeTradeData, SignTradeData} from '../trade.types';
-import {getTradeById} from 'src/shared/api/trade';
+import {ChatData} from './trade.types';
 
 export const createTradeMachine = setup({
   types: {
@@ -22,24 +18,46 @@ export const createTradeMachine = setup({
       receiverGemIds: number[];
       currentTrade: Trade | undefined;
       signature: string;
+      resultTxHash: string;
+      // chat
+      chatSocket: Socket;
+      chatRoomId: number;
+      groupPgpPublicKey: string;
     },
     input: {} as {
       data: {
         userId: number;
+        accessToken: string;
+        currentTrade: Trade | undefined;
       };
     },
     events: {} as
+      | {type: 'setChatData'; chatRoomId: number; groupPgpPublicKey: string}
+      | {type: 'setFindRecipient'}
+      | {type: 'setWaitingAcceptance'}
+      | {type: 'setSigning'}
+      | {type: 'setWaitingFinish'}
       | {type: 'selectRecipient'; receiverBbId: string}
       | {type: 'selectGemColor'; gemColor: GemColor}
       | {type: 'selectTokens'; receiverGemIds: number[]}
       | {type: 'sendRequest'}
       | {type: 'generateSignatureError'}
+      | {type: 'checkAcceptance'}
       | {type: 'sign'; signature: string}
+      | {type: 'finish'; resultTxHash: string}
       | {type: 'exit'},
   },
   actions: {
+    setChatDataAction: assign({
+      chatRoomId: (_, {chatRoomId}: ChatData) => chatRoomId,
+      groupPgpPublicKey: (_, {groupPgpPublicKey}: ChatData) =>
+        groupPgpPublicKey,
+    }),
     selectRecipientAction: assign({
       receiverBbId: (_, {receiverBbId}: {receiverBbId: string}) => receiverBbId,
+    }),
+    setGemColor: assign({
+      gemColor: (_, {gemColor}: {gemColor: GemColor}) => gemColor,
     }),
     selectTokensAction: assign({
       receiverGemIds: (_, {receiverGemIds}: {receiverGemIds: number[]}) =>
@@ -48,44 +66,40 @@ export const createTradeMachine = setup({
     setSignature: assign({
       signature: (_, {signature}: {signature: string}) => signature,
     }),
-    setGemColor: assign({
-      gemColor: (_, {gemColor}: {gemColor: GemColor}) => gemColor,
+    setResultTxHash: assign({
+      resultTxHash: (_, {resultTxHash}: {resultTxHash: string}) => resultTxHash,
     }),
   },
   actors: {
-    sendInitiatorRequest: fromPromise(
+    sendTradeRequest: fromPromise(
       async ({input}: {input: InitializeTradeData}) => initializeTrade(input),
     ),
-    checkAcceptance: fromPromise(
-      async ({input: {tradeId}}: {input: {tradeId: number}}) =>
-        checkIfTradeAccepted(tradeId),
-    ),
-    signTradeByInitiator: fromPromise(async ({input}: {input: SignTradeData}) =>
+    signTrade: fromPromise(async ({input}: {input: SignTradeData}) =>
       signTradeByInitiator(input),
-    ),
-    checkIfFinished: fromPromise(
-      async ({input: {tradeId}}: {input: {tradeId: number}}) => {
-        const trade = await getTradeById(tradeId);
-        await checkIfTradeFinished(trade);
-        return trade;
-      },
     ),
   },
 }).createMachine({
-  /** @xstate-layout N4IgpgJg5mDOIC5QAoC2BDAxgCwJYDswBKAOgDMCIAlMTXAB1zHwBcBiWMAG1pZrsbMWAbQAMAXUSh6Ae1i4WuGfikgAHogCMATgBMJXdoBsADgDsAZgvaArABYTF0RYA0IAJ6JdZ-XZtO9XQtdO20LfwBfCLc0LDxCUgA3JgB3ABUZAGtmWA5uXgBxMFQAYRkuGQAnMUkkEFl5RWVVDQR-EwMbUW7dGzNNIzMTIzdPBG9ff1FA4NDwiyiYjBwCYhJOfAgCKBoARwBXOHYIZTASAkSss9iVhPXmLfwdsAOjhAuZTHQm-Bqa1QaCiUKjqrU0JlEZhIkNERiMdk0onsNkcoy8ZjsJD8AT6KKM2js8MWIBu8TWG0ez1esHYYEqlSqJHoXG+ZCqqBIpNWpAp2z2hxp73wly+Pz+EgBciBzVBWgsmihCM04MhFlMdlcHi8on0mi6IURuhMXU0umJXLulTAyTAKQA8mQyHS8pt+Ud-nVAT8WnK7KISD5wqEbIM7N47GjxrYSINjDZvN1hs5zcsyUlUhlsvgAIKoGT7Vh5HiYFiZnIe6RS72yhBhfQWMz+NWiPwm7SRiYkWzytXGcwOMwpuLckhWm0pGiwfZcWlqBQV+pV4E+hCEkzaEiI4ZDYIhjUd7SaGMD02QvVBAZD25rFLoIFPbOYTBgegsdD4Z-nCA8NhqGnfM50DIFg6WQXRulEIg2AtG870UB8nxfN8PzOXBvzABcvWXGtdF0fEAxMEJLEcIxgiMGxIzVTFjQxawzB1UwjE0K80xIW97ygR9n1fd9PxwWhMm2LikN4sA2BOQhzmFK5OVTEd2PgzjEJ4lCSH4zBBIQ7jkOfIURW+YFxVqStGmw0BWm8CxMV0cE9BMMNjFCEYtXGfosT6TQNThBU+jsFj5LgoTlJ0s51M0pTtNEtg6QZSomRZFg2UqDkYNIBSgsi1SwoykSUL0z4DOUIzJVMmVzK8XD9Bs8CHBRE0Ixco0bCxCx7NhY0mMcWF-LueQoHwbYSBgQhKgMp4AGVcH6jgpt+CVPSXMr1EQYJwJjeyTD1OxtpCTUxk7GqjQ2hwmN6HryVmwbhrpMaoEm6brtGkD7vwb59itABRekqkwxaQXKqNtA3URPKCGw9F8hr9s0CwDF6UR7KMFtpjsHxzp5S6nnWTGoHE04pMubJZOHXqcex-rtny0VDIkX7Sv+5aEDVIx61hTztBMdcMWcsYnGa-FbEPPCdXB1H0fJgasb6yXcZixlmVZdlievDGKalnGqcKubxDp6UGdaKwMSxMwTaswxtDMdtGs8gN4dI1HwfBsJxfSp4ADECFwWBsC-H8-zfECSCAkDKjAiCoNStjAvdz3vd9jD5pMvWVz9ewCNI7wFR0E2KJcv1-URPRWpbU0nHMF3o6gD2Brj7KY5r7A8ckj4icj12q9jn2647hvNbFWnE8XemU66fmw2NBVwOsSNwWa0GdWNftD0hCuOOrr2u+wATtnX73ou+uKFcSpW28r3fN+3+uN77mmdcHrCltaP1OZjHwBnDTnAw7BwSBDGFt0bEmPy0QSRyQSNFOcIh75-RXEEKE3YkRqicHRUwkZzAkDanhbElg9DMWJPgGQEA4CqFSiVZONYAC0PNEAUK6AGUuMMkZA2RuRcWFBXS0AYEwVgZDqwAzDAefmltyIJgRkjBYIDI7jjLPgeAC1h41msB0Mw5EmLwiasqPaXhoyxhEfRMRyZJFgPJA8PkLwBQsF4WZRmW1moOBsgiJGOoYZaNcrqYRHMBhWCRCYcWY5UgOidJUKxj8tADGoh5RE8ZlRcwPIqU0yp8TRJsJ5Gw4tpFXBzHmAslj5HkIBj4Iw61CL0TCKaPogjX5xlEUmCRSwSZrH8baSc05clJz4YzPw20sSo1MCU1GCMDxHnhOYU8-R4zyiMKvRSwkVLPhCfrbU4MDD2T0ORHw21tozxRF2PouFESOPsdMnKczULoQWbAxEUIjShDwnszZUMvCOC7K1QkyD2gs2OVpXKfEt4aROSFC5OE-D6FIp5BsgYYaaG-kUvw4z4wqMGERcW0tthAoBoYFJ0JQbhAhhiR5TMilDBUdoEGth86DBRWTR6t0XrosZk4Na1hcIOwcFZVxR0MFXNWt5dqVK1ZQAlmivJHSDZ+kxDofEsJrDBGno1CEXZgzylwrys6RiGmqxlhLN6n0D70oNs4TEDZwjeEIkxQ8M8QgrJJdtBUPRphfJ7hvfVK1P6-z8Jo2w9lwQzyYtCJG9Fto2HBojM06qVZRzXp3eOLqmZhGasiT1KIEQmEogjX+AaxE5yAY68+ak-nhXPrGsM6akXvwxJ-XQaaOh-x8PYcl202Gd0gMWoYc8uiHjNsMOEQzjzmF6DoDUkNxZfBQjwCAxbgaQk2k7KwdEkRoKhJg+E-gcHgUHFECIQA */
+  /** @xstate-layout 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 */
   context: ({input}) => {
-    const {userId} = input.data;
+    const {userId, accessToken, currentTrade} = input.data;
     return {
       userId,
       receiverBbId: '',
       receiverGemIds: [],
       signature: '',
       gemColor: undefined,
-      currentTrade: undefined,
+      currentTrade,
+      resultTxHash: '',
+      chatSocket: io(
+        `${process.env.BACKEND_API_URL}:${process.env.BACKEND_WS_TRADE_CHAT_PORT}`,
+        {extraHeaders: {authorization: 'Bearer ' + accessToken}},
+      ),
+      chatRoomId: 0,
+      groupPgpPublicKey: '',
     };
   },
 
-  initial: 'findRecipient',
+  initial: 'checkingTradeStatus',
 
   states: {
     findRecipient: {
@@ -111,7 +125,7 @@ export const createTradeMachine = setup({
 
     sendingRequest: {
       invoke: {
-        src: 'sendInitiatorRequest',
+        src: 'sendTradeRequest',
 
         input: ({context: {receiverBbId, receiverGemIds}}) => ({
           receiverbBId: receiverBbId,
@@ -144,34 +158,14 @@ export const createTradeMachine = setup({
 
     reviewResult: {
       on: {
-        exit: "finished"
-      }
+        exit: 'finished',
+      },
     },
 
     waitingAcceptance: {
-      states: {
-        idle: {
-          after: {
-            '60000': 'checkingAcceptance',
-          },
-        },
-        checkingAcceptance: {
-          invoke: {
-            src: 'checkAcceptance',
-
-            input: ({context: {currentTrade}}) => {
-              if (!currentTrade) throw new Error('Trade is not found');
-
-              return {tradeId: currentTrade.id};
-            },
-
-            onError: 'idle',
-            onDone: '#(machine).signing.generatingSign',
-          },
-        },
+      on: {
+        checkAcceptance: 'signing',
       },
-
-      initial: 'idle',
     },
 
     signing: {
@@ -188,7 +182,7 @@ export const createTradeMachine = setup({
         },
         signing: {
           invoke: {
-            src: 'signTradeByInitiator',
+            src: 'signTrade',
 
             input: ({context: {currentTrade, signature}}) => {
               if (!currentTrade) throw new Error('Trade is not found');
@@ -207,44 +201,48 @@ export const createTradeMachine = setup({
     },
 
     waitingFinish: {
-      states: {
-        idle: {
-          after: {
-            '60000': 'checkingFinish',
-          },
-        },
-        checkingFinish: {
-          invoke: {
-            src: 'checkIfFinished',
-            input: ({context: {currentTrade, signature}}) => {
-              if (!currentTrade) throw new Error('Trade is not found');
-
-              return {tradeId: currentTrade.id, signature};
-            },
-            onDone: {
-              target: "#(machine).reviewResult",
-              actions: assign({currentTrade: ({event}) => event.output}),
-            },
-            onError: 'idle',
+      on: {
+        finish: {
+          target: 'reviewResult',
+          actions: {
+            type: 'setResultTxHash',
+            params: ({event}) => event,
           },
         },
       },
-
-      initial: 'idle',
     },
 
     finished: {
-      type: "final"
+      type: 'final',
     },
 
     canceled: {
-      type: "final"
-    }
+      type: 'final',
+    },
+
+    checkingTradeStatus: {
+      on: {
+        setFindRecipient: 'findRecipient',
+        setWaitingAcceptance: 'waitingAcceptance',
+        setSigning: 'signing',
+        setWaitingFinish: 'waitingFinish',
+      },
+    },
   },
 
   on: {
-    exit: ".canceled"
-  }
+    exit: '.canceled',
+    setChatData: {
+      actions: {
+        type: 'setChatDataAction',
+        params: ({event}) => event,
+      },
+    },
+  },
+
+  output: ({context: {chatSocket}}) => {
+    chatSocket.close();
+  },
 });
 
 export type CreateTradeActor = ActorRefFrom<typeof createTradeMachine>;

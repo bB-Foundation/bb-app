@@ -1,40 +1,53 @@
-import {assign, createActor, fromPromise, setup} from 'xstate';
+import {assign, createActor, setup} from 'xstate';
+import {io} from 'socket.io-client';
 
 import {Trade} from 'types/trade';
 import {createTradeMachine} from './create-trade-machine';
 import {acceptTradeMachine} from './accept-trade-machine';
-import {getUserTradeOffers, TradingMachinesIds} from './trade.api';
+import {TradingMachinesIds} from './trade.api';
+import {TradingMachineInitialData} from './trade.types';
+
+export const tradingSocket = io(
+  `${process.env.BACKEND_API_URL}:${process.env.BACKEND_API_PORT}`,
+);
+
+export enum TradingEventType {
+  TradeInitialized = 'trade_initialized',
+  TradeAccepted = 'trade_accepted',
+  TradeInitiatorSigned = 'trade_initiator_signed',
+  TradeReceiverSigned = 'trade_receiver_signed',
+  TradeCompleted = 'trade_completed',
+}
 
 export const tradingMachine = setup({
   types: {
     context: {} as {
       /** Current user id */
       userId: number;
+      accessToken: string;
       /** Available trade offers from other users */
       tradeOffers: Trade[];
     },
     events: {} as
-      | {type: 'start'; userId: number}
-      | {type: 'offer'}
+      | {type: 'start'; userId: number; accessToken: string}
+      | {type: 'offer'; currentTrade: Trade | undefined}
       | {type: 'accept'; currentTrade: Trade},
   },
   actions: {
-    setUserId: assign({
-      userId: (_, {userId}: {userId: number}) => userId,
+    setInitialData: assign({
+      userId: (_, {userId}: TradingMachineInitialData) => userId,
+      accessToken: (_, {accessToken}: TradingMachineInitialData) => accessToken,
     }),
   },
   actors: {
-    checkTradeOffers: fromPromise(async ({input}: {input: {userId: number}}) =>
-      getUserTradeOffers(input),
-    ),
     createTradeMachine,
     acceptTradeMachine,
   },
-  guards: {},
 }).createMachine({
-  /** @xstate-layout N4IgpgJg5mDOIC5QBcBOBDCBLAdlAdAO7pbK5QAqGEYA8gGb1iqwDEA9o8wNoAMAuolAAHdrFJZ2OISAAeiAIy8AnAFZ8AFgBsWgBz6du3r1UAaEAE9FvXZoDMCgEwB2BRseqNyu1tUBfP3M0THIiEjI8Kkw6LhZWdABjBLBhZD5BJBBRcTIpGXkEJV0tfG8XXQUdBWUtN3MrBDsPfEdqu14XRy9fVTsAoOpQ4glI6himFnwsCAAbMFZZWGR0ZDB8dHpV1AAKLWNjAEpWYOw8MJHKMYYJ2CnZsHSZbIk8zIKKu3xnEyc7DWdVEY7Mp6ogHOpnLoAUYoXtapV+iATkNwuQojRrsxbrAwOhUAkABZoq6xNgQKRrXAAN3YAGs1sizsMIpdopjJji8YTiWzSQhqewEitJDh0o9Ms9ctI3ohHLpPgpPIq9t9nHLdGZLIo7Op5bUNMCNb0gYjGQRmTyMaT8Jz8UTRrybqxmKh2Kh8MIZit6G6ALb4M3nFno8ZYm24u2W0Msfk4GlCqVigRPMQvaWgAp7WwKSFOZx2XTKfO6DSghCOFz4dp7BRNWqqVQ1PqBJGDM6JZKpEOsck4SlxukMtsEDspZAh2Px4VSJMZESpqX5awKWxeHOFwsaYpdMvlfBwrx-RxZ4Gm4d3OasJZ4tLJiULkVLhDOZwtP68F-KXhr3Q7rXlvZ8HlfMATcXgCx0fwW0DBJUFxVZu17fsaXpANz1g+CwAnAUExFWcUxyR8ZUKDoSlcPRlCMVpVC0Asy0VWwaJcD8tDlXglFUBQAhbHB2BoeBMjNAi0yfABaXoWmUCtvm-RxjArMtROBfBKgLA0ixXfRnDPEImVRB0rRuYTF2IxwdRUpUaI-D91U1BotyrHxFX2PQui0bToPPC0DOjW5pjmYyiIzRB3Mcfdc0qLQNA4jV6NUV9eFY74HA0TwOl0HTTnNfTWUMsNbW5Hz2QE+dCNeYLyxLfBVArNdlC8FxqmcXc1RaFdnDhKK9kcZRMtCUcuzGQLyrkRQ5VfSF3DVKKzI0bRdwqFp9H+LNPHi8C+rOfywGG9NRoQcTJOk4x3HkuSFAWz4aOBHVf1rMyuM83SCAwlYsKG+8yr2gonELTQukLWoNWcGotHoypqpUXpPFYis5W4vwgA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QBcBOBDCBLAdlAdAO7pbK5QAqGEYA8gGb1iqwDEA9o8wNoAMAuolAAHdrFJZ2OISAAeiAMwBOAEz4AjCqUB2AKy8AHAu0AWAGxKzAGhABPRCt4L8KrQZMHNXs7oMBfPxs0THIiEjI8Kkw6LhZWdABjBLBhZD5BJBBRcTIpGXkEV118JV9ebQV1YwMlE21rO0U9fF11dV4zdt0FMxN1PQCg6lDE5NSomlYIKTB8XAA3dgBrWeDsPHxRlOQJsAQF9gT0XJx09JlsiTzMgoUVdXwKpU0VXQteEw6bewRjbXxeG1eLolIYfNo2rpBiA1qEsBAADZgViwZDoVBpAQXMRXaQ3RDaf4qBSfQmgkzPAwqEzfBxmXj4IwVPTqT4KAxmHzQ2EbBKoMDHMC7KYzOY4RYrfA8gh8gXIIXUPYHI4nM5YzKXE75RDqXr4Mz1AwfdrA-oqWmFD6PNzvVTaQFc6E4dg0eCZaXYnKSPGgAoAWm6LlUKntH0cvFcFr97Ue6ncBpM914ljq2m5ww2xAkkUVDCYLE9uO1hV0-06njM905Bm6ugtKiMALMyl0IdL5VZCnTIQ2W3GisLWvxhRMxXUIN6ds5JhMCgtM-+VM0Bm0xN0fTjXcCMIzBHhSMH3uLAaDrlDid4Ecc6nrjbeygUvnud0q3fWMv5gt2h+uvoc5kZS8VHpHxfCpWoLXqR5PFbcxPDaEk0wCPwgA */
   context: {
     userId: 0,
+    accessToken: '',
     tradeOffers: [],
   },
   id: 'trading',
@@ -50,39 +63,15 @@ export const tradingMachine = setup({
           target: 'acceptTrade',
         },
       },
-
-      states: {
-        idle: {
-          after: {
-            '60000': 'searchingTradeOffers',
-          },
-        },
-
-        searchingTradeOffers: {
-          invoke: {
-            src: 'checkTradeOffers',
-            input: ({context: {userId}}) => ({userId}),
-            onDone: {
-              target: 'idle',
-              actions: assign({tradeOffers: ({event}) => event.output}),
-            },
-            onError: 'idle',
-          },
-        },
-      },
-
-      initial: 'searchingTradeOffers',
     },
 
     acceptTrade: {
       invoke: {
         src: 'acceptTradeMachine',
         id: TradingMachinesIds.ACCEPT_TRADE,
-
-        input: ({context: {userId}, event}) => ({
-          data: {userId, currentTrade: event.currentTrade},
+        input: ({context: {userId, accessToken}, event: {currentTrade}}) => ({
+          data: {userId, currentTrade, accessToken},
         }),
-
         onDone: 'waitingTradeOffers',
       },
     },
@@ -91,7 +80,7 @@ export const tradingMachine = setup({
       on: {
         start: {
           target: 'waitingTradeOffers',
-          actions: {type: 'setUserId', params: ({event}) => event},
+          actions: {type: 'setInitialData', params: ({event}) => event},
         },
       },
     },
@@ -100,7 +89,9 @@ export const tradingMachine = setup({
       invoke: {
         src: 'createTradeMachine',
         id: TradingMachinesIds.CREATE_TRADE,
-        input: ({context: {userId}}) => ({data: {userId}}),
+        input: ({context: {userId, accessToken}, event: {currentTrade}}) => ({
+          data: {userId, accessToken, currentTrade},
+        }),
         onDone: 'waitingTradeOffers',
       },
     },

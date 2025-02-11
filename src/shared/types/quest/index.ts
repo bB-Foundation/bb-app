@@ -1,6 +1,7 @@
 import QuestTask from './quest-task';
 import {Nullable} from '../tools';
 import User from '../user';
+import {ChatRoom} from 'types/chat-room';
 
 type Quest = {
   id: number;
@@ -14,6 +15,7 @@ type Quest = {
   imgUrl: string;
   tasks: QuestTask[];
   users: User[];
+  rooms: ChatRoom[];
 };
 
 export enum QuestStatus {

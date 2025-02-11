@@ -15,6 +15,7 @@ export type UserProfile = {
   bbId: Nullable<string>;
   email: string;
   accountAddress: Nullable<string>;
+  teamName: string;
 };
 
 export enum UserStatus {

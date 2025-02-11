@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import {Button} from '@ui-kitten/components';
 
+import styles from './create-trade.styles';
 import {SelectRecipient} from '../select-recipient';
 import {SelectTokens} from '../select-tokens';
 import {ReviewOrder} from '../review-order';
@@ -8,11 +9,14 @@ import {SelectTokensAmount} from '../select-tokens-amount';
 import {validateTokenColorSelect} from './create-trade.api';
 import {WaitFinish} from '../wait-finish';
 import {SignTrade} from '../sign-trade';
-import {useCreateTrade, useHandlers} from './create-trade.hooks';
 import {Finish} from '../finish';
+import {useChat, useCreateTrade, useHandlers} from './create-trade.hooks';
+import {OverlayLoader} from 'components/overlay-loader';
 
 export const CreateTrade: FC = () => {
   const {tradeStatus, data} = useCreateTrade();
+
+  const {chatRoomId, openChatModal} = useChat();
 
   const {
     selectTokens,
@@ -23,6 +27,7 @@ export const CreateTrade: FC = () => {
   } = useHandlers();
 
   const {
+    isCheckingTradeStatus,
     isFindRecipient,
     isViewTokens,
     isViewTokenAmount,
@@ -34,10 +39,24 @@ export const CreateTrade: FC = () => {
     isReviewResult,
   } = tradeStatus;
 
-  const {userId, gemColor, receiverGemIds, currentTrade} = data;
+  const {
+    userId,
+    gemColor,
+    receiverGemIds,
+    currentTrade,
+    resultTxHash,
+  } = data;
 
   return (
     <>
+      {!!chatRoomId && !isReviewResult && (
+        <Button size="small" style={styles.chatButton} onPress={openChatModal}>
+          Open chat
+        </Button>
+      )}
+
+      {isCheckingTradeStatus && <OverlayLoader />}
+
       {isFindRecipient && <SelectRecipient />}
 
       {isViewTokens && (
@@ -73,14 +92,18 @@ export const CreateTrade: FC = () => {
         />
       )}
 
-      {(isWaitingAcceptance || isSigning || isWaitingFinish) && (
+      {isWaitingAcceptance && (
         <WaitFinish message="Waiting for recipient acceptance" />
       )}
 
-      {currentTrade && currentTrade.txHash && isReviewResult && (
+      {(isSigning || isWaitingFinish) && (
+        <WaitFinish message="Processing trade, please wait" />
+      )}
+
+      {resultTxHash && isReviewResult && (
         <Finish
           message="Trade has been successfully finished"
-          txHash={currentTrade.txHash}
+          txHash={resultTxHash}
           exitHandler={exitHandler}
         />
       )}

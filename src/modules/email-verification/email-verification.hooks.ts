@@ -220,8 +220,11 @@ export const useCreateWallet = () => {
       try {
         if (!web3AccountData) return;
 
+        const {userId} = await getCurrentUserProfile();
+
         const additionalData = await getDeployAccountAdditionalData(
           web3AccountData.privateKey,
+          userId,
         );
 
         const data: DeployAccountData = {

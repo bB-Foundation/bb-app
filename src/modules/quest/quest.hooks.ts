@@ -1,10 +1,19 @@
-import {useCallback, useEffect, useMemo} from 'react';
-import {RouteProp, useFocusEffect, useRoute} from '@react-navigation/native';
+import {useCallback, useEffect, useMemo, useState} from 'react';
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 import {useSelector} from '@xstate/react';
+import {io, Socket} from 'socket.io-client';
 
-import {QuestsStackParamList} from '../navigation/navigation.types';
+import {
+  NavigationProp,
+  QuestsStackParamList,
+} from '../navigation/navigation.types';
 import {
   calculateDistanceFromQuestInKm,
   defineUserParticipateQuest,
@@ -22,11 +31,13 @@ import {
   WebAppEvents,
 } from '../../components/web-app/web-app.api';
 import {
+  getJwtAccessToken,
   getUserAccountAddress,
   getUserPrivateKey,
 } from 'src/shared/utils/secure-storage';
 import {Errors} from 'src/enums/errors';
 import {JoinQuestEvent} from 'components/web-app/web-app.types';
+import {ChatRoom} from 'types/chat-room';
 
 export const useQuestLogic = () => {
   const {
@@ -210,4 +221,67 @@ export const useButtonHandlers = () => {
     joinQuestHandler,
     leaveQuestHandler,
   };
+};
+
+export const useChat = () => {
+  const navigation = useNavigation<NavigationProp>();
+
+  const [socket, setSocket] = useState<Socket>();
+
+  const {data: currentUserProfile} = useCurrentUserProfile();
+
+  const openChat = (quest: Quest) => {
+    if (!currentUserProfile) throw new Error('user is not defined');
+    if (!socket) throw new Error('socket is not defined');
+
+    const {teamName} = currentUserProfile;
+
+    const groupQuestRoom = quest.rooms.find(r => r.name === teamName);
+    if (!groupQuestRoom) return;
+
+    socket.emit('joinToGroupChatRoom', {roomId: groupQuestRoom.id});
+    socket.emit('getRoomDetails', {roomId: groupQuestRoom.id});
+  };
+
+  // initialize chat socket
+  useEffect(() => {
+    (async () => {
+      const accessToken = await getJwtAccessToken();
+      if (!accessToken) throw new Error();
+
+      const socket = io(
+        `${process.env.BACKEND_API_URL}:${process.env.BACKEND_WS_TRADE_CHAT_PORT}`,
+        {extraHeaders: {authorization: 'Bearer ' + accessToken}},
+      );
+
+      const openChatRoom = (
+        chatRoomId: number,
+        groupPgpPublicKey: string,
+        chatMembersAmount: number,
+      ) => {
+        navigation.navigate('quest-chat', {
+          socket,
+          chatRoomId,
+          groupPgpPublicKey,
+          title: `Chat members: ${chatMembersAmount}`,
+        });
+      };
+
+      socket.on(
+        'roomDetailsFetched',
+        ({id, groupPgpPublicKey, participants}: ChatRoom) =>
+          openChatRoom(id, groupPgpPublicKey, participants.length),
+      );
+
+      socket.on(
+        'roomUpdated',
+        ({id, groupPgpPublicKey, participants}: ChatRoom) =>
+          openChatRoom(id, groupPgpPublicKey, participants.length),
+      );
+
+      setSocket(socket);
+    })();
+  }, [navigation]);
+
+  return {openChat};
 };

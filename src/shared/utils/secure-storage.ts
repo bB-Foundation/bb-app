@@ -6,6 +6,7 @@ enum TokenNames {
   USER_PASSWORD = 'USER_PASSWORD',
   USER_PRIVATE_KEY = 'USER_PRIVATE_KEY',
   USER_ACCOUNT_ADDRESS = 'USER_ACCOUNT_ADDRESS',
+  USER_PGP_PRIVATE_KEY = 'USER_PGP_PRIVATE_KEY',
 }
 
 const storeToken = async (tokenName: string, tokenValue: string) => {
@@ -160,6 +161,32 @@ export const getUserAccountAddress = async (userId: number) => {
   } catch (error) {
     throw error;
   }
+};
+
+export const storeUserPgpPrivateKey = async (
+  privateKey: string,
+  userId: number,
+) => {
+  const prevStateString = await getToken(TokenNames.USER_PGP_PRIVATE_KEY);
+  const prevState: {[userId: number]: string} | null = prevStateString
+    ? JSON.parse(prevStateString)
+    : null;
+
+  if (prevState) {
+    prevState[userId] = privateKey;
+  }
+
+  const value = prevState ? prevState : {[userId]: privateKey};
+  await storeToken(TokenNames.USER_PGP_PRIVATE_KEY, JSON.stringify(value));
+};
+
+export const getUserPgpPrivateKey = async (userId: number) => {
+  const prevStateString = await getToken(TokenNames.USER_PGP_PRIVATE_KEY);
+  const prevState: {[userId: number]: string} | null = prevStateString
+    ? JSON.parse(prevStateString)
+    : null;
+
+  return prevState ? prevState[userId] : null;
 };
 
 export const clearSecureStorage = () =>

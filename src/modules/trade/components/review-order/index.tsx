@@ -16,22 +16,16 @@ export const ReviewOrder: FC<ReviewOrderProps> = ({
   const styles = useStyleSheet(rootStyles);
 
   return (
-    <>
-      <View style={styles.content}>
-        <OfferCard owner="You" gemsAmount={gemsAmount} gemColor={gemColor} />
-        <SwapIcon style={styles.swapIcon} width={24} height={24} />
-        <OfferCard
-          owner={'Recipient'}
-          gemsAmount={gemsAmount}
-          gemColor="black"
-        />
-        <Button
-          onPress={submitHandler}
-          style={styles.submitButton}
-          disabled={isSubmitting}>
-          ACCEPT
-        </Button>
-      </View>
-    </>
+    <View style={styles.content}>
+      <OfferCard owner="You" gemsAmount={gemsAmount} gemColor={gemColor} />
+      <SwapIcon style={styles.swapIcon} width={24} height={24} />
+      <OfferCard owner={'Recipient'} gemsAmount={gemsAmount} gemColor="black" />
+      <Button
+        onPress={submitHandler}
+        style={styles.submitButton}
+        disabled={isSubmitting}>
+        ACCEPT
+      </Button>
+    </View>
   );
 };

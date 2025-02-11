@@ -4,12 +4,13 @@ import {Button, Text} from '@ui-kitten/components';
 import FastImage from '@d11/react-native-fast-image';
 
 import styles from './trade-offers.styles';
-import {tradingActor} from '../../api/trading-machine';
-import {useTradeOffers} from './trade-offers.hooks';
+import {useHandlers, useTradeOffers} from './trade-offers.hooks';
 import {getGemImageSourceByColor} from 'src/shared/api/gems';
 
 export const TradeOffers: FC = () => {
   const {tradeOffers, initiatorGemDetailsByTrade} = useTradeOffers();
+
+  const {openTrade} = useHandlers();
 
   if (!tradeOffers.length || !Object.keys(initiatorGemDetailsByTrade).length)
     return null;
@@ -23,7 +24,8 @@ export const TradeOffers: FC = () => {
         contentContainerStyle={styles.offersContainer}
         data={tradeOffers}
         renderItem={({item}) => {
-          const gems = initiatorGemDetailsByTrade[item.id];
+          const gems = initiatorGemDetailsByTrade?.[item.id];
+          if (!gems) return null;
 
           return (
             <View style={styles.offerItem}>
@@ -37,11 +39,7 @@ export const TradeOffers: FC = () => {
                 <Text category="h4">x {gems.length}</Text>
               </View>
 
-              <Button
-                size="small"
-                onPress={() =>
-                  tradingActor.send({type: 'accept', currentTrade: item})
-                }>
+              <Button size="small" onPress={() => openTrade(item)}>
                 Accept
               </Button>
             </View>

@@ -9,7 +9,7 @@ import {
 import {refreshAuthToken} from '../shared/api/sign-in';
 
 const api = axios.create({
-  baseURL: process.env.BACKEND_API_URL,
+  baseURL: `${process.env.BACKEND_API_URL}:${process.env.BACKEND_API_PORT}`,
 });
 
 api.interceptors.request.use(async config => {

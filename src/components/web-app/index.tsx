@@ -86,6 +86,7 @@ const WebApp = () => {
             encryptedPrivateKey,
             accessToken,
             baseApiUrl,
+            pgpPublicKey,
           } = event.data;
 
           const getSignatureMessage = generateMessage(
@@ -102,6 +103,7 @@ const WebApp = () => {
               encryptedPrivateKey,
               fullPublicKey,
               signature,
+              pgpPublicKey,
             },
             {
               headers: {
@@ -313,13 +315,9 @@ const WebApp = () => {
 
           const swapGemsTx = gemContract.populate('swap', [tokenIds]);
           const maxFee = await calculateMaxFee({account, TX: swapGemsTx});
-          const result = await account.execute(
-            [swapGemsTx],
-            undefined,
-              {
-              maxFee,
-            }
-          );
+          const result = await account.execute([swapGemsTx], undefined, {
+            maxFee,
+          });
           const txReceipt = await provider.waitForTransaction(
             result.transaction_hash,
           );

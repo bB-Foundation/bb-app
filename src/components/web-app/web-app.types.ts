@@ -8,6 +8,7 @@ type DeployAccountData = {
   encryptedPrivateKey: string;
   accessToken: string;
   baseApiUrl: string;
+  pgpPublicKey: string;
 };
 
 type JoinQuestData = {

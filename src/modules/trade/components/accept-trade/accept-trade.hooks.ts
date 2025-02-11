@@ -1,13 +1,24 @@
+import {useEffect} from 'react';
 import {useSelector} from '@xstate/react';
+import {useNavigation} from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 
 import {
   tokenColorRecipientSelectValidation,
   validateGemsAmount,
 } from './accept-trade.api';
 import {GemColor} from 'types/gem';
-import {tradingActor} from '../../api/trading-machine';
+import {
+  tradingActor,
+  TradingEventType,
+  tradingSocket,
+} from '../../api/trading-machine';
 import {TradingMachinesIds} from '../../api/trade.api';
 import {AcceptTradeActor} from '../../api/accept-trade-machine';
+import {ChatRoom, RoomType} from 'types/chat-room';
+import {NavigationProp} from 'src/modules/navigation/navigation.types';
+import {getTradeById} from 'src/shared/api/trade';
+import {TradeStatus} from 'types/trade';
 
 export const useAcceptTrade = () => {
   const acceptTradeActor = useSelector(
@@ -16,9 +27,20 @@ export const useAcceptTrade = () => {
       snapshot.children[TradingMachinesIds.ACCEPT_TRADE] as AcceptTradeActor,
   );
 
-  const {userId, gemColor, currentTrade, receiverGemIds} = useSelector(
-    acceptTradeActor,
-    snapshot => snapshot.context,
+  const {
+    userId,
+    gemColor,
+    currentTrade,
+    receiverGemIds,
+    chatSocket,
+    chatRoomId,
+  } = useSelector(acceptTradeActor, snapshot => snapshot.context);
+
+  const value = useSelector(acceptTradeActor, snapshot => snapshot.value);
+  console.log('🚀 ~ receiver trade status: ', value);
+
+  const isCheckingTradeStatus = useSelector(acceptTradeActor, snapshot =>
+    snapshot.matches('checkingTradeStatus'),
   );
 
   const isViewTokens = useSelector(acceptTradeActor, snapshot =>
@@ -53,8 +75,82 @@ export const useAcceptTrade = () => {
     snapshot.matches('reviewResult'),
   );
 
+  // on trade enter
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!isCheckingTradeStatus) return;
+
+        const trade = await getTradeById(currentTrade.id);
+
+        switch (trade.status) {
+          case TradeStatus.PENDING:
+            acceptTradeActor.send({type: 'setViewTokens'});
+            break;
+
+          case TradeStatus.ACCEPTED:
+            acceptTradeActor.send({type: 'setWaitingSign'});
+            break;
+
+          case TradeStatus.WAITING_SIGNATURE:
+            acceptTradeActor.send({type: 'setSigning'});
+            break;
+
+          case TradeStatus.SIGNED:
+            acceptTradeActor.send({type: 'setCompleting'});
+            break;
+
+          default:
+            break;
+        }
+      } catch (error) {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Error while loading the trade',
+        });
+      }
+    })();
+  }, [isCheckingTradeStatus, currentTrade.id, acceptTradeActor]);
+
+  // create a chat room on trade start
+  useEffect(() => {
+    if (chatRoomId) return;
+
+    chatSocket.emit('createRoom', {
+      type: RoomType.DIRECT,
+      participants: [currentTrade.initiatorId],
+    });
+  }, [chatSocket, currentTrade, chatRoomId]);
+
+  // sign trade after initiator signed
+  useEffect(() => {
+    tradingSocket.on(TradingEventType.TradeInitiatorSigned, () => {
+      acceptTradeActor.send({type: 'startSigning'});
+    });
+  }, [acceptTradeActor]);
+
+  // on join chat room
+  useEffect(() => {
+    chatSocket.on('roomCreated', ({id, groupPgpPublicKey}: ChatRoom) => {
+      acceptTradeActor.send({
+        type: 'setChatData',
+        chatRoomId: id,
+        groupPgpPublicKey,
+      });
+    });
+  }, [chatSocket, acceptTradeActor]);
+
+  // delete chat room after success trade
+  useEffect(() => {
+    if (!isReviewResult) return;
+
+    chatSocket.emit('deleteRoom', {roomId: chatRoomId});
+  }, [isReviewResult, chatRoomId, chatSocket]);
+
   return {
     tradeStatus: {
+      isCheckingTradeStatus,
       isViewTokens,
       isViewTokenAmount,
       isReviewOffer,
@@ -64,7 +160,12 @@ export const useAcceptTrade = () => {
       isCompleting,
       isReviewResult,
     },
-    data: {userId, gemColor, currentTrade, receiverGemIds},
+    data: {
+      userId,
+      gemColor,
+      currentTrade,
+      receiverGemIds,
+    },
   };
 };
 
@@ -117,5 +218,29 @@ export const useHandlers = () => {
     submitTrade,
     signTrade,
     exitHandler,
+  };
+};
+
+export const useChat = () => {
+  const navigation = useNavigation<NavigationProp>();
+
+  const acceptTradeActor = useSelector(
+    tradingActor,
+    snapshot =>
+      snapshot.children[TradingMachinesIds.ACCEPT_TRADE] as AcceptTradeActor,
+  );
+
+  const {chatRoomId} = useSelector(
+    acceptTradeActor,
+    snapshot => snapshot.context,
+  );
+
+  const openChatModal = () => {
+    navigation.navigate('chat', {isInitiator: false, title: 'Chat'});
+  };
+
+  return {
+    chatRoomId,
+    openChatModal,
   };
 };

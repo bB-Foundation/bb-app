@@ -61,4 +61,5 @@ export default StyleService.create({
     justifyContent: 'space-between',
   },
   footerContainer: {paddingVertical: 16, paddingHorizontal: 22, marginTop: 10},
+  chatButton: {margin: 'auto'},
 });

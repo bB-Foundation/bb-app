@@ -4,7 +4,7 @@ import {Button, Card, Text, useStyleSheet} from '@ui-kitten/components';
 import FastImage from '@d11/react-native-fast-image';
 import WebView from 'react-native-webview';
 
-import {useButtonHandlers, useQuestLogic} from './quest.hooks';
+import {useButtonHandlers, useChat, useQuestLogic} from './quest.hooks';
 import Page from 'components/page';
 import ImageOverlay from 'components/image-overlay';
 import AdvantageItem from './components/advantage-item';
@@ -25,6 +25,8 @@ const Quest: FC = () => {
   const {joinQuestHandler, leaveQuestHandler} = useButtonHandlers();
 
   const {webBrowserRef, onWebBrowserMessage} = webComponentData;
+
+  const {openChat} = useChat();
 
   const styles = useStyleSheet(themedStyles);
 
@@ -101,6 +103,13 @@ const Quest: FC = () => {
             </Button>
           )}
         </Card>
+
+        <Button
+          style={styles.chatButton}
+          status="info"
+          onPress={() => openChat(quest)}>
+          Open chat
+        </Button>
 
         <Text style={styles.sectionLabel} category="s1">
           About

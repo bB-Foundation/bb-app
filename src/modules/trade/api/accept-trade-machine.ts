@@ -1,14 +1,11 @@
 import {ActorRefFrom, assign, fromPromise, setup} from 'xstate';
+import {io, Socket} from 'socket.io-client';
 
 import {GemColor} from 'types/gem';
 import {Trade} from 'types/trade';
-import {
-  acceptTrade,
-  checkIfTradeSignedByInitiator,
-  completeTrade,
-  signTradeByReceiver,
-} from './trade.api';
+import {acceptTrade, completeTrade, signTradeByReceiver} from './trade.api';
 import {AcceptTradeData, SignTradeData} from '../trade.types';
+import {ChatData} from './trade.types';
 
 export const acceptTradeMachine = setup({
   types: {
@@ -20,21 +17,40 @@ export const acceptTradeMachine = setup({
       signature: string;
       /** color of gems to be traded */
       gemColor: GemColor | undefined;
+      // chat
+      chatSocket: Socket;
+      chatRoomId: number;
+      groupPgpPublicKey: string;
     },
     input: {} as {
       data: {
         userId: number;
         currentTrade: Trade;
+        accessToken: string;
       };
     },
     events: {} as
+      | {type: 'setChatData'; chatRoomId: number; groupPgpPublicKey: string}
+      | {type: 'setViewTokens'}
+      | {type: 'setWaitingSign'}
+      | {type: 'setSigning'}
+      | {type: 'setCompleting'}
       | {type: 'selectGemColor'; gemColor: GemColor}
       | {type: 'selectTokens'; receiverGemIds: number[]}
       | {type: 'sendRequest'}
+      | {type: 'startSigning'}
       | {type: 'sign'; signature: string}
       | {type: 'exit'},
   },
   actions: {
+    setChatDataAction: assign({
+      chatRoomId: (_, {chatRoomId}: ChatData) => chatRoomId,
+      groupPgpPublicKey: (_, {groupPgpPublicKey}: ChatData) =>
+        groupPgpPublicKey,
+    }),
+    setGemColor: assign({
+      gemColor: (_, {gemColor}: {gemColor: GemColor}) => gemColor,
+    }),
     selectTokensAction: assign({
       receiverGemIds: (_, {receiverGemIds}: {receiverGemIds: number[]}) =>
         receiverGemIds,
@@ -42,19 +58,12 @@ export const acceptTradeMachine = setup({
     setSignature: assign({
       signature: (_, {signature}: {signature: string}) => signature,
     }),
-    setGemColor: assign({
-      gemColor: (_, {gemColor}: {gemColor: GemColor}) => gemColor,
-    }),
   },
   actors: {
-    checkInitiatorSign: fromPromise(
-      async ({input: {currentTradeId}}: {input: {currentTradeId: number}}) =>
-        checkIfTradeSignedByInitiator(currentTradeId),
+    acceptTradeRequest: fromPromise(async ({input}: {input: AcceptTradeData}) =>
+      acceptTrade(input),
     ),
-    sendReceiverRequest: fromPromise(
-      async ({input}: {input: AcceptTradeData}) => acceptTrade(input),
-    ),
-    signTradeByReceiver: fromPromise(async ({input}: {input: SignTradeData}) =>
+    signTrade: fromPromise(async ({input}: {input: SignTradeData}) =>
       signTradeByReceiver(input),
     ),
     completeTrade: fromPromise(
@@ -62,11 +71,10 @@ export const acceptTradeMachine = setup({
         completeTrade(tradeId),
     ),
   },
-  guards: {},
 }).createMachine({
-  /** @xstate-layout N4IgpgJg5mDOIC5QAoC2BDAxgCwJYDswBKAOgDdcwB3AFQHsBrMfWAYljABsxMAXAcTCoAwnU50ATgG0ADAF1EoAA51YuXrjr5FIAB6IAjAA4DJACxGzAZgBsAdgCsRmVaMAmNwBoQAT0RuzUwMbEIcQmyMATisHaIBfOO80LDxCUg58CAIoACUwAEcAVzheVggtMBICMkZK5JwCYhIMrPxcguLYXgRqukx0DS1ZOWGdFTVB7SQ9QzMIkhkAuzM7CLcHYxtvPwRjBxIrOZk7YxkjMIMLBKSMBrTm5lb2opLWMAkJSRIlTgGAM0kqBI9VSTRa2TyLy6PXwNX6k2Go2m43UmimoH0uxk2PMBjshzsMmCITskW2iBiNnMkROYRsixONmuIBBjVIEjAFGoAHk-n93uxHpDOrwkcpVKitDpMQYZGY3AtDg4HMtjiYzuSEG4bGYDtE3K4DGEzjImYkWbdQaRMHRUD8wBo2mUKlVYbVgZa2SQbXbuI6oDC4QM0Yj5GMJZNpRTIm5IiQ7EY7MsbJEdbE3EZNVYMyQM1ZDkYTPi5Q5maz7hyuVQ8rBCpxSmBdOoxSAUZHppjrIcSGEaZFrA5XAms2Y4w4ZJFIos3AYZ-Ky577lX6Ex8ABBVB0Qr4Uocbh8FfMWAtttoqMIGxWUxWM4qo17Kd2TUBUzhGx0iLRWILlJeqjoVE2gAZVwKB8CqCBuFYXQugGSp0D+Xh3mQNxsRkIhWHLJp-0AqAQLAiDuBPCMzw7QwaSsBZ7FJbMbACDwDE1MwJxIAwp2OYJ1gcCw3B-O5sIA-18PAnAeAYbJhOdQhXRqJgPV-e4cKE0CROwMSJJUwM+mDIZ5GIiZSIxfwViCfsr3lO8UyzKw7FzK8IivRZZQMYI+KtEglI0gjRMwcTgJUt4Pi+H5-kBeT+NITz-O8tTfK8-AtPhEM9LDZESKlMitVNSiEzxIlR0vFVn0CEgzOCM5LHxS8zRuBSwRU7ISBgQgJGDaL8HYFT9MldEZi1aIqVjHUJxOJNzgcLNtXjIx8wNRZ+2Yqw3K9NQwMa8E2mFV5ymk3o5Kw9IGraB5MghDoSkSnT8FDBQ0oMjKjIQQ4LBIGa3BOGa5XlJ9fApDYFgnc4ok+kIjBqi06owxtm1S8V7t6zF7Bkcw7G1BMAmsGbGN+3Z-tJI15SJNjIkTSIEnNfA6AgOAdAO8N4fPABaLYcZ1XNIkuMGwnzacyfNA7yEoWhahYemevPeVnzZqx9UNY1nHBgWNueEUxfbR7Z3mWb+37Wcr0iCacaWVjCVjZwzGY1ZLGWitOSF3l+QkNXDL6oHWJMGlE3xA0ySNwkSCR2MresA38RtpofXtf1nYevqbJcAPlgNmQHG1exDZ2bNkeCVxUKcGMXICcP2Tt6gazrXgY4RxBAjogO5x4gwYkWEcxwnKcGLnXj+cXJplxFjctx3Kvzxl2y5kTCfmNHNOpd1GXszl+kFeLjzBPikfMrxPEeynd9DjxQcM8MbjzGsYnuItg3u9qiK19w4TCLATeNdWfZYlNQdAkcGIsyJUrz7L0qrYWwq8op4RUt6WKfkIFgRfn1GcM1pp5UuKmGIP1M6zjssEEmIdbDLFXqtfA2R4GYnemceMthdZyjlL-I22YA6XkcCTRMKZ96EKOlAJqzB3htVgb1U8scyGOCpFVah086GZ2sIwmyVCVipmsBwtax1lZbS6KQikspbL4h1jedwHhLCTWzkwsGZhBzXxiKvP4BBcCwDUhADRCALYrAOGxDYppEyFkcK3Hs7dpyzkuKhMwq9+j4EwFwSAjj5SUXfHRNOM4Uy+x2PeeMHMNhXljMqEwS1yZAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QAoC2BDAxgCwJYDswBKAYljABcBhbdCgETvQG0AGAXUVAAcB7WXBVy98XEAA9EAJikA2AHQBORQEYALFJUAOAKwBmLay169AGhABPRAFoA7AttrZeqVpWLbWxW4C+P82hYeISkYOKCbJxIIHwCQiJikgiy7vK2Ohkqeio6Ms4q5lYIOWryaqw6aspSjjqOWn4BGDgExPIAbrhgAO4AKrwA1mD4sGRgADZgmBQA4mCoVLzjvABOkWKxgsKi0UnaKmVaanqy6YYGMoXSagcqsvc697JeejqKeo0ggS0h8uT4EAIUAASmAAI4AVzgFBIEBEYHkBHagwR32CbX+gPwIPBUNgFAQSN4mDo20i62im3iO1Ae0qOnkrFcKlYWVY5VYFSuCDkDJeNT0GkUMjUtk+aNaRD+wyxOMh0JIYBWK1W8m44zoADNVqh5BLfpigaD5fjCfhkSTqeSOBt+FsErtECzOWUVLZBbZWU9bIpua8FFVbDl7kyg7Jxc10VKVmBOj0APKazVKsYA414igUnh26mJJ3sqSMwUZRysTwsrTcuSlPTvKQGYNGVjh-xfSOS+SYXiodWUIGw+GI80ovXt35dnuTITYs0W0kia1RbNxbZ5hAmLxlG7vNxSUWKHRV2SKeSyNRaZ6KCqs-QtppBDsxuPdUGwCHjGFhCI2yk51eO9cfVKGRa10HR1CMKsr3kLR0j3Pc1CqVQVAjB9fmffohnwABBVBeAhfAYXISZpkw4ZYCzGI-wdWlEHyeQ9CMOocm0N4yyrG5TyeR57heN5UJ+NpunQLZsQAZVwKB8DICh0BWCgJKkoFKKpf9aOKao0ndXQmT0TxniPGs609ewr1gxQ7zbNCMUk-AgXkGBCBWUlxNsshbJU6iaQkaRawUVRPWbUCAqkDiFB0TkbjkdkLOyMVW31GylOxaUASNXEFThQgh2RIZR2sqUBGSqBUtldNoVnYl53wRdbRXGifJ5MzDmPVhFCcJwpF9SxpGFBj0ncYUclUSzEqlHApgGIFemciAwDE2SKAhUZyAoAA1Lo+hREZPPq7ykhqeRckFWR9CMTRVDMHr11OU9hS648TikOoBKjTtsEm6bZvmxblrGCgAHUROnKBFJqn9l3tfbEAirQlFFFQclrdrbHsblEIcbxL2ijxPFejsJswKbsRm9A5oWug-tWxZJz7bFdqhtcWRSNIIrUOoajYvTuTqPQ0gqK9wNgplFHx8cPqJr6yZ+ymVsoMHlIhqi9qZrxgI8EbnlRzxK2u3I+TkWRXHKCybj8Vt8F4Ob4GiMa6sZgDrC6+QBRuO5ZE5K8nG5M8YMMWDPGezRKlFhKxzaDDtptyHcwAjRDIYusG0eJtRvDwqZXSk0KHt2P1JUOQ4ZMLqqii7IDw42x5DdEXDEQstnjUMW2ifTbE2TFZc7UxrdDh-YPADlxayrT1T09Lr7COWteeb8bu17EGu4apJsmcBiuvUO4LwDo8DlyEbzqkZtWBOWf5FbnpX3fHPfxVgCnsLTnnHed1PTUKDWBguCNEQpDEbPyOWFcL4UIkvaG64PBlC1k4I4MVDYJ1rEPNwKdDBpwKvIYSolQa2TAarI+LtBQFwLu8R4sEEHGQbmZH0aDBKFVskCXBAFNDHgYnUfQqNg5PG5DkQsBg2oVC8EGI4+gz5FTsilRySoXLYKkow9SMg3SsPSHpWwnD7hHj5nwrQvJ6znlUaI+hKVDTYnKviORjVnrPAYh7IwHhnAnCrLWP2Rh7Ai1FPrM+moCC4FgB9CA5iV5Xn8q-VkRx-YWQ-l-XIP9ELKERjQt6JJ8CYAmJAAJiANAHD3JUXi3hYK6G4foauGRzyuEeqKE+Z9CbEygKTcmv1o7KwdvnOGqjTpaGMMjNqlR0Ysz3G1PS2Rsjb3Nj4IAA */
   context: ({input}) => {
-    const {userId, currentTrade} = input.data;
+    const {userId, currentTrade, accessToken} = input.data;
     return {
       userId,
       tradeOffers: [],
@@ -75,10 +83,16 @@ export const acceptTradeMachine = setup({
       currentTrade,
       signature: '',
       gemColor: undefined,
+      chatSocket: io(
+        `${process.env.BACKEND_API_URL}:${process.env.BACKEND_WS_TRADE_CHAT_PORT}`,
+        {extraHeaders: {authorization: 'Bearer ' + accessToken}},
+      ),
+      chatRoomId: 0,
+      groupPgpPublicKey: '',
     };
   },
 
-  initial: 'viewTokens',
+  initial: 'checkingTradeStatus',
 
   states: {
     viewTokens: {
@@ -92,7 +106,7 @@ export const acceptTradeMachine = setup({
 
     sendingRequest: {
       invoke: {
-        src: 'sendReceiverRequest',
+        src: 'acceptTradeRequest',
 
         input: ({context: {currentTrade, receiverGemIds}}) => ({
           tradeId: currentTrade.id,
@@ -142,28 +156,9 @@ export const acceptTradeMachine = setup({
     },
 
     waitingSign: {
-      states: {
-        idle: {
-          after: {
-            '60000': 'checkingSign',
-          },
-        },
-
-        checkingSign: {
-          invoke: {
-            src: 'checkInitiatorSign',
-
-            input: ({context: {currentTrade}}) => ({
-              currentTradeId: currentTrade.id,
-            }),
-
-            onError: 'idle',
-            onDone: '#(machine).signing',
-          },
-        },
+      on: {
+        startSigning: 'signing',
       },
-
-      initial: 'idle',
     },
 
     signing: {
@@ -178,7 +173,7 @@ export const acceptTradeMachine = setup({
         },
         sendingRequest: {
           invoke: {
-            src: 'signTradeByReceiver',
+            src: 'signTrade',
             input: ({context: {currentTrade, signature}}) => ({
               tradeId: currentTrade.id,
               signature,
@@ -198,10 +193,34 @@ export const acceptTradeMachine = setup({
     canceled: {
       type: 'final',
     },
+
+    checkingTradeStatus: {
+      on: {
+        setViewTokens: 'viewTokens',
+
+        setWaitingSign: {
+          target: 'waitingSign',
+        },
+
+        setCompleting: 'completing',
+        setSigning: 'signing',
+      },
+    },
   },
 
   on: {
+    setChatData: {
+      actions: {
+        type: 'setChatDataAction',
+        params: ({event}) => event,
+      },
+    },
+
     exit: '.canceled',
+  },
+
+  output: ({context: {chatSocket}}) => {
+    chatSocket.close();
   },
 });
 

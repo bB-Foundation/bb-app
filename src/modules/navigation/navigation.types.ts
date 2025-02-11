@@ -1,4 +1,5 @@
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {Socket} from 'socket.io-client';
 
 export type RootStackParamList = {
   'sign-in': undefined;
@@ -17,6 +18,12 @@ export type QuestsStackParamList = {
   quest: {
     questId: number;
   };
+  'quest-chat': {
+    title: string;
+    socket: Socket;
+    chatRoomId: number;
+    groupPgpPublicKey: string;
+  };
 };
 
 export type QrCodeStackParamList = {
@@ -32,6 +39,15 @@ export type SwapStackParamList = {
   main: undefined;
 };
 
+export type TradeStackParamList = {
+  main: undefined;
+  chat: {isInitiator: boolean; title: string};
+};
+
 export type NavigationProp = NativeStackNavigationProp<
-  RootStackParamList & QuestsStackParamList & QrCodeStackParamList
+  RootStackParamList &
+    QuestsStackParamList &
+    QrCodeStackParamList &
+    SwapStackParamList &
+    TradeStackParamList
 >;

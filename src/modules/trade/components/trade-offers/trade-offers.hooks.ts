@@ -1,27 +1,61 @@
 import {useEffect, useState} from 'react';
-import {useSelector} from '@xstate/react';
 import {useQueryClient} from '@tanstack/react-query';
+import Toast from 'react-native-toast-message';
 
 import {GemMetadata} from 'types/gem';
-import {tradingActor} from '../../api/trading-machine';
+import {
+  tradingActor,
+  TradingEventType,
+  tradingSocket,
+} from '../../api/trading-machine';
 import {getGemById} from 'src/shared/api/gems';
 import queryKeys from 'configs/query-keys';
+import {Trade} from 'types/trade';
+import {getUserTradeOffers} from './trade-offers.api';
+import useCurrentUserProfile from 'hooks/current-user';
+import {Errors} from 'src/enums/errors';
 
 export const useTradeOffers = () => {
-  const tradeOffers = useSelector(
-    tradingActor,
-    snapshot => snapshot.context.tradeOffers,
-  );
-
   const queryClient = useQueryClient();
+
+  const {data: currentUserProfile} = useCurrentUserProfile();
+  const [tradeOffers, setTradeOffers] = useState<Trade[]>([]);
 
   const [initiatorGemDetailsByTrade, setInitiatorGemDetailsByTrade] = useState<
     Record<number, GemMetadata[]>
   >({});
 
+  // load trade offers on render
   useEffect(() => {
     (async () => {
-      const results: Record<number, any[]> = {};
+      if (!currentUserProfile) return;
+
+      try {
+        const offers = await getUserTradeOffers({
+          userId: currentUserProfile.userId,
+        });
+        setTradeOffers(offers);
+      } catch (error) {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: Errors.UNKNOWN,
+        });
+      }
+    })();
+  }, [currentUserProfile]);
+
+  // listen for new trades
+  useEffect(() => {
+    tradingSocket.on(TradingEventType.TradeInitialized, (trade: Trade) => {
+      setTradeOffers(p => [...p, trade]);
+    });
+  }, []);
+
+  // load gem images for trade offers
+  useEffect(() => {
+    (async () => {
+      const results: Record<number, GemMetadata[]> = {};
 
       for (const {id: tradeId, initiatorGemIds} of tradeOffers) {
         const initiatorGem = await Promise.all(
@@ -40,4 +74,22 @@ export const useTradeOffers = () => {
   }, [tradeOffers, queryClient]);
 
   return {tradeOffers, initiatorGemDetailsByTrade};
+};
+
+export const useHandlers = () => {
+  const {data: currentUserProfile} = useCurrentUserProfile();
+
+  const openTrade = (trade: Trade) => {
+    if (!currentUserProfile) throw new Error('User is not logged in');
+
+    const {userId} = currentUserProfile;
+
+    if (trade.initiatorId === userId) {
+      tradingActor.send({type: 'offer', currentTrade: trade});
+    } else {
+      tradingActor.send({type: 'accept', currentTrade: trade});
+    }
+  };
+
+  return {openTrade};
 };

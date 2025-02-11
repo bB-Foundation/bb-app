@@ -1,16 +1,20 @@
 import React from 'react';
+import {Button} from '@ui-kitten/components';
 
+import styles from './accept-trade.styles';
 import {SelectTokens} from '../select-tokens';
 import {ReviewOrder} from '../review-order';
 import {SelectTokensAmount} from '../select-tokens-amount';
 import {WaitFinish} from '../wait-finish';
 import {SignTrade} from '../sign-trade';
-import {useAcceptTrade, useHandlers} from './accept-trade.hooks';
+import {useAcceptTrade, useChat, useHandlers} from './accept-trade.hooks';
 import {Finish} from '../finish';
-import {Button} from '@ui-kitten/components';
+import {OverlayLoader} from 'components/overlay-loader';
 
 export const AcceptTrade = () => {
   const {tradeStatus, data} = useAcceptTrade();
+
+  const {chatRoomId, openChatModal} = useChat();
 
   const {
     validateTokenColorSelect,
@@ -23,6 +27,7 @@ export const AcceptTrade = () => {
   } = useHandlers();
 
   const {
+    isCheckingTradeStatus,
     isViewTokens,
     isViewTokenAmount,
     isReviewOffer,
@@ -37,6 +42,14 @@ export const AcceptTrade = () => {
 
   return (
     <>
+      {!!chatRoomId && !isReviewResult && (
+        <Button size="small" style={styles.chatButton} onPress={openChatModal}>
+          Open chat
+        </Button>
+      )}
+
+      {isCheckingTradeStatus && <OverlayLoader />}
+
       {isViewTokens && (
         <SelectTokens
           userId={userId}

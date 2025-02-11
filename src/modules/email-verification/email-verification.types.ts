@@ -11,4 +11,5 @@ export type DeployAccountAdditionalData = {
   accessToken: string;
   encryptedPrivateKey: string;
   baseApiUrl: string;
+  pgpPublicKey: string;
 };

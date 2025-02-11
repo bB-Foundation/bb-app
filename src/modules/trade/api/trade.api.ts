@@ -1,3 +1,6 @@
+import {isAxiosError} from 'axios';
+import Toast from 'react-native-toast-message';
+
 import api from 'configs/axios';
 import {Trade, TradeStatus} from 'types/trade';
 import {
@@ -7,8 +10,6 @@ import {
 } from '../trade.types';
 import {getTradeById} from 'src/shared/api/trade';
 import {tradingActor} from './trading-machine';
-import {isAxiosError} from 'axios';
-import Toast from 'react-native-toast-message';
 import {Errors} from 'src/enums/errors';
 
 export enum TradingMachinesIds {
@@ -37,26 +38,20 @@ export const initializeTrade = async (
   }
 };
 
-export const getUserTradeOffers = async ({
-  userId,
-}: {
-  userId: number;
-}): Promise<Trade[]> =>
-  (await api.get<Trade[]>(`reward/trades/user/${userId}`)).data.filter(
-    t => t.receiverId === userId && t.status === TradeStatus.PENDING,
-  );
-
+// TODO delete ???
 export const checkIfTradeAccepted = async (tradeId: number): Promise<void> => {
   const trade = await getTradeById(tradeId);
   if (trade.status !== TradeStatus.ACCEPTED)
     throw new Error('Trade is not accepted');
 };
 
+// TODO delete ???
 export const checkIfTradeFinished = async (trade: Trade): Promise<void> => {
   if (trade.status !== TradeStatus.FINISHED)
     throw new Error('Trade is not finished');
 };
 
+// TODO delete ???
 export const checkIfTradeSignedByInitiator = async (
   tradeId: number,
 ): Promise<void> => {
@@ -87,8 +82,6 @@ export const acceptTrade = async ({
     throw error;
   }
 };
-
-// (await api.post<Trade>(`reward/trade/${tradeId}/accept-trade`, data)).data;
 
 export const signTradeByInitiator = async ({
   tradeId,

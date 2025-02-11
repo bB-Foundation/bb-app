@@ -30,11 +30,11 @@ export const SignTrade: FC<SignTradeProps> = ({
         }
         try {
           const {signature} = message.data as {signature: string};
-          if (!signature) throw Error('No signature');
+          if (!signature) throw new Error('No signature');
 
           signTradeHandler(signature);
         } catch (error) {
-          // TODO add error handler
+          console.log('error:', error);
         }
       }
     }
@@ -65,9 +65,10 @@ export const SignTrade: FC<SignTradeProps> = ({
           },
         };
 
+        await new Promise(res => setTimeout(res, 1000));
         emitToWebBrowser(event);
       } catch (error) {
-        // TODO add error handler
+        console.log('error:', error);
       }
     })();
   }, [userId, tradeId, emitToWebBrowser]);

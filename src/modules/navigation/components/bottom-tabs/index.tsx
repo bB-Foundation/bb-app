@@ -8,9 +8,9 @@ import SwapIcon from 'src/assets/images/bottom-tabs/swap.svg';
 import UserIcon from 'src/assets/images/bottom-tabs/user.svg';
 import QuestsStack from '../quests-stack';
 import QrCodeStack from '../qr-code-stack';
-import {UserProfile} from 'src/modules/user-profile';
 import SwapStack from '../swap-stack';
 import TradeStack from '../trade-stack';
+import ProfileStack from '../profile-stack';
 
 const BottomTabs = () => {
   const BottomTab = createBottomTabNavigator();
@@ -83,7 +83,7 @@ const BottomTabs = () => {
       />
       <BottomTab.Screen
         name="user-profile"
-        component={UserProfile}
+        component={ProfileStack}
         options={{
           tabBarLabel: 'user',
           tabBarActiveTintColor: '#3366ff',

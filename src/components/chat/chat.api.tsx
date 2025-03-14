@@ -22,7 +22,7 @@ export const decryptChatMessage = async (
     createdAt: new Date(createdAt),
     user: {
       _id: creator.id,
-      name: creator.email,
+      name: creator.bbId,
     },
   };
 };

@@ -1,16 +1,16 @@
 import React from 'react';
 import {View} from 'react-native';
-import {RouteProp, useRoute} from '@react-navigation/native';
 import {useStyleSheet} from '@ui-kitten/components';
+import {RouteProp, useRoute} from '@react-navigation/native';
 
-import themedStyles from './quest-chat.styles';
-import {QuestsStackParamList} from '../navigation/navigation.types';
 import {Chat} from '../../components/chat';
+import themedStyles from './friends-chat.styles';
+import {ProfileStackParamList} from '../navigation/navigation.types';
 
-const QuestChat = () => {
+const FriendsChat = () => {
   const {
     params: {socket, chatRoomId, groupPgpPublicKey},
-  } = useRoute<RouteProp<QuestsStackParamList, 'quest-chat'>>();
+  } = useRoute<RouteProp<ProfileStackParamList, 'friends-chat'>>();
 
   const styles = useStyleSheet(themedStyles);
 
@@ -25,4 +25,4 @@ const QuestChat = () => {
   );
 };
 
-export default QuestChat;
+export default FriendsChat;

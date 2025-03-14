@@ -19,9 +19,9 @@ export const useButtonHandlers = () => {
 
     try {
       await logOut();
+    } finally {
       await clearSecureStorage();
       queryClient.clear();
-    } finally {
       dispatch(setIsLoading(false));
       navigation.reset({index: 0, routes: [{name: 'sign-in'}]});
     }

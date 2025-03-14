@@ -118,7 +118,7 @@ export const useAcceptTrade = () => {
     if (chatRoomId) return;
 
     chatSocket.emit('createRoom', {
-      type: RoomType.DIRECT,
+      type: RoomType.TRADE,
       participants: [currentTrade.initiatorId],
     });
   }, [chatSocket, currentTrade, chatRoomId]);

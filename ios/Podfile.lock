@@ -1639,6 +1639,27 @@ PODS:
     - React-logger (= 0.75.2)
     - React-perflogger (= 0.75.2)
     - React-utils (= 0.75.2)
+  - ReactNativeAvoidSoftinput (7.0.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNCClipboard (1.14.2):
     - React-Core
   - RNCMaskedView (0.3.1):
@@ -1876,6 +1897,7 @@ DEPENDENCIES:
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCodegen (from `build/generated/ios`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - ReactNativeAvoidSoftinput (from `../node_modules/react-native-avoid-softinput`)
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
@@ -2048,6 +2070,8 @@ EXTERNAL SOURCES:
     :path: build/generated/ios
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  ReactNativeAvoidSoftinput:
+    :path: "../node_modules/react-native-avoid-softinput"
   RNCClipboard:
     :path: "../node_modules/@react-native-clipboard/clipboard"
   RNCMaskedView:
@@ -2152,6 +2176,7 @@ SPEC CHECKSUMS:
   React-utils: 2e17380f9c456ac8bf2e63586e18b79f27386edc
   ReactCodegen: ec0b6ef4308774578943faf102b865b603e3e0f7
   ReactCommon: c254c0204d81fb3cd63fefd0df97fb8b3d1f63ab
+  ReactNativeAvoidSoftinput: 8c1435d9ed829773c70c0d1b6a6ad4e1e44aec99
   RNCClipboard: 47593431a9e763a71950798683b28f691f16b98d
   RNCMaskedView: de80352547bd4f0d607bf6bab363d826822bd126
   RNDeviceInfo: 014029374ada3164b6c40fe74041dca2f98b42d6

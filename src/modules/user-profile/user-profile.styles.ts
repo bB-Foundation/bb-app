@@ -29,4 +29,9 @@ export default StyleSheet.create({
     marginTop: 32,
   },
   advantageItemText: {fontSize: 17},
+  buttonsView: {
+    marginTop: 'auto',
+    paddingHorizontal: 16,
+    paddingVertical: 64,
+  },
 });

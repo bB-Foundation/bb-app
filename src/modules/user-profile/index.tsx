@@ -8,7 +8,7 @@ import styles from './user-profile.styles';
 import Page from 'components/page';
 import CopyIcon from 'src/assets/images/copy.svg';
 import AdvantageItem from './components/advantage-item';
-import {useUserProfileLogic} from './user-profile.hooks';
+import {useHandlers, useUserProfileLogic} from './user-profile.hooks';
 import {copyAccountAddress, openBlockChainExplorer} from './user-profile.api';
 import {SettingsButton} from './components/settings-button/button';
 import {OverlayLoader} from 'components/overlay-loader';
@@ -22,6 +22,8 @@ export const UserProfile = () => {
     reducedAccountAddress,
     loomis,
   } = useUserProfileLogic();
+
+  const {openChat} = useHandlers();
 
   if (isLoading) return <OverlayLoader />;
 
@@ -94,6 +96,10 @@ export const UserProfile = () => {
             </Text>
           }
         />
+      </View>
+
+      <View style={styles.buttonsView}>
+        <Button onPress={openChat}>ADD REBOOTER</Button>
       </View>
     </Page>
   );

@@ -44,10 +44,21 @@ export type TradeStackParamList = {
   chat: {isInitiator: boolean; title: string};
 };
 
+export type ProfileStackParamList = {
+  'profile-main': undefined;
+  friends: undefined;
+  'friends-chat': {
+    socket: Socket;
+    chatRoomId: number;
+    groupPgpPublicKey: string;
+  };
+};
+
 export type NavigationProp = NativeStackNavigationProp<
   RootStackParamList &
     QuestsStackParamList &
     QrCodeStackParamList &
     SwapStackParamList &
-    TradeStackParamList
+    TradeStackParamList &
+    ProfileStackParamList
 >;

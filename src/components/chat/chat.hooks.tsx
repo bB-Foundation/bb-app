@@ -1,7 +1,10 @@
 import {useCallback, useEffect, useState} from 'react';
+import {Platform} from 'react-native';
 import {IMessage} from 'react-native-gifted-chat';
 import OpenPGP from 'react-native-fast-openpgp';
 import Toast from 'react-native-toast-message';
+import {AvoidSoftInput} from 'react-native-avoid-softinput';
+import {useFocusEffect} from '@react-navigation/native';
 
 import {ChatProps, MessageFilters} from './chat.types';
 import useCurrentUserProfile from 'hooks/current-user';
@@ -43,6 +46,22 @@ export const useChat = ({
     [chatRoomId, chatSocket, groupPgpPublicKey],
   );
 
+  // need for proper KeyboardAvoidingView on Android
+  useFocusEffect(
+    useCallback(() => {
+      if (Platform.OS === 'android') {
+        AvoidSoftInput.setAdjustResize();
+        AvoidSoftInput.setEnabled(true);
+      }
+      return () => {
+        if (Platform.OS === 'android') {
+          AvoidSoftInput.setEnabled(false);
+          AvoidSoftInput.setAdjustPan();
+        }
+      };
+    }, []),
+  );
+
   // listen WS messages
   useEffect(() => {
     (async () => {
@@ -53,6 +72,9 @@ export const useChat = ({
       if (!userPgpPrivateKey) throw new Error('Invalid decrypt data');
 
       chatSocket.on('messageSent', async (message: [ChatMessage]) => {
+        // add messages from current room only
+        if (message[0].roomId !== chatRoomId) return;
+
         try {
           const messageWithDecryptedText = await decryptChatMessage(
             userId,

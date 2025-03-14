@@ -7,8 +7,9 @@ const useCurrentUserProfile = () =>
   useQuery({
     queryKey: queryKeys.getCurrentUserProfile(),
     queryFn: getCurrentUserProfile,
-    staleTime: Infinity,
-    gcTime: Infinity,
+    // staleTime: Infinity,
+    // gcTime: Infinity,
+    // retry: 0,
     retry: 0,
   });
 

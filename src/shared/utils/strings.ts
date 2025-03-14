@@ -1,3 +1,5 @@
+import {format} from 'date-fns';
+
 export const capitalize = (str: string) =>
   str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -21,3 +23,6 @@ export const truncate = function (
     fullStr.substr(fullStr.length - backChars)
   );
 };
+
+export const getTimeFromDateString = (dateString: string) =>
+  format(new Date(dateString), 'hh:mm a');

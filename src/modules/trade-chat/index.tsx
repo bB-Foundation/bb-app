@@ -5,7 +5,7 @@ import {RouteProp, useRoute} from '@react-navigation/native';
 
 import themedStyles from './trade-chat.styles';
 import {TradeStackParamList} from '../navigation/navigation.types';
-import {Chat} from '../trade/components/chat';
+import {Chat} from '../../components/chat';
 import {TradingMachinesIds} from '../trade/api/trade.api';
 import {tradingActor} from '../trade/api/trading-machine';
 import {AcceptTradeActor} from '../trade/api/accept-trade-machine';

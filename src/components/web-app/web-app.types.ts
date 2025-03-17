@@ -79,3 +79,9 @@ export type TradeSignaturePayload = {
   initiatorGemIds: string[];
   receiverGemIds: string[];
 };
+
+export type ExtendedWindow = {
+  ReactNativeWebView?: {
+    postMessage: (message: string) => void;
+  };
+};

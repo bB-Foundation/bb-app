@@ -17,36 +17,41 @@ import {
   web3Data,
   WebAppEvents,
 } from './web-app.api';
-import {Events} from './web-app.types';
+import {Events, ExtendedWindow} from './web-app.types';
 import deployedContracts from 'src/assets/data/deployedContracts';
 
 const originalConsoleLog = console.log;
+// extend console.log function to send error logs to React Native
 console.log = (...args) => {
   originalConsoleLog(...args); // Keep original behavior
 
-  if (window.ReactNativeWebView) {
-    try {
-      const serializedArgs = args.map(arg => {
-        if (arg instanceof Error) {
-          // Manually serialize Error objects
-          return {
-            message: arg.message,
-            stack: arg.stack,
-            name: arg.name,
-          };
-        }
-        // Serialize objects and other data types
-        return typeof arg === 'object' && arg !== null
-          ? JSON.stringify(arg, null, 2)
-          : String(arg);
-      });
+  const extendedWindow = window as ExtendedWindow;
 
-      // Send logs to React Native
-      window.ReactNativeWebView.postMessage(
-        JSON.stringify({type: 'log', data: serializedArgs}),
-      );
-    } catch (error) {
-      window.ReactNativeWebView.postMessage(
+  if (!extendedWindow.ReactNativeWebView) return;
+
+  try {
+    const serializedArgs = args.map(arg => {
+      if (arg instanceof Error) {
+        // Manually serialize Error objects
+        return {
+          message: arg.message,
+          stack: arg.stack,
+          name: arg.name,
+        };
+      }
+      // Serialize objects and other data types
+      return typeof arg === 'object' && arg !== null
+        ? JSON.stringify(arg, null, 2)
+        : String(arg);
+    });
+
+    // Send logs to React Native
+    extendedWindow.ReactNativeWebView.postMessage(
+      JSON.stringify({type: 'log', data: serializedArgs}),
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      extendedWindow.ReactNativeWebView.postMessage(
         JSON.stringify({
           type: 'log',
           data: ['[Unserializable data]', error.message],

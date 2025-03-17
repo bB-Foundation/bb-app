@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import QrScannerIcon from 'src/assets/images/bottom-tabs/qr-scanner.svg';
@@ -11,9 +11,22 @@ import QrCodeStack from '../qr-code-stack';
 import SwapStack from '../swap-stack';
 import TradeStack from '../trade-stack';
 import ProfileStack from '../profile-stack';
+import {
+  initializeTradingSocket,
+  initializeChatSocket,
+  closeAllSockets,
+} from '../../../../shared/api/sockets';
 
 const BottomTabs = () => {
   const BottomTab = createBottomTabNavigator();
+
+  // initialize sockets
+  useEffect(() => {
+    initializeTradingSocket();
+    initializeChatSocket();
+
+    return () => closeAllSockets();
+  }, []);
 
   return (
     <BottomTab.Navigator

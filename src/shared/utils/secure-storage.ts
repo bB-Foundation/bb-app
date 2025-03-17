@@ -35,20 +35,14 @@ const getToken = async (tokenName: string) => {
 const clearToken = (tokenName: string) =>
   Keychain.resetGenericPassword({service: tokenName});
 
-export const storeJwtAccessToken = async (tokenValue: string) => {
-  try {
-    await storeToken(TokenNames.JWT_ACCESS, tokenValue);
-  } catch (error) {
-    throw error;
-  }
-};
+export const storeJwtAccessToken = async (tokenValue: string) =>
+  storeToken(TokenNames.JWT_ACCESS, tokenValue);
 
-export const getJwtAccessToken = async () => {
-  try {
-    return await getToken(TokenNames.JWT_ACCESS);
-  } catch (error) {
-    throw error;
-  }
+export const getJwtAccessToken = async (): Promise<string> => {
+  const token = await getToken(TokenNames.JWT_ACCESS);
+  if (!token) throw new Error('No access token');
+
+  return token;
 };
 
 export const clearJwtAccessToken = async () =>

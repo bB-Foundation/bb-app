@@ -1,11 +1,10 @@
-import {useEffect} from 'react';
+import {useCallback, useEffect, useMemo} from 'react';
 import {useSelector} from '@xstate/react';
-import Toast from 'react-native-toast-message';
 
-import {tradingActor, tradingSocket} from './api/trading-machine';
+import {tradingActor} from './api/trading-machine';
 import useCurrentUserProfile from 'hooks/current-user';
-import {getJwtAccessToken} from 'src/shared/utils/secure-storage';
-import {Errors} from 'src/enums/errors';
+import {useFocusEffect} from '@react-navigation/native';
+import {getTradingSocket} from 'src/shared/api/sockets';
 
 export const useTradeLogic = () => {
   const {data: currentUserProfile} = useCurrentUserProfile();
@@ -22,38 +21,26 @@ export const useTradeLogic = () => {
     snapshot.matches('createTrade'),
   );
 
-  // Switch to trading machine state
+  const tradingSocket = useMemo(() => getTradingSocket(), []);
+
+  // Start base trading machine
   useEffect(() => {
-    (async () => {
-      if (!currentUserProfile) return;
+    if (!currentUserProfile) return;
 
-      try {
-        const accessToken = await getJwtAccessToken();
-        if (!accessToken) throw new Error('No access token');
-
-        tradingSocket.emit('auth', accessToken);
-
-        tradingActor.send({
-          type: 'start',
-          userId: currentUserProfile.userId,
-          accessToken,
-        });
-      } catch (error) {
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: Errors.UNKNOWN,
-        });
-      }
-    })();
-
-    // TODO doesn't work
-    // TODO doesn't work
-    // TODO doesn't work
-    return () => {
-      tradingSocket.close();
-    };
+    tradingActor.send({
+      type: 'start',
+      userId: currentUserProfile.userId,
+    });
   }, [currentUserProfile]);
+
+  // remove socket listeners
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        tradingSocket.removeAllListeners();
+      };
+    }, [tradingSocket]),
+  );
 
   return {
     isWaitingTradeOffers,

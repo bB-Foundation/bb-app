@@ -1,5 +1,4 @@
 import {ActorRefFrom, assign, fromPromise, setup} from 'xstate';
-import {io, Socket} from 'socket.io-client';
 
 import {GemColor} from 'types/gem';
 import {Trade} from 'types/trade';
@@ -18,7 +17,6 @@ export const acceptTradeMachine = setup({
       /** color of gems to be traded */
       gemColor: GemColor | undefined;
       // chat
-      chatSocket: Socket;
       chatRoomId: number;
       groupPgpPublicKey: string;
     },
@@ -26,7 +24,6 @@ export const acceptTradeMachine = setup({
       data: {
         userId: number;
         currentTrade: Trade;
-        accessToken: string;
       };
     },
     events: {} as
@@ -74,7 +71,7 @@ export const acceptTradeMachine = setup({
 }).createMachine({
   /** @xstate-layout N4IgpgJg5mDOIC5QAoC2BDAxgCwJYDswBKAYljABcBhbdCgETvQG0AGAXUVAAcB7WXBVy98XEAA9EAJikA2AHQBORQEYALFJUAOAKwBmLay169AGhABPRAFoA7AttrZeqVpWLbWxW4C+P82hYeISkYOKCbJxIIHwCQiJikgiy7vK2Ohkqeio6Ms4q5lYIOWryaqw6aspSjjqOWn4BGDgExPIAbrhgAO4AKrwA1mD4sGRgADZgmBQA4mCoVLzjvABOkWKxgsKi0UnaKmVaanqy6YYGMoXSagcqsvc697JeejqKeo0ggS0h8uT4EAIUAASmAAI4AVzgFBIEBEYHkBHagwR32CbX+gPwIPBUNgFAQSN4mDo20i62im3iO1Ae0qOnkrFcKlYWVY5VYFSuCDkDJeNT0GkUMjUtk+aNaRD+wyxOMh0JIYBWK1W8m44zoADNVqh5BLfpigaD5fjCfhkSTqeSOBt+FsErtECzOWUVLZBbZWU9bIpua8FFVbDl7kyg7Jxc10VKVmBOj0APKazVKsYA414igUnh26mJJ3sqSMwUZRysTwsrTcuSlPTvKQGYNGVjh-xfSOS+SYXiodWUIGw+GI80ovXt35dnuTITYs0W0kia1RbNxbZ5hAmLxlG7vNxSUWKHRV2SKeSyNRaZ6KCqs-QtppBDsxuPdUGwCHjGFhCI2yk51eO9cfVKGRa10HR1CMKsr3kLR0j3Pc1CqVQVAjB9fmffohnwABBVBeAhfAYXISZpkw4ZYCzGI-wdWlEHyeQ9CMOocm0N4yyrG5TyeR57heN5UJ+NpunQLZsQAZVwKB8DICh0BWCgJKkoFKKpf9aOKao0ndXQmT0TxniPGs609ewr1gxQ7zbNCMUk-AgXkGBCBWUlxNsshbJU6iaQkaRawUVRPWbUCAqkDiFB0TkbjkdkLOyMVW31GylOxaUASNXEFThQgh2RIZR2sqUBGSqBUtldNoVnYl53wRdbRXGifJ5MzDmPVhFCcJwpF9SxpGFBj0ncYUclUSzEqlHApgGIFemciAwDE2SKAhUZyAoAA1Lo+hREZPPq7ykhqeRckFWR9CMTRVDMHr11OU9hS648TikOoBKjTtsEm6bZvmxblrGCgAHUROnKBFJqn9l3tfbEAirQlFFFQclrdrbHsblEIcbxL2ijxPFejsJswKbsRm9A5oWug-tWxZJz7bFdqhtcWRSNIIrUOoajYvTuTqPQ0gqK9wNgplFHx8cPqJr6yZ+ymVsoMHlIhqi9qZrxgI8EbnlRzxK2u3I+TkWRXHKCybj8Vt8F4Ob4GiMa6sZgDrC6+QBRuO5ZE5K8nG5M8YMMWDPGezRKlFhKxzaDDtptyHcwAjRDIYusG0eJtRvDwqZXSk0KHt2P1JUOQ4ZMLqqii7IDw42x5DdEXDEQstnjUMW2ifTbE2TFZc7UxrdDh-YPADlxayrT1T09Lr7COWteeb8bu17EGu4apJsmcBiuvUO4LwDo8DlyEbzqkZtWBOWf5FbnpX3fHPfxVgCnsLTnnHed1PTUKDWBguCNEQpDEbPyOWFcL4UIkvaG64PBlC1k4I4MVDYJ1rEPNwKdDBpwKvIYSolQa2TAarI+LtBQFwLu8R4sEEHGQbmZH0aDBKFVskCXBAFNDHgYnUfQqNg5PG5DkQsBg2oVC8EGI4+gz5FTsilRySoXLYKkow9SMg3SsPSHpWwnD7hHj5nwrQvJ6znlUaI+hKVDTYnKviORjVnrPAYh7IwHhnAnCrLWP2Rh7Ai1FPrM+moCC4FgB9CA5iV5Xn8q-VkRx-YWQ-l-XIP9ELKERjQt6JJ8CYAmJAAJiANAHD3JUXi3hYK6G4foauGRzyuEeqKE+Z9CbEygKTcmv1o7KwdvnOGqjTpaGMMjNqlR0Ysz3G1PS2Rsjb3Nj4IAA */
   context: ({input}) => {
-    const {userId, currentTrade, accessToken} = input.data;
+    const {userId, currentTrade} = input.data;
     return {
       userId,
       tradeOffers: [],
@@ -83,10 +80,6 @@ export const acceptTradeMachine = setup({
       currentTrade,
       signature: '',
       gemColor: undefined,
-      chatSocket: io(
-        `${process.env.BACKEND_API_URL}:${process.env.BACKEND_WS_TRADE_CHAT_PORT}`,
-        {extraHeaders: {authorization: 'Bearer ' + accessToken}},
-      ),
       chatRoomId: 0,
       groupPgpPublicKey: '',
     };
@@ -217,10 +210,6 @@ export const acceptTradeMachine = setup({
     },
 
     exit: '.canceled',
-  },
-
-  output: ({context: {chatSocket}}) => {
-    chatSocket.close();
   },
 });
 

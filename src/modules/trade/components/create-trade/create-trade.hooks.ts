@@ -1,20 +1,17 @@
-import {useEffect} from 'react';
+import {useEffect, useMemo} from 'react';
 import {useSelector} from '@xstate/react';
 import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
 import {GemColor} from 'types/gem';
-import {
-  tradingActor,
-  TradingEventType,
-  tradingSocket,
-} from '../../api/trading-machine';
+import {tradingActor, TradingEventType} from '../../api/trading-machine';
 import {TradingMachinesIds} from '../../api/trade.api';
 import {CreateTradeActor} from '../../api/create-trade-machine';
 import {ChatRoom} from 'types/chat-room';
 import {NavigationProp} from 'src/modules/navigation/navigation.types';
 import {TradeStatus} from 'types/trade';
 import {getTradeById} from 'src/shared/api/trade';
+import {getChatSocket, getTradingSocket} from 'src/shared/api/sockets';
 
 export const useCreateTrade = () => {
   const createTradeActor = useSelector(
@@ -29,7 +26,6 @@ export const useCreateTrade = () => {
     receiverGemIds,
     currentTrade,
     resultTxHash,
-    chatSocket,
     chatRoomId,
   } = useSelector(createTradeActor, snapshot => snapshot.context);
 
@@ -75,6 +71,9 @@ export const useCreateTrade = () => {
   const isReviewResult = useSelector(createTradeActor, snapshot =>
     snapshot.matches('reviewResult'),
   );
+
+  const tradingSocket = useMemo(() => getTradingSocket(), []);
+  const chatSocket = useMemo(() => getChatSocket(), []);
 
   // on trade enter
   useEffect(() => {
@@ -131,7 +130,7 @@ export const useCreateTrade = () => {
         createTradeActor.send({type: 'finish', resultTxHash});
       },
     );
-  }, [createTradeActor]);
+  }, [createTradeActor, tradingSocket]);
 
   // on join chat room
   useEffect(() => {
@@ -143,6 +142,14 @@ export const useCreateTrade = () => {
       });
     });
   }, [chatSocket, createTradeActor]);
+
+  // remove socket listeners
+  useEffect(() => {
+    return () => {
+      chatSocket.removeAllListeners();
+      tradingSocket.removeAllListeners();
+    };
+  }, [chatSocket, tradingSocket]);
 
   return {
     tradeStatus: {
@@ -209,13 +216,13 @@ export const useChat = () => {
       snapshot.children[TradingMachinesIds.CREATE_TRADE] as CreateTradeActor,
   );
 
-  const {chatRoomId} = useSelector(
+  const {chatRoomId, groupPgpPublicKey} = useSelector(
     createTradeActor,
     snapshot => snapshot.context,
   );
 
   const openChatModal = () => {
-    navigation.navigate('chat', {isInitiator: true, title: 'Chat'});
+    navigation.navigate('chat', {chatRoomId, groupPgpPublicKey, title: 'Chat'});
   };
 
   return {

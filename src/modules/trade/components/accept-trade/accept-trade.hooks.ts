@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useEffect, useMemo} from 'react';
 import {useSelector} from '@xstate/react';
 import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
@@ -8,17 +8,14 @@ import {
   validateGemsAmount,
 } from './accept-trade.api';
 import {GemColor} from 'types/gem';
-import {
-  tradingActor,
-  TradingEventType,
-  tradingSocket,
-} from '../../api/trading-machine';
+import {tradingActor, TradingEventType} from '../../api/trading-machine';
 import {TradingMachinesIds} from '../../api/trade.api';
 import {AcceptTradeActor} from '../../api/accept-trade-machine';
 import {ChatRoom, RoomType} from 'types/chat-room';
 import {NavigationProp} from 'src/modules/navigation/navigation.types';
 import {getTradeById} from 'src/shared/api/trade';
 import {TradeStatus} from 'types/trade';
+import {getChatSocket, getTradingSocket} from 'src/shared/api/sockets';
 
 export const useAcceptTrade = () => {
   const acceptTradeActor = useSelector(
@@ -27,14 +24,8 @@ export const useAcceptTrade = () => {
       snapshot.children[TradingMachinesIds.ACCEPT_TRADE] as AcceptTradeActor,
   );
 
-  const {
-    userId,
-    gemColor,
-    currentTrade,
-    receiverGemIds,
-    chatSocket,
-    chatRoomId,
-  } = useSelector(acceptTradeActor, snapshot => snapshot.context);
+  const {userId, gemColor, currentTrade, receiverGemIds, chatRoomId} =
+    useSelector(acceptTradeActor, snapshot => snapshot.context);
 
   const value = useSelector(acceptTradeActor, snapshot => snapshot.value);
   console.log('🚀 ~ receiver trade status: ', value);
@@ -74,6 +65,9 @@ export const useAcceptTrade = () => {
   const isReviewResult = useSelector(acceptTradeActor, snapshot =>
     snapshot.matches('reviewResult'),
   );
+
+  const tradingSocket = useMemo(() => getTradingSocket(), []);
+  const chatSocket = useMemo(() => getChatSocket(), []);
 
   // on trade enter
   useEffect(() => {
@@ -128,7 +122,7 @@ export const useAcceptTrade = () => {
     tradingSocket.on(TradingEventType.TradeInitiatorSigned, () => {
       acceptTradeActor.send({type: 'startSigning'});
     });
-  }, [acceptTradeActor]);
+  }, [acceptTradeActor, tradingSocket]);
 
   // on join chat room
   useEffect(() => {
@@ -147,6 +141,14 @@ export const useAcceptTrade = () => {
 
     chatSocket.emit('deleteRoom', {roomId: chatRoomId});
   }, [isReviewResult, chatRoomId, chatSocket]);
+
+  // remove socket listeners
+  useEffect(() => {
+    return () => {
+      chatSocket.removeAllListeners();
+      tradingSocket.removeAllListeners();
+    };
+  }, [chatSocket, tradingSocket]);
 
   return {
     tradeStatus: {
@@ -230,13 +232,13 @@ export const useChat = () => {
       snapshot.children[TradingMachinesIds.ACCEPT_TRADE] as AcceptTradeActor,
   );
 
-  const {chatRoomId} = useSelector(
+  const {chatRoomId, groupPgpPublicKey} = useSelector(
     acceptTradeActor,
     snapshot => snapshot.context,
   );
 
   const openChatModal = () => {
-    navigation.navigate('chat', {isInitiator: false, title: 'Chat'});
+    navigation.navigate('chat', {chatRoomId, groupPgpPublicKey, title: 'Chat'});
   };
 
   return {

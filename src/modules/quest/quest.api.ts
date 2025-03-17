@@ -56,6 +56,7 @@ export const getDistanceLabel = (distanceInKm: number | undefined): string => {
   return distanceLabel;
 };
 
+// TODO delete machine
 export const machine = setup({
   types: {
     context: {} as {},

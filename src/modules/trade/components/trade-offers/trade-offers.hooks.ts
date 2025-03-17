@@ -1,19 +1,17 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useQueryClient} from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 
 import {GemMetadata} from 'types/gem';
-import {
-  tradingActor,
-  TradingEventType,
-  tradingSocket,
-} from '../../api/trading-machine';
+import {tradingActor, TradingEventType} from '../../api/trading-machine';
 import {getGemById} from 'src/shared/api/gems';
 import queryKeys from 'configs/query-keys';
 import {Trade} from 'types/trade';
 import {getUserTradeOffers} from './trade-offers.api';
 import useCurrentUserProfile from 'hooks/current-user';
 import {Errors} from 'src/enums/errors';
+import {getTradingSocket} from 'src/shared/api/sockets';
+import {useFocusEffect} from '@react-navigation/native';
 
 export const useTradeOffers = () => {
   const queryClient = useQueryClient();
@@ -24,6 +22,8 @@ export const useTradeOffers = () => {
   const [initiatorGemDetailsByTrade, setInitiatorGemDetailsByTrade] = useState<
     Record<number, GemMetadata[]>
   >({});
+
+  const tradingSocket = useMemo(() => getTradingSocket(), []);
 
   // load trade offers on render
   useEffect(() => {
@@ -46,11 +46,13 @@ export const useTradeOffers = () => {
   }, [currentUserProfile]);
 
   // listen for new trades
-  useEffect(() => {
-    tradingSocket.on(TradingEventType.TradeInitialized, (trade: Trade) => {
-      setTradeOffers(p => [...p, trade]);
-    });
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      tradingSocket.on(TradingEventType.TradeInitialized, (trade: Trade) => {
+        setTradeOffers(p => [...p, trade]);
+      });
+    }, [tradingSocket]),
+  );
 
   // load gem images for trade offers
   useEffect(() => {

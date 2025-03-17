@@ -4,8 +4,8 @@ import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
 import {GemColor} from 'types/gem';
-import {tradingActor, TradingEventType} from '../../api/trading-machine';
-import {TradingMachinesIds} from '../../api/trade.api';
+import {tradingActor} from '../../api/trading-machine';
+import {TradingEventType, TradingMachinesIds} from '../../api/trade.api';
 import {CreateTradeActor} from '../../api/create-trade-machine';
 import {ChatRoom} from 'types/chat-room';
 import {NavigationProp} from 'src/modules/navigation/navigation.types';

@@ -1,5 +1,6 @@
 import {isAxiosError} from 'axios';
 import Toast from 'react-native-toast-message';
+import {EventObject} from 'xstate';
 
 import api from 'configs/axios';
 import {Trade, TradeStatus} from 'types/trade';
@@ -15,6 +16,14 @@ import {Errors} from 'src/enums/errors';
 export enum TradingMachinesIds {
   CREATE_TRADE = 'createTrade',
   ACCEPT_TRADE = 'acceptTrade',
+}
+
+export enum TradingEventType {
+  TradeInitialized = 'trade_initialized',
+  TradeAccepted = 'trade_accepted',
+  TradeInitiatorSigned = 'trade_initiator_signed',
+  TradeReceiverSigned = 'trade_receiver_signed',
+  TradeCompleted = 'trade_completed',
 }
 
 export const initializeTrade = async (
@@ -99,3 +108,14 @@ export const completeTrade = async (tradeId: number): Promise<string> =>
   (await api.post<string>(`reward/trade/${tradeId}/complete`)).data;
 
 export const createTradeHandler = () => tradingActor.send({type: 'offer'});
+
+export function assertEventType<
+  TE extends EventObject,
+  TType extends TE['type'],
+>(event: TE, eventType: TType): asserts event is TE & {type: TType} {
+  if (event.type !== eventType) {
+    throw new Error(
+      `Invalid event: expected "${eventType}", got "${event.type}"`,
+    );
+  }
+}

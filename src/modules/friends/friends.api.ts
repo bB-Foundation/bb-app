@@ -16,19 +16,15 @@ export const decryptChatRoomLastMessage = async (
           userPgpPrivateKey,
           userId.toString(),
         )
-      : Promise.resolve(null),
+      : Promise.reject(null),
   );
 
   const decryptResults = await Promise.allSettled(decryptPromises);
 
   for (const [i, decryptedMessage] of decryptResults.entries()) {
-    if (
-      decryptedMessage.status === 'fulfilled' &&
-      decryptedMessage.value !== null &&
-      roomsWithDecryptedLastMessage[i].lastMessage?.text
-    ) {
-      roomsWithDecryptedLastMessage[i].lastMessage.text =
-        decryptedMessage.value;
+    const lastMessage = roomsWithDecryptedLastMessage[i].lastMessage;
+    if (decryptedMessage.status === 'fulfilled' && lastMessage) {
+      lastMessage.text = decryptedMessage.value;
     }
   }
 

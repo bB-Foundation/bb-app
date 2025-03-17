@@ -8,8 +8,8 @@ import {
   validateGemsAmount,
 } from './accept-trade.api';
 import {GemColor} from 'types/gem';
-import {tradingActor, TradingEventType} from '../../api/trading-machine';
-import {TradingMachinesIds} from '../../api/trade.api';
+import {tradingActor} from '../../api/trading-machine';
+import {TradingEventType, TradingMachinesIds} from '../../api/trade.api';
 import {AcceptTradeActor} from '../../api/accept-trade-machine';
 import {ChatRoom, RoomType} from 'types/chat-room';
 import {NavigationProp} from 'src/modules/navigation/navigation.types';

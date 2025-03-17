@@ -3,16 +3,8 @@ import {assign, createActor, setup} from 'xstate';
 import {Trade} from 'types/trade';
 import {createTradeMachine} from './create-trade-machine';
 import {acceptTradeMachine} from './accept-trade-machine';
-import {TradingMachinesIds} from './trade.api';
+import {assertEventType, TradingMachinesIds} from './trade.api';
 import {TradingMachineInitialData} from './trade.types';
-
-export enum TradingEventType {
-  TradeInitialized = 'trade_initialized',
-  TradeAccepted = 'trade_accepted',
-  TradeInitiatorSigned = 'trade_initiator_signed',
-  TradeReceiverSigned = 'trade_receiver_signed',
-  TradeCompleted = 'trade_completed',
-}
 
 export const tradingMachine = setup({
   types: {
@@ -61,9 +53,10 @@ export const tradingMachine = setup({
       invoke: {
         src: 'acceptTradeMachine',
         id: TradingMachinesIds.ACCEPT_TRADE,
-        input: ({context: {userId}, event: {currentTrade}}) => ({
-          data: {userId, currentTrade},
-        }),
+        input: ({context: {userId}, event}) => {
+          assertEventType(event, 'accept');
+          return {data: {userId, currentTrade: event.currentTrade}};
+        },
         onDone: 'waitingTradeOffers',
       },
     },
@@ -81,9 +74,10 @@ export const tradingMachine = setup({
       invoke: {
         src: 'createTradeMachine',
         id: TradingMachinesIds.CREATE_TRADE,
-        input: ({context: {userId}, event: {currentTrade}}) => ({
-          data: {userId, currentTrade},
-        }),
+        input: ({context: {userId}, event}) => {
+          assertEventType(event, 'offer');
+          return {data: {userId, currentTrade: event.currentTrade}};
+        },
         onDone: 'waitingTradeOffers',
       },
     },

@@ -106,7 +106,10 @@ export const useChat = ({
         const decryptedMessages = await Promise.allSettled(decryptPromises);
 
         const successDecryptedMessages = decryptedMessages
-          .filter(m => m.status === 'fulfilled')
+          .filter(
+            (m): m is PromiseFulfilledResult<IMessage> =>
+              m.status === 'fulfilled',
+          )
           .map(m => m.value)
           .sort(sortChatMessagesByTime);
 

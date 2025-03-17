@@ -3,7 +3,7 @@ import {useQueryClient} from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 
 import {GemMetadata} from 'types/gem';
-import {tradingActor, TradingEventType} from '../../api/trading-machine';
+import {tradingActor} from '../../api/trading-machine';
 import {getGemById} from 'src/shared/api/gems';
 import queryKeys from 'configs/query-keys';
 import {Trade} from 'types/trade';
@@ -12,6 +12,7 @@ import useCurrentUserProfile from 'hooks/current-user';
 import {Errors} from 'src/enums/errors';
 import {getTradingSocket} from 'src/shared/api/sockets';
 import {useFocusEffect} from '@react-navigation/native';
+import {TradingEventType} from '../../api/trade.api';
 
 export const useTradeOffers = () => {
   const queryClient = useQueryClient();

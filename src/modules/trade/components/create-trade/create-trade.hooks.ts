@@ -9,7 +9,7 @@ import {TradingEventType, TradingMachinesIds} from '../../api/trade.api';
 import {CreateTradeActor} from '../../api/create-trade-machine';
 import {ChatRoom} from 'types/chat-room';
 import {NavigationProp} from 'src/modules/navigation/navigation.types';
-import {TradeStatus} from 'types/trade';
+import {Trade, TradeStatus} from 'types/trade';
 import {getTradeById} from 'src/shared/api/trade';
 import {getChatSocket, getTradingSocket} from 'src/shared/api/sockets';
 
@@ -60,6 +60,10 @@ export const useCreateTrade = () => {
     snapshot.matches('waitingAcceptance'),
   );
 
+  const isReviewingOfferedGems = useSelector(createTradeActor, snapshot =>
+    snapshot.matches('reviewingOfferedGems'),
+  );
+
   const isSigning = useSelector(createTradeActor, snapshot =>
     snapshot.matches('signing'),
   );
@@ -94,7 +98,7 @@ export const useCreateTrade = () => {
             break;
 
           case TradeStatus.ACCEPTED:
-            createTradeActor.send({type: 'setSigning'});
+            createTradeActor.send({type: 'setReviewingOfferedGems'});
             break;
 
           case TradeStatus.WAITING_SIGNATURE:
@@ -120,8 +124,8 @@ export const useCreateTrade = () => {
 
   // listen trade WS events
   useEffect(() => {
-    tradingSocket.on(TradingEventType.TradeAccepted, () => {
-      createTradeActor.send({type: 'checkAcceptance'});
+    tradingSocket.on(TradingEventType.TradeAccepted, (trade: Trade) => {
+      createTradeActor.send({type: 'reviewOffer', currentTrade: trade});
     });
 
     tradingSocket.on(
@@ -160,6 +164,7 @@ export const useCreateTrade = () => {
       isReviewOffer,
       isSendingRequest,
       isWaitingAcceptance,
+      isReviewingOfferedGems,
       isSigning,
       isWaitingFinish,
       isReviewResult,
@@ -190,6 +195,8 @@ export const useHandlers = () => {
 
   const submitTrade = () => createTradeActor.send({type: 'sendRequest'});
 
+  const acceptOffer = () => createTradeActor.send({type: 'acceptOffer'});
+
   const signTrade = (signature: string) => {
     createTradeActor.send({type: 'sign', signature});
   };
@@ -202,6 +209,7 @@ export const useHandlers = () => {
     selectTokens,
     selectTokensAmount,
     submitTrade,
+    acceptOffer,
     signTrade,
     exitHandler,
   };

@@ -71,9 +71,14 @@ export const AcceptTrade = () => {
         <ReviewOrder
           isSubmitting={isSendingRequest}
           gemsAmount={receiverGemIds.length}
-          gemColor={gemColor}
+          user1GemIds={receiverGemIds}
+          user2GemIds={currentTrade.initiatorGemIds}
           submitHandler={submitTrade}
         />
+      )}
+
+      {isWaitingSign && (
+        <WaitFinish message="Waiting for recipient acceptance" />
       )}
 
       {currentTrade && isSigning && (
@@ -84,7 +89,7 @@ export const AcceptTrade = () => {
         />
       )}
 
-      {(isWaitingSign || isSigning || isCompleting) && (
+      {(isSigning || isCompleting) && (
         <WaitFinish message="Processing trade, please wait" />
       )}
 

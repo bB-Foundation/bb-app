@@ -1,8 +1,7 @@
-import {GemColor} from 'types/gem';
-
 export type ReviewOrderProps = {
   isSubmitting: boolean;
   gemsAmount: number;
-  gemColor: GemColor;
+  user1GemIds: number[];
+  user2GemIds?: number[];
   submitHandler: () => void;
 };

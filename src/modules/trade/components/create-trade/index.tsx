@@ -22,6 +22,7 @@ export const CreateTrade: FC = () => {
     selectTokens,
     selectTokensAmount,
     submitTrade,
+    acceptOffer,
     signTrade,
     exitHandler,
   } = useHandlers();
@@ -34,18 +35,13 @@ export const CreateTrade: FC = () => {
     isReviewOffer,
     isSendingRequest,
     isWaitingAcceptance,
+    isReviewingOfferedGems,
     isSigning,
     isWaitingFinish,
     isReviewResult,
   } = tradeStatus;
 
-  const {
-    userId,
-    gemColor,
-    receiverGemIds,
-    currentTrade,
-    resultTxHash,
-  } = data;
+  const {userId, gemColor, receiverGemIds, currentTrade, resultTxHash} = data;
 
   return (
     <>
@@ -77,10 +73,20 @@ export const CreateTrade: FC = () => {
 
       {gemColor && (isReviewOffer || isSendingRequest) && (
         <ReviewOrder
-          gemColor={gemColor}
-          isSubmitting={isSendingRequest}
+          user1GemIds={receiverGemIds}
           gemsAmount={receiverGemIds.length}
+          isSubmitting={isSendingRequest}
           submitHandler={submitTrade}
+        />
+      )}
+
+      {currentTrade && isReviewingOfferedGems && (
+        <ReviewOrder
+          user1GemIds={currentTrade.initiatorGemIds}
+          user2GemIds={currentTrade.receiverGemIds}
+          gemsAmount={currentTrade.receiverGemIds.length}
+          isSubmitting={false}
+          submitHandler={acceptOffer}
         />
       )}
 

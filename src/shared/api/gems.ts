@@ -13,9 +13,9 @@ export const getGems = async ({userId}: GemFilters): Promise<GemMetadata[]> =>
 export const stackGemsByColor = (gems: GemMetadata[]) =>
   groupBy(gems, gem => gem.attributes.color);
 
-export const getGemImageSourceByColor = (gemColor: string) => {
+export const getGemImageSourceByColor = (gemColor: GemColor | undefined) => {
   switch (gemColor) {
-    case 'black':
+    case undefined:
       return require('src/assets/images/quests/assets/gem-black.png');
     case GemColor.BLUE:
       return require('src/assets/images/quests/assets/gem-blue.png');

@@ -32,6 +32,7 @@ export const createTradeMachine = setup({
       | {type: 'setChatData'; chatRoomId: number; groupPgpPublicKey: string}
       | {type: 'setFindRecipient'}
       | {type: 'setWaitingAcceptance'}
+      | {type: 'setReviewingOfferedGems'}
       | {type: 'setSigning'}
       | {type: 'setWaitingFinish'}
       | {type: 'selectRecipient'; receiverBbId: string}
@@ -39,7 +40,8 @@ export const createTradeMachine = setup({
       | {type: 'selectTokens'; receiverGemIds: number[]}
       | {type: 'sendRequest'}
       | {type: 'generateSignatureError'}
-      | {type: 'checkAcceptance'}
+      | {type: 'reviewOffer'; currentTrade: Trade}
+      | {type: 'acceptOffer'}
       | {type: 'sign'; signature: string}
       | {type: 'finish'; resultTxHash: string}
       | {type: 'exit'},
@@ -76,7 +78,7 @@ export const createTradeMachine = setup({
     ),
   },
 }).createMachine({
-  /** @xstate-layout N4IgpgJg5mDOIC5QAoC2BDAxgCwJYDswBKAYjAA9cAXAbQAYBdRUABwHtZrc39mRzEAJgDMAdgB0ATgCswurIBsc4ZNEKAHABoQAT0TqJ6gCx1BCo7NErBARgC+d7Wix5CpWGCoBhbOioARP3R6JiQQdk4qbl4wgQQjQTopQTNRC3UbQVVRUW09BABaGxtpcQUFOjojSQsFGwU0yQcnDBwCYnEAMwIIACUwTFwWXDB8KhIPABsBqn7B4dHaRj4Irh4+OJtJQXEsjSsVaSN1ZTyhUR2LOW2RQWrhWWaQZza3cQA3EYB3ABU2AGtRrAJmBppgqABxMCoLxsSZsABOIRWHDWMVAcVk6l20kqpmkonqonUCjOCEEF3EVzoN2Ed0kD2ETxerg6HnwEAIUH6AEcAK5wcYQHhgcQEd4A0Us9pEcTszn4blgfmChDitiYPzRELIsKrKLrWKIEo2CTlSRbBQUwTSE6k3SICylaQlO4E01KBSSBTM1qs2Xyrm8gWwcZgBEIxHiFiTPydRGocTSt6BxXB1XqzUG-A65Z61HZjbG4SmqnFGzqOhWDRGYRkxI7EqmIw2UzqXGZX0uGXiBFgT5gL4AeU6nXDII56dDutYBeiRYQNmEJnEFwe1WkDQSaXrMjKom90gplRJdCZjmefp7A9+kvwAEFUGw+WMQWCqH9AfhYDPwnPDRiiAMjsYiyMIFROnQWz1pSMgluB3oGMcohdq8HR9je-SwHykxhpQSyhLOkTzkai5ekkKjFKI0i4oI6jtnWDoIBowjiMuNF0XQ5iSJU54tN2bxfOgXCKvemCYGALBUOg+ASSQOADP8YkSVJMkSb++okYBCDejY4hngoLrbKY5iCGSRhqKuLbUWIFiiHQ6gMqh-pyrgUD4Fy4gwIQCJaoqADKbn4BMQUaf+6L8IgJZ6RZKQiMuciEpuZKGUY+4JFx9wUvUzk9pw7med54Z+VAgXuSQRW+VQYBlfgfh8n2ACiEaImFxEAZFCCOeIlb1LW6huhcppktIe5eriJmZLi0i5SmQWeflHmKiQwqEGK+ASoCSZXnNBWKq5e1QGqG0alqPC5oRf7tRFcQnBRhKtnSrbISlxg9RYxxnikSi2rNbLzfti1cmQLUItGsZUPGCKJsm-2HQdS1HZmZ05owbVoguRiGbshk2AkWwkhWjH5KNEhbNUGTHLW9lGH9spCSJUAAGIELgsDYCQ3Qeez6OFqRS6mLslGmGoBi2SlFRlBWkjZNsLoGHT4gKZg-xcj8vkQDV0lUHywIeFQLOTgMQwjGMvNaZ1ZhSFcrZHIZqgy9I9Z0quFzHEuDsMgSivK6rirq+gmv+drusglQADqwlRKJ4mSdJslgObHWbCkST2ZWYgHrIDK5ExJiNpnDY0i2BI+hesOyr7asa1r9V654tVcknN2IEUNriK6WwORkRxnk7ecWWU2ySD3Jj44IPvYIp1eB7XOv1xHUdcobbPYM3C4FLYrG1iUJi6bINK5-kxhpQkMspCaR7gQ4F74GwmvwGEFcotdG8Ugouw8TxZitkuR+IBRfONFbRVguMBE4isuZ9GNgsMYL8MakQSLuUoDRDzHgchUPil4BIdBvJ+IE8C+baRUNiNQm4+p0RdEuZB+40H2QwWeRWqYlQqlDIQi2mwjilGOLYFsFRTBLmJucRsB4vQZCUHIX65cdroX7N8EcY4ETsOTsaPqPV3S21sNLf+5JVBli0eNWwLoLCKzwXeR8z44H5lfqRC4H8NADXsgyKaOisgoNEUeehp4sEV17HIwcWEcJUGUS3RcR4dgMnAtcO4JpJCvVYuxI8lZuKVAntInB9Ml4xxUvHCSISFyZGXMkDQxQZYlnkDoiyH80imnolYRy3oqhMIBlAfJiC9K9XMMIAadlbCVK2DiNQJhMj21puktCAYWleVGMVaOpUgptO0uWDuHijgWVNCUe0+QGh6U4oZEWFhTQ+JkZM+GQNFSLM6tUNKI8d5n0SDs-u2ylBlhqNUEQtEqzNLOUFeqTVQaXJTqUeoNIHgXA7DUIRCBcTVNLpkBIRxCnHIyeIBmcyV7s0BaomkZQVBiNoqaIw8S2JOj2dUXikDWbs0gFixcxI9Ijy9FkHinodEaB2DSI4qgSTrnKD7NSoIaXWIQdpao+kqw9zKcIFQ9knn6EMPncwlhrBfPGS5Ku-sa7BzrrSzedFP40kmlBBCcqEDgSSHceQVptiGUJA0G+dggA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QAoC2BDAxgCwJYDswBKAYjAA9cAXAbQAYBdRUABwHtZrc39mRzEAJgDMAdgB0ATgCswurIBsc4ZNEKAHABoQAT0TqJ6gCx1BCo7NErBARgC+d7Wix5CpWGCoBhbOioARP3R6JiQQdk4qbl4wgQQjQTopQTNRC3UbQVVRUW09BABaGxtpcQUFOjojSQsFGwU0yQcnDBwCYnEAMwIIACUwTFwWXDB8KhIPABsBqn7B4dHaRj4Irh4+OJtJQXEsjSsVaSN1ZTyhUR2LOW2RQWrhWWaQZza3cQA3EYB3ABU2AGtRrAJmBppgqABxMCoLxsSZsABOIRWHDWMVAcVk6l20kqpmkonqonUCjOCEEF3EVzoN2Ed0kD2ETxerg6HnwEAIUH6AEcAK5wcYQHhgcQEd4A0Us9pEcTszn4blgfmChDitiYPzRELIsKrKLrWKIEo2CTlSRbBQUwTSE6k3SICylaQlO4E01KBSSBTM1qs2Xyrm8gWwcZgBEIxHiFiTPydRGocTSt6BxXB1XqzUG-A65Z61HZjbG4SmqnFGzqOhWDRGYRkxI7EqmIw2UzqXGZX0uGXiBFgT5gL4AeU6nXDII56dDutYBeiRYQNmEJnEFwe1WkDQSaXrMjKom90gplRJdCZjmefp7A9+kvwAEFUGw+WMQWCqH9AfhYDPwnPDRiiAMjsYiyMIFROnQWz1pSMgluB3oGMcohdq8HR9je-SwHykxhpQSyhLOkTzkai5ekkKjFKI0i4oI6jtnWDoIBowjiMuNF0XQ5iSJU54tN2bxfOgXCKvemCYGALBUOg+ASSQGHfCOY5InmRFoguxQPOINGSKecjVDkZIWEY4hQUeJgJBashNBeyZsrgUD4Fy4gwIQCJaoqADKDn4BMPm-vqJGAQgJY2FSFwpMIy5yISm5kgoRz7gkXH3BS9Sof6co+c5rnhh5UDeY5JC5e5VBgIV+B+HyfYAKIRoiAX-ui-D6JI4iVvUtbqG6FymmS0h7l6uKmHUNryBlPacI5zlTU5iokMKhBivgEqAkmV4ptlipZdNipqitGpajwuaEX+xEAS1CAnBRhKtnSrbIfFxjtcZlZ0mYDzqBNm27VAO1zVAZD1Qi0axlQ8YIomdkBltf2zVy+0Slm2qMI153NXERgJbsCU2AkWwkhWjH5ANEhbNUGTHLWohVN9HRCSJUAAGIELgsDYCQ3ROezaPqaRS6mLslGmGoBhiEY8UVGUFaSNk2wugYdOyjgAz-FyPzuRA5XSVQfLAh4VAs5OAxDCMYy84WpFmFIVytkcCWqLL0j1nSq4XMcS6OwyBJK+IKuYGrioa+gWueTresglQADqwlRKJ4mSdJslgBbQWXZkOSmbpHEWikFlGVU7VWlxD1mAkPq2RtHT+4HUDB6H4f654FVcqnF1xEUNriK6Wx0PRJQmA8RlGGa2y6QPVS2IIvs1+rmva1VTfR7HXJG2z2BtxjiAFLYrG1hP3olNcuRMcYJmWTcJpHuBvsKYOXJKeGkBQqgwJYBJUmPypp2Be3iBpNie6VQGQZFojYIyahVwtm6iacoFgZ7YFVnPEOC9dZL36DeB+o4n4QBfj+VSZ0+bBX7lSa0Bg3Q2gyAXEyJJEjHG6okNI08nj4DYFreAYRoYonRguHekCsg0hGq2JcJ98gURMB9LI1RNJXF9lzPoJsFhjG4UQy6CRdylAaIeY8fcKh8UvAJDoN5PxAhUZbYKKhsRqE3J1OiLolwaP3Nommuizy+1TEqFUoYzFp02EcUoxxbAtgqKYJcxNziNgPF6DISg5C2lvv2RS2CEQ+L-ouTq7V3R21sDLURQhVBlhyUNWwLp4GV0MbKYxd5HzPmUfmHhpELgKDKPRY8DJMgEkcVohKOi9IJMwnAHCVBUlb0XEeHYDJwLXDuCaSQT1WLsSPJWbilRmH8TQrKBmccoBiQ-knCSIyNJZDCiWd2cgRAnCMBLJiI9mlpArCU+o5hpDuNhoc0iLZ2pQXMMIbqFhep5PiFsHEahth41OQNV5v0XKjDytsiq7zgrlm7lEmiVzCSxXtPkBoYVOIJRFhYU0+job-Rmm8+pqjMY1CkMYEsllEg4udkxcoe9ybVBELRKsUKAb-SqrVYGiL05d3qDSB4FwOw1HCQgXEdyCSjQSEcTIUVfZbNXqzdmgrNitjakob02dQk7mZScNiTo8XVF4nI9ViCICauNMSMKukvRZB4p6QFGgdg0iOKoEk65ygzxkhJaYNqKXmLUW1So9qBqTJUDTJl+QDAvRGlcKw2wuXlI2X7RBAdkEN0XrawoKRsQCJ4mYYRCE42IHAkkO48grTbASoSBo-TvhYOUs-aEHC1KhriOob0Ntzkum9J6qVtyoEPNgc8hwDggA */
   context: ({input}) => {
     const {userId, currentTrade} = input.data;
     return {
@@ -157,7 +159,10 @@ export const createTradeMachine = setup({
 
     waitingAcceptance: {
       on: {
-        checkAcceptance: 'signing',
+        reviewOffer: {
+          target: 'reviewingOfferedGems',
+          actions: assign({currentTrade: ({event}) => event.currentTrade}),
+        },
       },
     },
 
@@ -173,6 +178,7 @@ export const createTradeMachine = setup({
             generateSignatureError: 'signatureError',
           },
         },
+
         signing: {
           invoke: {
             src: 'signTrade',
@@ -187,6 +193,7 @@ export const createTradeMachine = setup({
             onDone: '#(machine).waitingFinish',
           },
         },
+
         signatureError: {},
       },
 
@@ -219,6 +226,13 @@ export const createTradeMachine = setup({
         setWaitingAcceptance: 'waitingAcceptance',
         setSigning: 'signing',
         setWaitingFinish: 'waitingFinish',
+        setReviewingOfferedGems: 'reviewingOfferedGems',
+      },
+    },
+
+    reviewingOfferedGems: {
+      on: {
+        acceptOffer: 'signing',
       },
     },
   },

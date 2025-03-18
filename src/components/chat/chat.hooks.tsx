@@ -1,5 +1,5 @@
-import {useCallback, useEffect, useState} from 'react';
-import {Platform} from 'react-native';
+import {useCallback, useState} from 'react';
+import {InteractionManager, Platform} from 'react-native';
 import {IMessage} from 'react-native-gifted-chat';
 import OpenPGP from 'react-native-fast-openpgp';
 import Toast from 'react-native-toast-message';
@@ -63,61 +63,67 @@ export const useChat = ({
   );
 
   // listen WS messages
-  useEffect(() => {
-    (async () => {
-      if (!currentUserProfile) throw new Error('User is not logged in');
-      const {userId} = currentUserProfile;
+  useFocusEffect(
+    useCallback(() => {
+      const task = InteractionManager.runAfterInteractions(() => {
+        (async () => {
+          if (!currentUserProfile) throw new Error('User is not logged in');
+          const {userId} = currentUserProfile;
 
-      const userPgpPrivateKey = await getUserPgpPrivateKey(userId);
-      if (!userPgpPrivateKey) throw new Error('Invalid decrypt data');
+          const userPgpPrivateKey = await getUserPgpPrivateKey(userId);
+          if (!userPgpPrivateKey) throw new Error('Invalid decrypt data');
 
-      chatSocket.on('messageSent', async (message: [ChatMessage]) => {
-        // add messages from current room only
-        if (message[0].roomId !== chatRoomId) return;
+          chatSocket.on('messageSent', async (message: [ChatMessage]) => {
+            // add messages from current room only
+            if (message[0].roomId !== chatRoomId) return;
 
-        try {
-          const messageWithDecryptedText = await decryptChatMessage(
-            userId,
-            userPgpPrivateKey,
-            message[0],
-          );
+            try {
+              const messageWithDecryptedText = await decryptChatMessage(
+                userId,
+                userPgpPrivateKey,
+                message[0],
+              );
 
-          setMessages(previousMessages =>
-            [...previousMessages, messageWithDecryptedText].sort(
-              sortChatMessagesByTime,
-            ),
-          );
-        } catch (error) {
-          console.log('error:', error);
-        }
+              setMessages(previousMessages =>
+                [...previousMessages, messageWithDecryptedText].sort(
+                  sortChatMessagesByTime,
+                ),
+              );
+            } catch (error) {
+              console.log('error:', error);
+            }
+          });
+
+          const messageFilters: MessageFilters = {
+            roomId: chatRoomId,
+          };
+
+          chatSocket.emit('findAllMessages', messageFilters);
+
+          chatSocket.on('allMessages', async (messages: ChatMessage[]) => {
+            const decryptPromises = messages.map(m =>
+              decryptChatMessage(userId, userPgpPrivateKey, m),
+            );
+
+            const decryptedMessages = await Promise.allSettled(decryptPromises);
+
+            const successDecryptedMessages = decryptedMessages
+              .filter(
+                (m): m is PromiseFulfilledResult<IMessage> =>
+                  m.status === 'fulfilled',
+              )
+              .map(m => m.value)
+              .sort(sortChatMessagesByTime);
+
+            setMessages(successDecryptedMessages);
+            setAreLoadingMessages(false);
+          });
+        })();
       });
 
-      const messageFilters: MessageFilters = {
-        roomId: chatRoomId,
-      };
-
-      chatSocket.emit('findAllMessages', messageFilters);
-
-      chatSocket.on('allMessages', async (messages: ChatMessage[]) => {
-        const decryptPromises = messages.map(m =>
-          decryptChatMessage(userId, userPgpPrivateKey, m),
-        );
-
-        const decryptedMessages = await Promise.allSettled(decryptPromises);
-
-        const successDecryptedMessages = decryptedMessages
-          .filter(
-            (m): m is PromiseFulfilledResult<IMessage> =>
-              m.status === 'fulfilled',
-          )
-          .map(m => m.value)
-          .sort(sortChatMessagesByTime);
-
-        setMessages(successDecryptedMessages);
-        setAreLoadingMessages(false);
-      });
-    })();
-  }, [chatSocket, currentUserProfile, chatRoomId]);
+      return () => task.cancel();
+    }, [chatSocket, currentUserProfile, chatRoomId]),
+  );
 
   return {messages, areLoadingMessages, onSend};
 };

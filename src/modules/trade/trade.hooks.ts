@@ -9,6 +9,10 @@ import {getTradingSocket} from 'src/shared/api/sockets';
 export const useTradeLogic = () => {
   const {data: currentUserProfile} = useCurrentUserProfile();
 
+  const isIdle = useSelector(tradingActor, snapshot =>
+    snapshot.matches('idle'),
+  );
+
   const isWaitingTradeOffers = useSelector(tradingActor, snapshot =>
     snapshot.matches('waitingTradeOffers'),
   );
@@ -42,9 +46,5 @@ export const useTradeLogic = () => {
     }, [tradingSocket]),
   );
 
-  return {
-    isWaitingTradeOffers,
-    isAcceptTrade,
-    isCreateTrade,
-  };
+  return {isIdle, isWaitingTradeOffers, isAcceptTrade, isCreateTrade};
 };

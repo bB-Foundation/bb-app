@@ -11,7 +11,8 @@ import {AcceptTrade} from './components/accept-trade';
 import {TradeOffers} from './components/trade-offers';
 
 export const Trade: FC = () => {
-  const {isWaitingTradeOffers, isAcceptTrade, isCreateTrade} = useTradeLogic();
+  const {isIdle, isWaitingTradeOffers, isAcceptTrade, isCreateTrade} =
+    useTradeLogic();
 
   return (
     <Page isBottomTabContainer>
@@ -21,7 +22,7 @@ export const Trade: FC = () => {
 
       {isWaitingTradeOffers && <TradeOffers />}
 
-      {isWaitingTradeOffers && (
+      {(isIdle || isWaitingTradeOffers) && (
         <View style={styles.buttonsContainer}>
           <Button onPress={createTradeHandler} style={styles.createTradeButton}>
             CREATE TRADE OFFER

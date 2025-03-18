@@ -9,7 +9,11 @@ import {
 } from './accept-trade.api';
 import {GemColor} from 'types/gem';
 import {tradingActor} from '../../api/trading-machine';
-import {TradingEventType, TradingMachinesIds} from '../../api/trade.api';
+import {
+  TradeErrors,
+  TradingEventType,
+  TradingMachinesIds,
+} from '../../api/trade.api';
 import {AcceptTradeActor} from '../../api/accept-trade-machine';
 import {ChatRoom, RoomType} from 'types/chat-room';
 import {NavigationProp} from 'src/modules/navigation/navigation.types';
@@ -98,10 +102,11 @@ export const useAcceptTrade = () => {
             break;
         }
       } catch (error) {
+        acceptTradeActor.send({type: 'exit'});
         Toast.show({
           type: 'error',
           text1: 'Error',
-          text2: 'Error while loading the trade',
+          text2: TradeErrors.LOAD_TRADE,
         });
       }
     })();

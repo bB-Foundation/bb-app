@@ -5,7 +5,11 @@ import Toast from 'react-native-toast-message';
 
 import {GemColor} from 'types/gem';
 import {tradingActor} from '../../api/trading-machine';
-import {TradingEventType, TradingMachinesIds} from '../../api/trade.api';
+import {
+  TradeErrors,
+  TradingEventType,
+  TradingMachinesIds,
+} from '../../api/trade.api';
 import {CreateTradeActor} from '../../api/create-trade-machine';
 import {ChatRoom} from 'types/chat-room';
 import {NavigationProp} from 'src/modules/navigation/navigation.types';
@@ -113,10 +117,11 @@ export const useCreateTrade = () => {
             break;
         }
       } catch (error) {
+        createTradeActor.send({type: 'exit'});
         Toast.show({
           type: 'error',
           text1: 'Error',
-          text2: 'Error while loading the trade',
+          text2: TradeErrors.LOAD_TRADE,
         });
       }
     })();

@@ -26,6 +26,10 @@ export enum TradingEventType {
   TradeCompleted = 'trade_completed',
 }
 
+export enum TradeErrors {
+  LOAD_TRADE = 'Error while loading the trade',
+}
+
 export const initializeTrade = async (
   data: InitializeTradeData,
 ): Promise<Trade> => {

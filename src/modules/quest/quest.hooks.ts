@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   RouteProp,
   useFocusEffect,
@@ -225,6 +225,11 @@ export const useButtonHandlers = () => {
 export const useChat = () => {
   const navigation = useNavigation<NavigationProp>();
 
+  const [currentGroupQuestRoomId, setCurrentGroupQuestRoomId] =
+    useState<number>();
+
+  const [isLoadingChatData, setIsLoadingChatData] = useState(false);
+
   const {data: currentUserProfile} = useCurrentUserProfile();
 
   const chatSocket = useMemo(() => getChatSocket(), []);
@@ -237,15 +242,21 @@ export const useChat = () => {
     const groupQuestRoom = quest.rooms.find(r => r.name === teamName);
     if (!groupQuestRoom) return;
 
+    setIsLoadingChatData(true);
+
     // only one request will return response join / getRoomDetails
     chatSocket.emit('joinToGroupChatRoom', {roomId: groupQuestRoom.id});
     chatSocket.emit('getRoomDetails', {roomId: groupQuestRoom.id});
+
+    setCurrentGroupQuestRoomId(groupQuestRoom.id);
   };
 
   // initialize chat socket
   useFocusEffect(
     useCallback(() => {
       (async () => {
+        if (!currentGroupQuestRoomId) return;
+
         const openChatRoom = (
           chatRoomId: number,
           groupPgpPublicKey: string,
@@ -260,22 +271,32 @@ export const useChat = () => {
 
         chatSocket.on(
           'roomDetailsFetched',
-          ({id, groupPgpPublicKey, participants}: ChatRoom) =>
-            openChatRoom(id, groupPgpPublicKey, participants.length),
+          ({id, groupPgpPublicKey, participants}: ChatRoom) => {
+            if (id !== currentGroupQuestRoomId) return;
+            openChatRoom(id, groupPgpPublicKey, participants.length);
+            setIsLoadingChatData(false);
+          },
         );
 
         chatSocket.on(
           'roomUpdated',
-          ({id, groupPgpPublicKey, participants}: ChatRoom) =>
-            openChatRoom(id, groupPgpPublicKey, participants.length),
+          ({id, groupPgpPublicKey, participants}: ChatRoom) => {
+            if (id !== currentGroupQuestRoomId) return;
+            openChatRoom(id, groupPgpPublicKey, participants.length);
+            setIsLoadingChatData(false);
+          },
         );
       })();
+    }, [navigation, chatSocket, currentGroupQuestRoomId]),
+  );
 
+  useFocusEffect(
+    useCallback(() => {
       return () => {
         chatSocket.removeAllListeners();
       };
-    }, [navigation, chatSocket]),
+    }, [chatSocket]),
   );
 
-  return {openChat};
+  return {isLoadingChatData, openChat};
 };

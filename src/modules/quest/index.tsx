@@ -26,7 +26,7 @@ const Quest: FC = () => {
 
   const {webBrowserRef, onWebBrowserMessage} = webComponentData;
 
-  const {openChat} = useChat();
+  const {isLoadingChatData, openChat} = useChat();
 
   const styles = useStyleSheet(themedStyles);
 
@@ -107,7 +107,8 @@ const Quest: FC = () => {
         <Button
           style={styles.chatButton}
           status="info"
-          onPress={() => openChat(quest)}>
+          onPress={() => openChat(quest)}
+          disabled={isLoadingChatData}>
           Open chat
         </Button>
 

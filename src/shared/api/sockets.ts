@@ -23,6 +23,8 @@ export const initializeTradingSocket = async () => {
 
 const tradingSocketAuth = async () => {
   const accessToken = await getJwtAccessToken();
+  if (!accessToken) throw new Error();
+
   tradingSocket.emit('auth', accessToken);
 };
 
@@ -33,6 +35,8 @@ export const getChatSocket = (): Socket => {
 
 export const initializeChatSocket = async (): Promise<Socket> => {
   const accessToken = await getJwtAccessToken();
+  if (!accessToken) throw new Error();
+
   chatSocket = io(
     `${process.env.BACKEND_API_URL}:${process.env.BACKEND_WS_TRADE_CHAT_PORT}`,
     {extraHeaders: {authorization: 'Bearer ' + accessToken}},

@@ -9,158 +9,122 @@ enum TokenNames {
   USER_PGP_PRIVATE_KEY = 'USER_PGP_PRIVATE_KEY',
 }
 
-const storeToken = async (tokenName: string, tokenValue: string) => {
-  try {
-    await Keychain.setGenericPassword(tokenName, tokenValue, {
-      service: tokenName,
-    });
-  } catch (error) {
-    throw error;
-  }
+const storeToken = async (
+  tokenName: string,
+  tokenValue: string,
+): Promise<void> => {
+  await Keychain.setGenericPassword(tokenName, tokenValue, {
+    service: tokenName,
+  });
 };
 
-const getToken = async (tokenName: string) => {
-  try {
-    const credentials = await Keychain.getGenericPassword({service: tokenName});
-    if (credentials) {
-      return credentials.password;
-    } else {
-      return null;
-    }
-  } catch (error) {
-    throw error;
-  }
+const getToken = async (tokenName: string): Promise<string | null> => {
+  const credentials = await Keychain.getGenericPassword({service: tokenName});
+  return credentials ? credentials.password : null;
 };
 
-const clearToken = (tokenName: string) =>
+const clearToken = async (tokenName: string): Promise<boolean> =>
   Keychain.resetGenericPassword({service: tokenName});
 
-export const storeJwtAccessToken = async (tokenValue: string) =>
+// JWT ACCESS
+
+export const storeJwtAccessToken = async (tokenValue: string): Promise<void> =>
   storeToken(TokenNames.JWT_ACCESS, tokenValue);
 
-export const getJwtAccessToken = async (): Promise<string> => {
-  const token = await getToken(TokenNames.JWT_ACCESS);
-  if (!token) throw new Error('No access token');
+export const getJwtAccessToken = async (): Promise<string | null> =>
+  getToken(TokenNames.JWT_ACCESS);
 
-  return token;
-};
-
-export const clearJwtAccessToken = async () =>
+export const clearJwtAccessToken = async (): Promise<boolean> =>
   clearToken(TokenNames.JWT_ACCESS);
 
-export const storeJwtRefreshToken = async (tokenValue: string) => {
-  try {
-    await storeToken(TokenNames.JWT_REFRESH, tokenValue);
-  } catch (error) {
-    throw error;
-  }
-};
+// JWT REFRESH
 
-export const getJwtRefreshToken = async () => {
-  try {
-    return await getToken(TokenNames.JWT_REFRESH);
-  } catch (error) {
-    throw error;
-  }
-};
+export const storeJwtRefreshToken = async (tokenValue: string): Promise<void> =>
+  storeToken(TokenNames.JWT_REFRESH, tokenValue);
 
-export const clearJwtRefreshToken = async () =>
+export const getJwtRefreshToken = async (): Promise<string | null> =>
+  getToken(TokenNames.JWT_REFRESH);
+
+export const clearJwtRefreshToken = async (): Promise<boolean> =>
   clearToken(TokenNames.JWT_REFRESH);
 
-export const storeUserPassword = async (password: string) => {
-  try {
-    await storeToken(TokenNames.USER_PASSWORD, password);
-  } catch (error) {
-    throw error;
-  }
-};
+// USER PASSWORD
 
-export const getUserPassword = async () => {
-  try {
-    return await getToken(TokenNames.USER_PASSWORD);
-  } catch (error) {
-    throw error;
-  }
-};
+export const storeUserPassword = async (password: string): Promise<void> =>
+  storeToken(TokenNames.USER_PASSWORD, password);
 
-export const clearUserPassword = async () =>
+export const getUserPassword = async (): Promise<string | null> =>
+  getToken(TokenNames.USER_PASSWORD);
+
+export const clearUserPassword = async (): Promise<boolean> =>
   clearToken(TokenNames.USER_PASSWORD);
+
+// USER PRIVATE KEY
 
 export const storeUserPrivateKey = async (
   privateKey: string,
   userId: number,
-) => {
-  try {
-    const prevStateString = await getToken(TokenNames.USER_PRIVATE_KEY);
-    const prevState: {[userId: number]: string} | null = prevStateString
-      ? JSON.parse(prevStateString)
-      : null;
+): Promise<void> => {
+  const prevStateString = await getToken(TokenNames.USER_PRIVATE_KEY);
+  const prevState: {[userId: number]: string} | null = prevStateString
+    ? JSON.parse(prevStateString)
+    : null;
 
-    if (prevState) {
-      prevState[userId] = privateKey;
-    }
-
-    const value = prevState ? prevState : {[userId]: privateKey};
-    await storeToken(TokenNames.USER_PRIVATE_KEY, JSON.stringify(value));
-  } catch (error) {
-    throw error;
+  if (prevState) {
+    prevState[userId] = privateKey;
   }
+
+  const value = prevState ? prevState : {[userId]: privateKey};
+  await storeToken(TokenNames.USER_PRIVATE_KEY, JSON.stringify(value));
 };
 
-export const getUserPrivateKey = async (userId: number) => {
-  try {
-    const prevStateString = await getToken(TokenNames.USER_PRIVATE_KEY);
-    const prevState: {[userId: number]: string} | null = prevStateString
-      ? JSON.parse(prevStateString)
-      : null;
+export const getUserPrivateKey = async (
+  userId: number,
+): Promise<string | null> => {
+  const prevStateString = await getToken(TokenNames.USER_PRIVATE_KEY);
+  const prevState: {[userId: number]: string} | null = prevStateString
+    ? JSON.parse(prevStateString)
+    : null;
 
-    return prevState ? prevState[userId] : null;
-  } catch (error) {
-    throw error;
-  }
+  return prevState ? prevState[userId] : null;
 };
 
-// export const clearUserPrivateKey = async (userId: number) =>
-//   clearToken(TokenNames.USER_PRIVATE_KEY);
+// USER ACCOUNT ADDRESS
 
 export const storeUserAccountAddress = async (
   accountAddress: string,
   userId: number,
-) => {
-  try {
-    const prevStateString = await getToken(TokenNames.USER_ACCOUNT_ADDRESS);
-    const prevState: {[userId: number]: string} | null = prevStateString
-      ? JSON.parse(prevStateString)
-      : null;
+): Promise<void> => {
+  const prevStateString = await getToken(TokenNames.USER_ACCOUNT_ADDRESS);
+  const prevState: {[userId: number]: string} | null = prevStateString
+    ? JSON.parse(prevStateString)
+    : null;
 
-    if (prevState) {
-      prevState[userId] = accountAddress;
-    }
-
-    const value = prevState ? prevState : {[userId]: accountAddress};
-    await storeToken(TokenNames.USER_ACCOUNT_ADDRESS, JSON.stringify(value));
-  } catch (error) {
-    throw error;
+  if (prevState) {
+    prevState[userId] = accountAddress;
   }
+
+  const value = prevState ? prevState : {[userId]: accountAddress};
+  await storeToken(TokenNames.USER_ACCOUNT_ADDRESS, JSON.stringify(value));
 };
 
-export const getUserAccountAddress = async (userId: number) => {
-  try {
-    const prevStateString = await getToken(TokenNames.USER_ACCOUNT_ADDRESS);
-    const prevState: {[userId: number]: string} | null = prevStateString
-      ? JSON.parse(prevStateString)
-      : null;
+export const getUserAccountAddress = async (
+  userId: number,
+): Promise<string | null> => {
+  const prevStateString = await getToken(TokenNames.USER_ACCOUNT_ADDRESS);
+  const prevState: {[userId: number]: string} | null = prevStateString
+    ? JSON.parse(prevStateString)
+    : null;
 
-    return prevState ? prevState[userId] : null;
-  } catch (error) {
-    throw error;
-  }
+  return prevState ? prevState[userId] : null;
 };
+
+// USER PGP PRIVATE KEY
 
 export const storeUserPgpPrivateKey = async (
   privateKey: string,
   userId: number,
-) => {
+): Promise<void> => {
   const prevStateString = await getToken(TokenNames.USER_PGP_PRIVATE_KEY);
   const prevState: {[userId: number]: string} | null = prevStateString
     ? JSON.parse(prevStateString)
@@ -174,7 +138,9 @@ export const storeUserPgpPrivateKey = async (
   await storeToken(TokenNames.USER_PGP_PRIVATE_KEY, JSON.stringify(value));
 };
 
-export const getUserPgpPrivateKey = async (userId: number) => {
+export const getUserPgpPrivateKey = async (
+  userId: number,
+): Promise<string | null> => {
   const prevStateString = await getToken(TokenNames.USER_PGP_PRIVATE_KEY);
   const prevState: {[userId: number]: string} | null = prevStateString
     ? JSON.parse(prevStateString)
@@ -183,5 +149,5 @@ export const getUserPgpPrivateKey = async (userId: number) => {
   return prevState ? prevState[userId] : null;
 };
 
-export const clearSecureStorage = () =>
-  Promise.all([clearJwtAccessToken(), clearJwtRefreshToken()]);
+export const clearJWTTokens = () =>
+  Promise.allSettled([clearJwtAccessToken(), clearJwtRefreshToken()]);

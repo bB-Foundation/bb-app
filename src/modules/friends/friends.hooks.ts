@@ -95,6 +95,8 @@ export const useChat = () => {
       chatSocket.emit('getUserRooms', {type: RoomType.DIRECT});
 
       chatSocket.on('roomDetailsFetched', async (rooms: ChatRoom[]) => {
+        if (rooms[0].type !== RoomType.DIRECT) return;
+
         const userPgpPrivateKey = await getUserPgpPrivateKey(userId);
         if (!userPgpPrivateKey) throw new Error('Invalid decrypt data');
 
@@ -109,6 +111,8 @@ export const useChat = () => {
       });
 
       chatSocket.on('roomCreated', (room: ChatRoom) => {
+        if (room.type !== RoomType.DIRECT) return;
+
         setChatRooms(p => [...p, room]);
 
         if (room.createdBy === userId) {

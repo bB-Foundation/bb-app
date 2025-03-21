@@ -16,6 +16,7 @@ import {
   initializeChatSocket,
   closeAllSockets,
 } from '../../../../shared/api/sockets';
+import {BottomTabButton} from '../bottom-tab-button';
 
 const BottomTabs = () => {
   const BottomTab = createBottomTabNavigator();
@@ -45,6 +46,9 @@ const BottomTabs = () => {
               height={27}
               fill={focused ? '#3366ff' : 'gray'}
             />
+          ),
+          tabBarButton: props => (
+            <BottomTabButton bottomTabBarButtonProps={props} />
           ),
         }}
       />
@@ -77,6 +81,9 @@ const BottomTabs = () => {
               fill={focused ? '#3366ff' : 'gray'}
             />
           ),
+          tabBarButton: props => (
+            <BottomTabButton bottomTabBarButtonProps={props} />
+          ),
         }}
       />
       <BottomTab.Screen
@@ -91,6 +98,9 @@ const BottomTabs = () => {
               height={27}
               fill={focused ? '#3366ff' : 'gray'}
             />
+          ),
+          tabBarButton: props => (
+            <BottomTabButton bottomTabBarButtonProps={props} />
           ),
         }}
       />
@@ -107,6 +117,9 @@ const BottomTabs = () => {
               height={27}
               fill={focused ? '#3366ff' : 'gray'}
             />
+          ),
+          tabBarButton: props => (
+            <BottomTabButton bottomTabBarButtonProps={props} />
           ),
         }}
       />

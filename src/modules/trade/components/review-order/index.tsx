@@ -71,7 +71,11 @@ export const ReviewOrder: FC<ReviewOrderProps> = ({
       <Button
         onPress={submitHandler}
         style={styles.submitButton}
-        disabled={isSubmitting}>
+        disabled={
+          isSubmitting ||
+          isFetchingUser1GemsMetadata ||
+          isFetchingUser2GemsMetadata
+        }>
         ACCEPT
       </Button>
     </View>

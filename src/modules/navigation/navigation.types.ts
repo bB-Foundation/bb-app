@@ -39,7 +39,6 @@ export type SwapStackParamList = {
 
 export type TradeStackParamList = {
   main: undefined;
-  chat: {chatRoomId: number; groupPgpPublicKey: string; title: string};
 };
 
 export type ProfileStackParamList = {

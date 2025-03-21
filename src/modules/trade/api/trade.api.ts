@@ -12,6 +12,7 @@ import {
 import {getTradeById} from 'src/shared/api/trade';
 import {tradingActor} from './trading-machine';
 import {Errors} from 'src/enums/errors';
+import {ChatRoom} from 'types/chat-room';
 
 export enum TradingMachinesIds {
   CREATE_TRADE = 'createTrade',
@@ -123,3 +124,12 @@ export function assertEventType<
     );
   }
 }
+
+export const generateTradeRoomName = (tradeId: number): string =>
+  `trade-room-${tradeId}`;
+
+export const findTradeChatRoomByTradeId = (
+  tradeId: number,
+  chatRooms: ChatRoom[],
+): ChatRoom | undefined =>
+  chatRooms.find(r => r.name === generateTradeRoomName(tradeId));

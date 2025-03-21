@@ -1,18 +1,18 @@
-import {useEffect, useMemo} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {useSelector} from '@xstate/react';
-import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
 import {GemColor} from 'types/gem';
 import {tradingActor} from '../../api/trading-machine';
 import {
+  findTradeChatRoomByTradeId,
+  generateTradeRoomName,
   TradeErrors,
   TradingEventType,
   TradingMachinesIds,
 } from '../../api/trade.api';
 import {CreateTradeActor} from '../../api/create-trade-machine';
-import {ChatRoom} from 'types/chat-room';
-import {NavigationProp} from 'src/modules/navigation/navigation.types';
+import {ChatRoom, RoomType} from 'types/chat-room';
 import {Trade, TradeStatus} from 'types/trade';
 import {getTradeById} from 'src/shared/api/trade';
 import {getChatSocket, getTradingSocket} from 'src/shared/api/sockets';
@@ -129,7 +129,10 @@ export const useCreateTrade = () => {
 
   // listen trade WS events
   useEffect(() => {
+    if (!currentTrade?.id) return;
+
     tradingSocket.on(TradingEventType.TradeAccepted, (trade: Trade) => {
+      if (trade.id !== currentTrade.id) return;
       createTradeActor.send({type: 'reviewOffer', currentTrade: trade});
     });
 
@@ -139,18 +142,41 @@ export const useCreateTrade = () => {
         createTradeActor.send({type: 'finish', resultTxHash});
       },
     );
-  }, [createTradeActor, tradingSocket]);
+  }, [createTradeActor, tradingSocket, currentTrade?.id]);
 
   // on join chat room
   useEffect(() => {
-    chatSocket.on('roomCreated', ({id, groupPgpPublicKey}: ChatRoom) => {
+    if (chatRoomId) return;
+    if (!currentTrade) return;
+
+    chatSocket.emit('getUserRooms', {type: RoomType.TRADE});
+
+    chatSocket.on('roomCreated', ({id, name, groupPgpPublicKey}: ChatRoom) => {
+      if (name !== generateTradeRoomName(currentTrade.id)) return;
+
       createTradeActor.send({
         type: 'setChatData',
         chatRoomId: id,
-        groupPgpPublicKey: groupPgpPublicKey,
+        groupPgpPublicKey,
       });
     });
-  }, [chatSocket, createTradeActor]);
+
+    chatSocket.once('roomDetailsFetched', (rooms: ChatRoom[]) => {
+      const existingChatRoom = findTradeChatRoomByTradeId(
+        currentTrade.id,
+        rooms,
+      );
+
+      if (existingChatRoom) {
+        const {id: chatRoomId, groupPgpPublicKey} = existingChatRoom;
+        createTradeActor.send({
+          type: 'setChatData',
+          chatRoomId,
+          groupPgpPublicKey,
+        });
+      }
+    });
+  }, [chatSocket, createTradeActor, currentTrade, chatRoomId]);
 
   // remove socket listeners
   useEffect(() => {
@@ -180,7 +206,6 @@ export const useCreateTrade = () => {
       receiverGemIds,
       currentTrade,
       resultTxHash,
-      chatRoomId,
     },
   };
 };
@@ -221,7 +246,7 @@ export const useHandlers = () => {
 };
 
 export const useChat = () => {
-  const navigation = useNavigation<NavigationProp>();
+  const [isOpenChatModal, setIsOpenChatModal] = useState(false);
 
   const createTradeActor = useSelector(
     tradingActor,
@@ -234,12 +259,15 @@ export const useChat = () => {
     snapshot => snapshot.context,
   );
 
-  const openChatModal = () => {
-    navigation.navigate('chat', {chatRoomId, groupPgpPublicKey, title: 'Chat'});
-  };
+  const chatSocket = useMemo(() => getChatSocket(), []);
+
+  const toggleChatModal = () => setIsOpenChatModal(p => !p);
 
   return {
+    chatSocket,
     chatRoomId,
-    openChatModal,
+    groupPgpPublicKey,
+    isOpenChatModal,
+    toggleChatModal,
   };
 };

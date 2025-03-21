@@ -12,11 +12,19 @@ import {SignTrade} from '../sign-trade';
 import {Finish} from '../finish';
 import {useChat, useCreateTrade, useHandlers} from './create-trade.hooks';
 import {OverlayLoader} from 'components/overlay-loader';
+import {Chat} from 'components/chat';
+import {TradeChatModal} from '../trade-chat-modal';
 
 export const CreateTrade: FC = () => {
   const {tradeStatus, data} = useCreateTrade();
 
-  const {chatRoomId, openChatModal} = useChat();
+  const {
+    chatSocket,
+    chatRoomId,
+    groupPgpPublicKey,
+    isOpenChatModal,
+    toggleChatModal,
+  } = useChat();
 
   const {
     selectTokens,
@@ -46,10 +54,21 @@ export const CreateTrade: FC = () => {
   return (
     <>
       {!!chatRoomId && !isReviewResult && (
-        <Button size="small" style={styles.chatButton} onPress={openChatModal}>
+        <Button
+          size="small"
+          style={styles.chatButton}
+          onPress={toggleChatModal}>
           Open chat
         </Button>
       )}
+
+      <TradeChatModal isOpen={isOpenChatModal} toggleOpen={toggleChatModal}>
+        <Chat
+          chatSocket={chatSocket}
+          chatRoomId={chatRoomId}
+          groupPgpPublicKey={groupPgpPublicKey}
+        />
+      </TradeChatModal>
 
       {isCheckingTradeStatus && <OverlayLoader />}
 

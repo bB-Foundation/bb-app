@@ -10,11 +10,19 @@ import {SignTrade} from '../sign-trade';
 import {useAcceptTrade, useChat, useHandlers} from './accept-trade.hooks';
 import {Finish} from '../finish';
 import {OverlayLoader} from 'components/overlay-loader';
+import {TradeChatModal} from '../trade-chat-modal';
+import {Chat} from 'components/chat';
 
 export const AcceptTrade = () => {
   const {tradeStatus, data} = useAcceptTrade();
 
-  const {chatRoomId, openChatModal} = useChat();
+  const {
+    chatSocket,
+    chatRoomId,
+    groupPgpPublicKey,
+    isOpenChatModal,
+    toggleChatModal,
+  } = useChat();
 
   const {
     validateTokenColorSelect,
@@ -43,10 +51,21 @@ export const AcceptTrade = () => {
   return (
     <>
       {!!chatRoomId && !isReviewResult && (
-        <Button size="small" style={styles.chatButton} onPress={openChatModal}>
+        <Button
+          size="small"
+          style={styles.chatButton}
+          onPress={toggleChatModal}>
           Open chat
         </Button>
       )}
+
+      <TradeChatModal isOpen={isOpenChatModal} toggleOpen={toggleChatModal}>
+        <Chat
+          chatSocket={chatSocket}
+          chatRoomId={chatRoomId}
+          groupPgpPublicKey={groupPgpPublicKey}
+        />
+      </TradeChatModal>
 
       {isCheckingTradeStatus && <OverlayLoader />}
 

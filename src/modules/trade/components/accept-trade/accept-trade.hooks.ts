@@ -1,6 +1,5 @@
-import {useEffect, useMemo} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {useSelector} from '@xstate/react';
-import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
 import {
@@ -10,15 +9,16 @@ import {
 import {GemColor} from 'types/gem';
 import {tradingActor} from '../../api/trading-machine';
 import {
+  findTradeChatRoomByTradeId,
+  generateTradeRoomName,
   TradeErrors,
   TradingEventType,
   TradingMachinesIds,
 } from '../../api/trade.api';
 import {AcceptTradeActor} from '../../api/accept-trade-machine';
 import {ChatRoom, RoomType} from 'types/chat-room';
-import {NavigationProp} from 'src/modules/navigation/navigation.types';
 import {getTradeById} from 'src/shared/api/trade';
-import {TradeStatus} from 'types/trade';
+import {Trade, TradeStatus} from 'types/trade';
 import {getChatSocket, getTradingSocket} from 'src/shared/api/sockets';
 
 export const useAcceptTrade = () => {
@@ -112,33 +112,53 @@ export const useAcceptTrade = () => {
     })();
   }, [isCheckingTradeStatus, currentTrade.id, acceptTradeActor]);
 
-  // create a chat room on trade start
+  // create a chat room on trade start or use an existing one
   useEffect(() => {
     if (chatRoomId) return;
 
-    chatSocket.emit('createRoom', {
-      type: RoomType.TRADE,
-      participants: [currentTrade.initiatorId],
-    });
-  }, [chatSocket, currentTrade, chatRoomId]);
+    chatSocket.emit('getUserRooms', {type: RoomType.TRADE});
 
-  // sign trade after initiator signed
-  useEffect(() => {
-    tradingSocket.on(TradingEventType.TradeInitiatorSigned, () => {
-      acceptTradeActor.send({type: 'startSigning'});
-    });
-  }, [acceptTradeActor, tradingSocket]);
+    chatSocket.once('roomDetailsFetched', (rooms: ChatRoom[]) => {
+      const existingChatRoom = findTradeChatRoomByTradeId(
+        currentTrade.id,
+        rooms,
+      );
 
-  // on join chat room
-  useEffect(() => {
-    chatSocket.on('roomCreated', ({id, groupPgpPublicKey}: ChatRoom) => {
+      if (existingChatRoom) {
+        const {id: chatRoomId, groupPgpPublicKey} = existingChatRoom;
+        acceptTradeActor.send({
+          type: 'setChatData',
+          chatRoomId,
+          groupPgpPublicKey,
+        });
+      } else {
+        chatSocket.emit('createRoom', {
+          name: generateTradeRoomName(currentTrade.id),
+          type: RoomType.TRADE,
+          participants: [currentTrade.initiatorId],
+        });
+      }
+    });
+
+    chatSocket.on('roomCreated', ({id, name, groupPgpPublicKey}: ChatRoom) => {
+      if (name !== generateTradeRoomName(currentTrade.id)) return;
+
       acceptTradeActor.send({
         type: 'setChatData',
         chatRoomId: id,
         groupPgpPublicKey,
       });
     });
-  }, [chatSocket, acceptTradeActor]);
+  }, [chatSocket, currentTrade, chatRoomId, acceptTradeActor]);
+
+  // sign trade after initiator signed
+  useEffect(() => {
+    tradingSocket.on(TradingEventType.TradeInitiatorSigned, (trade: Trade) => {
+      if (trade.id !== currentTrade.id) return;
+
+      acceptTradeActor.send({type: 'startSigning'});
+    });
+  }, [acceptTradeActor, tradingSocket, currentTrade.id]);
 
   // delete chat room after success trade
   useEffect(() => {
@@ -229,7 +249,7 @@ export const useHandlers = () => {
 };
 
 export const useChat = () => {
-  const navigation = useNavigation<NavigationProp>();
+  const [isOpenChatModal, setIsOpenChatModal] = useState(false);
 
   const acceptTradeActor = useSelector(
     tradingActor,
@@ -242,12 +262,15 @@ export const useChat = () => {
     snapshot => snapshot.context,
   );
 
-  const openChatModal = () => {
-    navigation.navigate('chat', {chatRoomId, groupPgpPublicKey, title: 'Chat'});
-  };
+  const chatSocket = useMemo(() => getChatSocket(), []);
+
+  const toggleChatModal = () => setIsOpenChatModal(p => !p);
 
   return {
+    chatSocket,
     chatRoomId,
-    openChatModal,
+    groupPgpPublicKey,
+    isOpenChatModal,
+    toggleChatModal,
   };
 };
